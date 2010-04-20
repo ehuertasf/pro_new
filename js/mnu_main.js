@@ -62,20 +62,14 @@ function main_menu(){
                                     icon:'files/images_app/document-search-result.png',
                                     handler:mttotipocli
                                 },{
+                                    text: 'Usuarios',
+                                    cls:'x-btn-text-icon',
+                                    icon:'files/images_app/document-search-result.png',
+                                    handler:mttousers
+								},{
                                     text: 'Cargos'
                                 }]
-                            },{
-                                text: 'Accesos',
-                                cls: 'x-btn-text-icon',
-                                icon: 'files/images_app/lock.png',
-                                menu: [{
-                                    text: 'Usuarios'
-                                },{
-                                    text: 'Perfiles'
-                                },{
-                                    text: 'Opciones'
-                                }]
-                            }]
+							}]
 			},{
                             xtype: 'tbfill'
 			},{

@@ -268,7 +268,7 @@ function mttotipocli(){
         rdo_inactivo.setValue(0);
     }
 
-    var view_window = new Ext.Window({
+    var view_window_tcli = new Ext.Window({
         frame:true,
         title:'Tipos de Cliente',
         width:350,
@@ -279,7 +279,7 @@ function mttotipocli(){
         resizable:false
     });
 
-    view_window.show();
+    view_window_tcli.show();
 
 
 }

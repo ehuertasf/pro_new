@@ -3,7 +3,7 @@
  * Actualizamos el estado de la solicitud a Finalizada siempre y cuando los checks de
  * cada una de las personas asociadas a la solicitud tiene estado finalizado
  * @version 1.0
- * @author Ricardo De la Torre G.
+ * @author Ricardo De la Torre
  * 17-04-2010
  */
 

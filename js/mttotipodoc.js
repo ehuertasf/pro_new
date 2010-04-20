@@ -1,9 +1,9 @@
 /*
- * Funcion para mostrar el formulario de mantenimiento de tipo de documentos
- * Ricardo De la Torre
- * 17-04-2010
- * v1.0
- */
+* Funcion para mostrar el formulario de mantenimiento de tipo de documentos
+* Ricardo De la Torre
+* 17-04-2010
+* v1.0
+*/
 function mttotipodoc(){
 
     var accion=0;
@@ -11,16 +11,16 @@ function mttotipodoc(){
     var rdo_activo,rdo_inactivo,idfi_;
 
     dstipdoc = new Ext.data.Store({
-        reader  : new Ext.data.JsonReader({
-                fields  : ['codtipdoc', 'destipdoc','esttipdoc','est'],
-                root    : 'tipdoc',
-                id      : 'codtipdoc'
+        reader : new Ext.data.JsonReader({
+                fields : ['codtipdoc', 'destipdoc','esttipdoc','est'],
+                root : 'tipdoc',
+                id : 'codtipdoc'
         }),
         proxy: new Ext.data.HttpProxy({
                 url: 'DB/datamttos.php?x=1'
         }),
         autoLoad: true
-    });    
+    });
 
     var cmtipdoc = new Ext.grid.ColumnModel(
         [{
@@ -62,18 +62,18 @@ function mttotipodoc(){
         clicksToEdit:1,
         selModel: new Ext.grid.RowSelectionModel({singleSelect:true}),
         frame : true,
-        tbar        : [{
+        tbar : [{
             text: 'Nuevo',
             cls: 'x-btn-text-icon',
             icon: 'files/images_app/plus.png',
-            id  : 'btn_nuevodoc',
+            id : 'btn_nuevodoc',
             handler:addtipdoc,
             tooltip: 'Registrar nuevo documento'
         },'-',{
             text: 'Editar',
             cls: 'x-btn-text-icon',
             icon: 'files/images_app/add16.gif',
-            id  : 'btn_editadoc',
+            id : 'btn_editadoc',
             tooltip: 'Editar documento',
             handler:function(){
                 accion=2;
@@ -87,16 +87,16 @@ function mttotipodoc(){
                     Ext.getCmp('btn_nuevodoc').disable();
                     Ext.getCmp('btn_editadoc').disable();
 
-                    var selectedRow	=grdtipdoc.getSelectionModel().getSelected();
-                    var campo0 	=grdtipdoc.getColumnModel().getDataIndex(0);
-                    var campo1 	=grdtipdoc.getColumnModel().getDataIndex(1);
-                    var campo3 	=grdtipdoc.getColumnModel().getDataIndex(3);
-                    idfi_	=selectedRow.get(campo0);
-                    var desc_	=selectedRow.get(campo1);
-                    var esta_	=selectedRow.get(campo3);
+                    var selectedRow =grdtipdoc.getSelectionModel().getSelected();
+                    var campo0 =grdtipdoc.getColumnModel().getDataIndex(0);
+                    var campo1 =grdtipdoc.getColumnModel().getDataIndex(1);
+                    var campo3 =grdtipdoc.getColumnModel().getDataIndex(3);
+                    idfi_ =selectedRow.get(campo0);
+                    var desc_ =selectedRow.get(campo1);
+                    var esta_ =selectedRow.get(campo3);
 
                     Ext.getCmp('desc').setValue(desc_);
-                    
+
                     if(esta_==1){
                         rdo_tdocumento.setValue(1);
                     }else{
@@ -112,15 +112,15 @@ function mttotipodoc(){
                         icon: Ext.MessageBox.INFO
                     });
                 }
-                
-                
+
+
             }
         },'-',{
             text: 'Grabar',
             cls: 'x-btn-text-icon',
             disabled:true,
             icon: 'files/images_app/disk.png',
-            id  : 'btn_grabadoc',
+            id : 'btn_grabadoc',
             tooltip: 'Grabar cambios',
             handler:grabartipodoc
         },'-',{
@@ -128,30 +128,30 @@ function mttotipodoc(){
             disabled:true,
             cls: 'x-btn-text-icon',
             icon: 'files/images_app/delete.gif',
-            id  : 'btn_canceladoc',
+            id : 'btn_canceladoc',
             handler:cancelar,
             tooltip: 'Cancelar cambios'
         }]
     });
 
     rdo_activo=new Ext.form.Radio({
-        boxLabel    :'Activo',
-        name        :'rb-tdoc',
-        inputValue  :1
+        boxLabel :'Activo',
+        name :'rb-tdoc',
+        inputValue :1
     });
 
     rdo_inactivo=new Ext.form.Radio({
-        boxLabel    :'Inactivo',
-        name        :'rb-tdoc',
-        inputValue  :2
+        boxLabel :'Inactivo',
+        name :'rb-tdoc',
+        inputValue :2
     });
 
     var rdo_tdocumento=new Ext.form.RadioGroup({
-        fieldLabel  :'Estado',
+        fieldLabel :'Estado',
         id:'rdoestdoc',
-        itemCls     :'sinpadding',
-        disabled    :true,
-        allowBlank  :false,
+        itemCls :'sinpadding',
+        disabled :true,
+        allowBlank :false,
         items: [rdo_activo,rdo_inactivo]
     });
 
@@ -198,8 +198,8 @@ function mttotipodoc(){
         Ext.getCmp('btn_editadoc').enable();
 
         Ext.Ajax.request({
-            url	: 'DB/datamttos.php',
-            params	: {
+            url : 'DB/datamttos.php',
+            params : {
                 x:2,
                 accion:accion,
                 desc:Ext.getCmp('desc').getValue(),
@@ -225,7 +225,7 @@ function mttotipodoc(){
                             x:1
                     };
                     dstipdoc.load();
-                    
+
                 }else if(val==3){
                     Ext.Msg.show({
                         title: 'Mensaje',
@@ -242,7 +242,7 @@ function mttotipodoc(){
                             x:1
                     };
                     dstipdoc.load();
-                    
+
                 }else{
                         Ext.Msg.alert('CUIDADO!','El Tipo de Documento que intenta ingresar ya existe');
                 }
@@ -268,7 +268,7 @@ function mttotipodoc(){
         rdo_inactivo.setValue(0);
     }
 
-    var view_window = new Ext.Window({
+    var view_window_tdoc = new Ext.Window({
         frame:true,
         title:'Tipos de Documento',
         width:350,
@@ -279,7 +279,7 @@ function mttotipodoc(){
         resizable:false
     });
 
-    view_window.show();
+    view_window_tdoc.show();
 
 
 }

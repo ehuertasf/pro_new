@@ -259,8 +259,11 @@ switch ($n){
             $codper = $_POST['codper'];
             $codsol = $_POST['codsol'];
             $codchkdom = $_POST['codchk'];
+            $codimg1 = $_POST['codimg1'];
+            $codimg2 = $_POST['codimg2'];
+            $codimg3 = $_POST['codimg3'];
             $imgactdom1 = $_POST['imgdom1act'];
-            $imgactdom1 = $_POST['imgdom2act'];
+            $imgactdom2 = $_POST['imgdom2act'];
             $imgactmap = $_POST['imgmapact'];
             $nomimgdom1 =  basename( $_FILES['imgdom1']['name']);
             $nomimgdom2 =  basename( $_FILES['imgdom2']['name']);

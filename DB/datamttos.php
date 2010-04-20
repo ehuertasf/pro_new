@@ -1,9 +1,9 @@
 <?php
 /**
-* Scripts para grabar los datos de los formularios mantenimiento de tipo de documentos y tipo de cliente
-* @version 1.0
+* Scripts para grabar los datos de los formularios mantenimiento de tipo de documentos, tipo de clientes y usuarios
+* @version 1.0 Codigo PHP para los mantenimientos de tipo de documento y de clientes (17-04-2010)
+* @version 1.1 Se agrego scripts para el mantenimiento de usuarios (20-04-2010)
 * @author Ricardo De la Torre
-* 17-04-2010
 */
 header("Content-type: application/json; charset=UTF-8");
 header("Cache-control: No-Cache");
@@ -170,6 +170,117 @@ switch ($x){
                 break;
         }
         break;
+	case 5:
+		/*
+		 * Listar usuarios
+		 */
+		$isql_="SELECT coduser,nomuser,apeuser,loguser,pasuser,IF(estuser=1,'Activo','Inactivo') AS estuser,estuser as est FROM tb_users ORDER BY nomuser ASC;";
+        $iqry_=mysql_query($isql_);
+        while($obj = mysql_fetch_object($iqry_)) {
+            $arr[] = $obj;
+        }
+        echo '{"users":'.json_encode($arr).'}';
+		break;
+	case 6:
+		$accion=$_POST["accion"];
+		session_start();
+		
+        switch ($accion){
+            case 1:
+                /*
+				* Grabar nuevo usuario
+				*/
+
+                try{
+                    $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+
+                    $dbh->beginTransaction();
+                    $sql="INSERT IGNORE INTO tb_users (nomuser,apeuser,loguser,pasuser,codcli,codperf,estuser,fecregusu,usuregusu)
+						VALUES(:xnombre,:xapellido,:xlogin,:xpass,:xcodcli,:xcodperf,:xestado,NOW(),:xcodusuario);";
+                    $stmt = $dbh->prepare($sql);
+                    $stmt->execute(array(
+                        ':xnombre'=>ucfirst(trim($_POST["nombre"])),
+						':xapellido'=>ucfirst(trim($_POST["apellido"])),
+						':xlogin'=>trim($_POST["login"]),
+						':xpass'=>md5(trim($_POST["pass"])),
+						':xcodcli'=>trim($_POST["empresa"]),
+						':xcodperf'=>trim($_POST["perfil"]),
+						':xcodusuario'=> $_SESSION['us3r1d'],
+                        ':xestado'=>$_POST["rb-tuser"]
+                    ));
+                    $n=$dbh->lastInsertId();
+                    $dbh->commit();
+                    if($n==0) {
+                        echo "{ success:false }";
+                    }else{
+                        echo "{ success:true }";
+                    }
+
+                }catch (PDOException $e){
+                    $dbh->rollBack();
+					 echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
+                }
+                break;
+            case 2:
+                /*
+				* Grabar cambios en el tipo de documento
+				*/
+                if($_POST["activo"]=='true') $estado=1;
+                if($_POST["inactivo"]=='true') $estado=0;
+
+                try{
+                    $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+
+                    $sql="update tb_tipcliente set destipcli=:xdesc,esttipcli=:xest where codtipcli=:xid;";
+                    $stmt = $dbh->prepare($sql);
+                    $stmt->bindParam(':xid',$_POST["id"]);
+                    $stmt->bindParam(':xdesc',trim($_POST["desc"]));
+                    $stmt->bindParam(':xest',$estado);
+                    $stmt->execute();
+                    print 3;
+
+                }catch (PDOException $e){
+                    $dbh->rollBack();
+					// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
+                }
+                break;
+        }
+		break;
+	case 7:
+		/*
+		 * Lista los perfiles
+		 */
+		$isql_="SELECT codperf,desperf FROM tb_perfil ORDER BY 2 ASC;";
+        $iqry_=mysql_query($isql_);
+        while($obj = mysql_fetch_object($iqry_)) {
+            $arr[] = $obj;
+        }
+        echo '{"perfiles":'.json_encode($arr).'}';
+		break;
+	case 8:
+		/*
+		 * Consulto los datos de un usuario para editar
+		 */
+		$id=$_POST["id"];
+		$qry="SELECT coduser,nomuser,apeuser,loguser,pasuser,codperf,estuser,codcli FROM tb_users WHERE coduser=$id";
+		$rqry=mysql_query($qry);
+        while($obj = mysql_fetch_array($rqry)) {
+			$coduser=$obj[0];
+            $nombre=$obj[1];
+			$apeuser=$obj[2];
+			$login=$obj[3];
+			$pass=$obj[4];
+			$codperf=$obj[5];
+			$estado=$obj[6];
+			$codcli=$obj[7];
+        }
+		$response = array('nombre'=>$nombre, 'apeuser'=>$apeuser,'login'=>$login,'pass'=>$pass,'codperf'=>$codperf,'estado'=>$estado,'codcli'=>$codcli );
+	    $json_response = json_encode($response);
+		echo $json_response;
+
+        
+		
+		break;
 }
 
 ?>
