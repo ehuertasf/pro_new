@@ -3,6 +3,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+header("Content-type: application/json; charset=UTF-8");
+header("Cache-control: No-Cache");
+header("Pragma: No-Cache");
+
 ini_set("display_errors", "On");
 error_reporting(E_ALL ^ E_NOTICE);
 include_once("connect.php");
@@ -214,13 +218,20 @@ switch ($n){
             echo '{"cabsolicitud":'.json_encode($arr).'}';
             break;
        case 8: //cabecera solicitud
+            include("ftn_actestchk.php");
             $codsol	= $_POST['codsol'];
-            $sqlquery ="select ds.codsol,ds.codper,concat(p.nomper,' ',p.apepatper,' ',p.apematper) as nombre,p.codtipdoc,doc.destipdoc,p.numdocper,ds.codpacchk,pc.despacchk,ds.codpue,pu.despue
-                        from tb_detallesolicitud ds left join tb_persona p on ds.codper=p.codper
-                        left join tb_packcheck pc on ds.codpacchk=pc.codpacchk
-                        left join tb_puesto pu on ds.codpue=pu.codpue
-                        left join tb_tipdoc doc on p.codtipdoc=doc.codtipdoc
-                        where codsol=".$codsol;
+			ftn_act_estadochk($codsol);
+            $sqlquery ="SELECT ds.codsol,ds.codper,CONCAT(p.nomper,' ',p.apepatper,' ',p.apematper) AS nombre,p.codtipdoc,doc.destipdoc,p.numdocper,
+						ds.codpacchk,pc.despacchk,ds.codpue,pu.despue,(
+							SELECT r.desestchk FROM tb_estadocheck r,tmp_estactchk i
+							WHERE r.codestchk=i.codestchk AND i.codsol=ds.codsol AND i.codper=ds.codper
+						) AS estado
+						FROM tb_detallesolicitud ds LEFT JOIN tb_persona p ON ds.codper=p.codper
+						LEFT JOIN tb_packcheck pc ON ds.codpacchk=pc.codpacchk
+						LEFT JOIN tb_puesto pu ON ds.codpue=pu.codpue
+						LEFT JOIN tb_tipdoc doc ON p.codtipdoc=doc.codtipdoc
+						WHERE codsol=".$codsol;
+
             $stmt = mysql_query($sqlquery);
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
             echo '{"detpersol":'.json_encode($arr).'}';

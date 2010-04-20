@@ -42,7 +42,10 @@ Ext.apply(Ext.form.VTypes, {
 
 var codper='',nomper='',apepatper='',apematper='',codtipdoc='',numdocper='',estper='';
 var regPersona;
-
+var ds_detsol;
+var stcondetsolper,vcodcli;
+var codestsol,desde,hasta;
+var cboEstadosol;
 
 //Formulario
 function frm_reg_persona(){
@@ -983,7 +986,7 @@ function frm_reg_cliente(){
                     icon        : 'files/images_app/disk.png',
                     tooltip 	: 'Grabar Datos del Cliente',
                     handler		: function(){
-                        var vcodcli= Ext.util.Format.trim(Ext.getCmp('txt_codcli').getValue());
+                        vcodcli= Ext.util.Format.trim(Ext.getCmp('txt_codcli').getValue());
                         var vnomcli= Ext.util.Format.trim(Ext.getCmp('txt_nomcli').getValue());
                         var vruccli= Ext.util.Format.trim(Ext.getCmp('txt_ruccli').getValue());
                         var vdircli= Ext.util.Format.trim(Ext.getCmp('txt_dircli').getValue());
@@ -2108,17 +2111,17 @@ var btn_consolicitudes = new Ext.Button({
                         stcondetsolper.removeAll();
                         var codsol = Ext.util.Format.trim(txt_concodsol.getValue());
                         var codcli = cbo_consolcodcli.getValue();
-                        var codestsol = cboEstadosol.getValue();
+                        codestsol = cboEstadosol.getValue();
                         //Ext.util.Format.trim(dp_consoldesde.format('Y-m-d'))
                         var predesde = dp_consoldesde.getValue();
-                        var desde='';
+                        desde='';
                         if(predesde!=''){
                             desde = predesde.format('Y-m-d')+' 00:00:00';
                         }else{
                             desde = '';
                         }
                         var prehasta = dp_consolhasta.getValue();
-                        var hasta='';
+                        hasta='';
                         if(prehasta!=''){
                             hasta = prehasta.format('Y-m-d')+' 23:59:59';
                         }else{
@@ -2162,7 +2165,7 @@ var cbo_consolcodcli = new Ext.form.ComboBox({
         anchor          : '100%'
 });
 
-var cboEstadosol = new Ext.form.ComboBox({
+cboEstadosol = new Ext.form.ComboBox({
         fieldLabel  : 'Estado',
         id          : 'cbo_Estadosol',
 	store       : ds_estadosol,
@@ -2279,7 +2282,7 @@ var cm_consolicitud = new Ext.grid.ColumnModel(
         ]
     );
 
-    var stcondetsolper = new Ext.data.Store({
+    stcondetsolper = new Ext.data.Store({
                     proxy: new Ext.data.HttpProxy({
                         url: 'DB/solicitud.php',
                         method : 'POST'
@@ -2479,7 +2482,9 @@ ds_cabsol.on('load',function(){
 });
 
 //Detalle de la solicitud
-var ds_detsol = new Ext.data.Store({
+
+
+ds_detsol = new Ext.data.Store({
                     proxy: new Ext.data.HttpProxy({
                         url: 'DB/solicitud.php',
                         method : 'POST'
@@ -2500,6 +2505,7 @@ var ds_detsol = new Ext.data.Store({
                         {name: 'despacchk', mapping: 'despacchk'},
                         {name: 'codpue', mapping: 'codpue'},
                         {name: 'despue', mapping: 'despue'},
+                        {name: 'estado', mapping: 'estado'}
                         ]),
                     autoLoad: false
                 });
@@ -2558,6 +2564,11 @@ var cm_detpersonas = new Ext.grid.ColumnModel(
             header: 'Puesto',
             readonly: true,
             dataIndex: 'despue',
+            hidden: false
+        },{
+            header: 'Estado',
+            readonly: true,
+            dataIndex: 'estado',
             hidden: false
         }
         ]
@@ -5322,6 +5333,33 @@ var tabPanelCheck = new Ext.TabPanel({
                                                                 buttons: Ext.MessageBox.OK,
                                                                 icon: Ext.MessageBox.INFO
                                                             });
+
+
+                                                              //Ricardo 14-04-10
+                                                            ds_detsol.proxy= new Ext.data.HttpProxy({
+                                                                    url: 'DB/solicitud.php',
+                                                                    method : 'POST'
+                                                            });
+                                                            ds_detsol.baseParams={
+                                                                    n:8,
+                                                                    codsol:cod_sol
+                                                            };
+                                                            ds_detsol.load();
+
+                                                            ftnactestsol(cod_sol);
+
+                                                            stcondetsolper.proxy= new Ext.data.HttpProxy({
+                                                                    url: 'DB/solicitud.php',
+                                                                    method : 'POST'
+                                                            });
+
+                                                            stcondetsolper.baseParams={
+                                                                    n:5,
+                                                                    codestsol:cboEstadosol.getValue()
+                                                            };
+                                                            stcondetsolper.load();
+
+
                                                         }
 
                                             },
@@ -5335,6 +5373,9 @@ var tabPanelCheck = new Ext.TabPanel({
                                                         }
                                             }
                                         });
+
+  
+
                                     }
                                     else{
                                         Ext.Msg.show({
@@ -6003,6 +6044,28 @@ ds_cabchecksrv.load();
 /********************************************
  *   Fin de formulario frm_checks_persona   *
  *******************************************/
+
+
+
+function ftnactestsol(codsol){
+    Ext.Ajax.request({
+        url	: 'DB/verestsol.php',
+        params	: {
+            codsol       : codsol
+        },
+        success:function(response,options){
+            var val=response.responseText;
+            if(val==1){
+                    //actualizo
+            }else{
+                    //No hago nada
+            }
+        }
+    });
+
+
+}
+
 
 /****************************************
  * Inicio de formulario frm_logout *

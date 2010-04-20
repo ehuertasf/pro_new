@@ -52,7 +52,15 @@ function main_menu(){
                                 menu:[{
                                     text: 'Estados'
                                 },{
-                                    text: 'Tipos de Documento'
+                                    text: 'Tipos de Documento',
+                                    cls:'x-btn-text-icon',
+                                    icon:'files/images_app/document-search-result.png',
+                                    handler:mttotipodoc
+                                },{
+                                    text: 'Tipos de Cliente',
+                                    cls:'x-btn-text-icon',
+                                    icon:'files/images_app/document-search-result.png',
+                                    handler:mttotipocli
                                 },{
                                     text: 'Cargos'
                                 }]
