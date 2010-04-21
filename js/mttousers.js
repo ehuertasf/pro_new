@@ -9,8 +9,10 @@ function mttousers(){
     var accion_users=0;
     var dsusers;
     var rdo_activo_user,rdo_inactivo_user,idfi_;
-    var j_perfil,dsClientes,dsPerfiles;
+    var j_empresa,dsClientes,dsPerfiles;
     var cboperf;
+	var xcaso_=0;
+	
 
     
 
@@ -36,7 +38,7 @@ function mttousers(){
 
     dsusers = new Ext.data.Store({
             reader : new Ext.data.JsonReader({
-            fields : ['coduser', 'nomuser','apeuser','loguser','pasuser','estuser','est','nomcli','desperf'],
+            fields : ['coduser', 'nomuser','apeuser','loguser','pasuser','estuser','est','nomcli','desperf','codperf'],
             root : 'users',
             id : 'coduser'
         }),
@@ -54,21 +56,19 @@ function mttousers(){
             dataIndex: 'loguser',
             width:100,
             hidden: false
-	},{
+		},{
             header: 'coduser',
             readonly: true,
             dataIndex: 'coduser',
             hidden: true
-        },
-        {
+        },{
             header: 'Nombres',
             align:'left',
             readonly: true,
             dataIndex: 'nomuser',
             width:170,
             hidden: false
-        },
-        {
+        },{
             header: 'Apellidos',
             align:'left',
             readonly: true,
@@ -102,14 +102,20 @@ function mttousers(){
             readonly: true,
             dataIndex: 'est',
             hidden: true
-        }
+	},{
+            header: 'Codperf',
+            align:'center',
+            readonly: true,
+            dataIndex: 'codperf',
+            hidden: true
+	}
         ]
     );
 
     var grdusers = new Ext.grid.EditorGridPanel({
         id : 'idgrdusers',
         store : dsusers,
-	autoWidth:true,
+		autoWidth:true,
         height : 265,
         cm : cmusers,
         loadMask:true,
@@ -137,22 +143,23 @@ function mttousers(){
                 if(selectedKeys.length > 0) {
                     Ext.getCmp('nombre').enable();
                     Ext.getCmp('apellido').enable();
-                    Ext.getCmp('pass').enable();
-                    Ext.getCmp('cpass').enable();
-                    Ext.getCmp('idcbo').enable();
-                    Ext.getCmp('idcboperfil').enable();
-
+                    
                     Ext.getCmp('btn_grabauser').enable();
                     Ext.getCmp('btn_cancelauser').enable();
                     rdo_tuser.enable();
                     Ext.getCmp('btn_nuevouser').disable();
                     Ext.getCmp('btn_editauser').disable();
 
+					Ext.getCmp('idbtnreset').disable();
+
 
                     var selectedRow =grdusers.getSelectionModel().getSelected();
                     var campo1 =grdusers.getColumnModel().getDataIndex(1);
+                    var campo8 =grdusers.getColumnModel().getDataIndex(8);
 
                     idfi_ =selectedRow.get(campo1);
+                    var xcodperf=selectedRow.get(campo8);
+
 
                     Ext.Ajax.request({
                         url : 'DB/datamttos.php',
@@ -166,19 +173,25 @@ function mttousers(){
                             Ext.getCmp('nombre').setValue(jsonData.nombre);
                             Ext.getCmp('apellido').setValue(jsonData.apeuser);
                             Ext.getCmp('login').setValue(jsonData.login);
+                            Ext.getCmp('idcbo').setValue(jsonData.nomcliente);
+
+
+                            Ext.getCmp('idcboperfil').setValue(jsonData.desperf);
+                            Ext.getCmp('idcboperfil').disable();
+							
                             rdo_tuser.setValue(jsonData.estado);
 
-                            cboperf=Ext.getCmp('idcboperfil');
+							if(jsonData.codcli==1){
+								Ext.getCmp('idcboperfil').enable();
 
-
-                            dsPerfiles.on('load', function(a, recs, index){
-                                if (a.totalLength != 0){
-                                    cboperf.setValue(recs[2].get('descperf'));
-                                }
-                            });
-
-                            //falta terminar la funcion de editar
-
+								dsPerfiles.reset;
+								Ext.getCmp('idcboperfil').setValue('');
+								dsPerfiles.proxy=new Ext.data.HttpProxy({
+										url: 'DB/datamttos.php?x=7&i=1'
+								});
+								dsPerfiles.load();
+								xcaso_=1;
+							}
                         }
                     });
 
@@ -195,13 +208,67 @@ function mttousers(){
 
             }
         },'-',{
+			id:'idbtnreset',
+			text:'Reset Clave',
+			toolTip:'Resetear la clave',
+			disabled:false,
+			icon: 'files/images_app/limpiar.gif',
+			handler:function(){
+				accion_users=2;
+				var selectedKeys2 = grdusers.selModel.selections.keys;
+
+				if(selectedKeys2.length > 0) {
+
+					Ext.getCmp('btn_grabauser').enable();
+					Ext.getCmp('btn_cancelauser').enable();
+
+					Ext.getCmp('btn_nuevouser').disable();
+					Ext.getCmp('btn_editauser').disable();
+
+					Ext.getCmp('pass').enable();
+					Ext.getCmp('cpass').enable();
+
+					Ext.getCmp('idbtnreset').disable();
+					xcaso_=2;
+
+                    var selectedRow2 =grdusers.getSelectionModel().getSelected();
+                    var campo11 =grdusers.getColumnModel().getDataIndex(1);
+
+                    idfi_ =selectedRow2.get(campo11);
+
+                   Ext.Ajax.request({
+                        url : 'DB/datamttos.php',
+                        params : {
+                            x:8,
+                            id:idfi_
+                        },
+                        success:function(response,options){
+                            var stringData	=response.responseText;
+                            var jsonData 	= Ext.util.JSON.decode(stringData);
+                            Ext.getCmp('nombre').setValue(jsonData.nombre);
+                            Ext.getCmp('apellido').setValue(jsonData.apeuser);
+                            Ext.getCmp('login').setValue(jsonData.login);
+                        }
+                    });
+
+				}else{
+                    Ext.Msg.show({
+                        title: 'Aviso',
+                        msg: 'Debe seleccionar una fila',
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.INFO
+                    });
+				}
+
+			}			
+		},'-',{
             text: 'Grabar',
             cls: 'x-btn-text-icon',
             disabled:true,
             icon: 'files/images_app/disk.png',
             id : 'btn_grabauser',
             tooltip: 'Grabar cambios',
-            handler:grabartipodoc
+            handler:grabaruser
         },'-',{
             text: 'Cancelar',
             disabled:true,
@@ -290,6 +357,41 @@ function mttousers(){
                      border:false,
                      items: [{
                         xtype       :'combo',
+                        id          :'idcbo',
+                        fieldLabel  :'Empresa',
+                        store       :dsClientes,
+                        displayField:'nomcli',
+                        valueField  :'codcli',
+                        disabled    :true,
+                        mode        :'remote',
+                        editable    :false,
+                        allowBlank  :false,
+                        triggerAction:  'all',
+                        forceSelection  :true,
+                        anchor      :'90%',
+                        name        :'idcbo',
+                        listeners: {
+                            'select': function (){
+
+                                j_empresa=Ext.getCmp("idcbo").getValue();
+
+								dsPerfiles.reset;
+								Ext.getCmp('idcboperfil').setValue('');
+								dsPerfiles.proxy=new Ext.data.HttpProxy({
+										url: 'DB/datamttos.php?x=7&i='+j_empresa
+								});
+								dsPerfiles.load();
+
+
+                            }
+                        }
+                     }]						
+				},{
+                     columnWidth:.5,
+                     layout: 'form',
+                     border:false,
+                     items: [{
+                        xtype       :'combo',
                         id          :'idcboperfil',
                         fieldLabel  :'Perfil',
                         store       :dsPerfiles,
@@ -303,44 +405,9 @@ function mttousers(){
                         triggerAction   :'all',
                         forceSelection  :true,
                         anchor	:'90%',
-                        name	:'idcboperfil',
-                        listeners: {
-                            'select': function (){
-
-                                j_perfil=Ext.getCmp("idcboperfil").getValue();
-
-                                dsClientes.reset;
-                                Ext.getCmp('idcbo').setValue('');
-
-                                dsClientes.proxy=new Ext.data.HttpProxy({
-                                        url: 'DB/clientes.php?n=7&i='+j_perfil
-                                });
-                                dsClientes.load();
-
-                            }
-                        }
+                        name	:'idcboperfil'
                  }]
-            },{
-                     columnWidth:.5,
-                     layout: 'form',
-                     border:false,
-                     items: [{
-                        xtype       :'combo',
-                        id          :'idcbo',
-                        fieldLabel  :'Empresa',
-                        store       :dsClientes,
-                        displayField:'nomcli',
-                        valueField  :'codcli',
-                        disabled    :true,
-                        mode        :'remote',
-                        editable    :false,
-                        allowBlank  :false,
-                        triggerAction:  'all',
-                        forceSelection  :true,
-                        anchor      :'90%',
-                        name        :'idcbo'
-                     }]
-                }]
+            }]
             },{
                     layout	:'column',
                     border	:false,
@@ -385,7 +452,7 @@ function mttousers(){
                     layout	:'column',
                     border	:false,
                     items	:[{
-                         columnWidth:.5,
+                         columnWidth:.4,
                          layout: 'form',
                          border:false,
                          items: [{
@@ -404,7 +471,7 @@ function mttousers(){
 
                          }]
                     },{
-                         columnWidth:.5,
+                         columnWidth:.4,
                          layout: 'form',
                          border:false,
                          items: [{
@@ -441,11 +508,12 @@ function mttousers(){
         rdo_tuser.enable();
         Ext.getCmp('btn_nuevouser').disable();
         Ext.getCmp('btn_editauser').disable();
+		Ext.getCmp('idbtnreset').disable();
         rdo_activo_user.setValue(1);
         accion_users=1;
     }
 
-    function grabartipodoc(){
+    function grabaruser(){
 		
 		var xPass=Ext.getCmp('pass').getValue();
 		var cPass=Ext.getCmp('cpass').getValue();
@@ -487,7 +555,8 @@ function mttousers(){
                                                 accion:accion_users,
                                                 empresa:Ext.getCmp('idcbo').getValue(),
                                                 perfil:Ext.getCmp('idcboperfil').getValue(),
-                                                id:idfi_
+                                                id:idfi_,
+												xcaso_:xcaso_
                                             },
                                             waitTitle:'Enviando',
                                             waitMsg:'Guardando datos ...',
@@ -540,6 +609,7 @@ function mttousers(){
 
         Ext.getCmp('btn_nuevouser').enable();
         Ext.getCmp('btn_editauser').enable();
+		Ext.getCmp('idbtnreset').enable();
         rdo_tuser.disable();
         rdo_activo_user.setValue(0);
         rdo_inactivo_user.setValue(0);

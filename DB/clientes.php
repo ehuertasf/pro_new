@@ -112,15 +112,7 @@ switch ($n){
                 echo "{respuesta: {error : 0, mensaje: 'Se grabaron correctamente los datos', codcli: $codcli} }";
             } catch (Exception $e) {
                 $dbh->rollBack();
-//                echo 'PDO Excepciones.	';
-//                echo 'Error con la base de datos: <br />';
-//                echo 'SQL Query: ', $sql;
-//                echo '<pre>';
-//                echo 'Error: ,'.$e->getMessage();
-//                echo 'Archivo: ' . $e->getFile() . '<br />';
-//                echo 'Linea: ' . $e->getLine() . '<br />';
-//                echo '</pre>';
-                echo "{respuesta: {error : 1, mensaje: 'Ocurrio un error al grabar los datos comuniquese con Sistemas' }}";
+//                echo "{respuesta: {error : 1, mensaje: 'Ocurrio un error al grabar los datos comuniquese con Sistemas' }}";
             }
             break;
         case 5: //Tipos de Documentos
@@ -137,12 +129,7 @@ switch ($n){
             echo '{"solcliente":'.json_encode($arr).'}';
             break;
         case 7: //Listado de clientes sin usar limit
-            $i=$_GET["i"];
-            if($i==3){
-                    $query = "select codcli,codestcli,codtipcli,nomcli,ruccli,dircli,telcli from tb_cliente order by nomcli";
-            }else{
-                    $query = "select codcli,codestcli,codtipcli,nomcli,ruccli,dircli,telcli from tb_cliente where codcli=4 order by nomcli";
-            }
+			$query = "select codcli,codestcli,codtipcli,nomcli,ruccli,dircli,telcli from tb_cliente order by nomcli";
             $result = mysql_query($query);
 
 

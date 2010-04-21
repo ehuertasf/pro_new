@@ -89,7 +89,6 @@ switch ($x){
                     print 3;
 
                 }catch (PDOException $e){
-                    $dbh->rollBack();
 		// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
                 }
                 break;
@@ -147,7 +146,7 @@ switch ($x){
                 break;
             case 2:
                 /*
-                * Grabar cambios en el tipo de documento
+                * Grabar cambios en el tipo de cliente
                 */
                 if($_POST["activo"]=='true') $estado=1;
                 if($_POST["inactivo"]=='true') $estado=0;
@@ -163,8 +162,7 @@ switch ($x){
                     $stmt->execute();
                     print 3;
 
-                }catch (PDOException $e){
-                    $dbh->rollBack();
+                }catch (PDOException $e){                    
 		// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
                 }
                 break;
@@ -175,7 +173,7 @@ switch ($x){
 		 * Listar usuarios
 		 */
 		$isql_="SELECT a.coduser,a.nomuser,a.apeuser,a.loguser,a.pasuser,IF(a.estuser=1,'Activo','Inactivo') AS estuser,a.estuser AS est,
-                        b.nomcli,c.desperf
+                        b.nomcli,c.desperf,a.codperf
                         FROM tb_users a,tb_cliente b,tb_perfil c
                         WHERE a.codcli=b.codcli AND a.codperf=c.codperf
                         ORDER BY nomuser ASC;";
@@ -200,16 +198,16 @@ switch ($x){
 
                     $dbh->beginTransaction();
                     $sql="INSERT IGNORE INTO tb_users (nomuser,apeuser,loguser,pasuser,codcli,codperf,estuser,fecregusu,usuregusu)
-						VALUES(:xnombre,:xapellido,:xlogin,:xpass,:xcodcli,:xcodperf,:xestado,NOW(),:xcodusuario);";
+                            VALUES(:xnombre,:xapellido,:xlogin,:xpass,:xcodcli,:xcodperf,:xestado,NOW(),:xcodusuario);";
                     $stmt = $dbh->prepare($sql);
                     $stmt->execute(array(
                         ':xnombre'=>ucfirst(trim($_POST["nombre"])),
-						':xapellido'=>ucfirst(trim($_POST["apellido"])),
-						':xlogin'=>trim($_POST["login"]),
-						':xpass'=>md5(trim($_POST["pass"])),
-						':xcodcli'=>trim($_POST["empresa"]),
-						':xcodperf'=>trim($_POST["perfil"]),
-						':xcodusuario'=> $_SESSION['us3r1d'],
+                        ':xapellido'=>ucfirst(trim($_POST["apellido"])),
+                        ':xlogin'=>trim($_POST["login"]),
+                        ':xpass'=>md5(trim($_POST["pass"])),
+                        ':xcodcli'=>trim($_POST["empresa"]),
+                        ':xcodperf'=>trim($_POST["perfil"]),
+                        ':xcodusuario'=> $_SESSION['us3r1d'],
                         ':xestado'=>$_POST["rb-tuser"]
                     ));
                     $n=$dbh->lastInsertId();
@@ -227,23 +225,50 @@ switch ($x){
                 break;
             case 2:
                 /*
-                * Grabar cambios en el tipo de documento
+                * Grabar cambios en usuario
                 */
 
                 try{
                     $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 
-                    $sql="update tb_users set nomuser=:xnomuser,apeuser=:xapeuser,pasuser=:xpasuser where codtipcli=:xid;";
-                    $stmt = $dbh->prepare($sql);
-                    $stmt->bindParam(':xid',$_POST["id"]);
-                    $stmt->bindParam(':xdesc',trim($_POST["desc"]));
-                    $stmt->bindParam(':xest',$estado);
-                    $stmt->execute();
-                    print 3;
+                    if($_POST["xcaso_"]==0){
+                        /*
+                         * Actualizamos datos de usuarios que no pertenecen a Pro Outsourcing
+                         */
+                        $sql="update tb_users set nomuser=:xnomuser,apeuser=:xapeuser,estuser=:xest where coduser=:xcoduser;";
+
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->bindParam(':xcoduser',$_POST["id"]);
+                        $stmt->bindParam(':xnomuser',trim($_POST["nombre"]));
+                        $stmt->bindParam(':xapeuser',trim($_POST["apellido"]));
+                        $stmt->bindParam(':xest',$_POST["rb-tuser"]);
+                        $stmt->execute();
+                        echo "{ success:true }";
+
+                    }elseif($_POST["xcaso_"]==1){
+                        $sql="update tb_users set nomuser=:xnomuser,apeuser=:xapeuser,estuser=:xest,codperf=:xcodperf where coduser=:xcoduser;";
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->bindParam(':xcoduser',$_POST["id"]);
+                        $stmt->bindParam(':xnomuser',trim($_POST["nombre"]));
+                        $stmt->bindParam(':xapeuser',trim($_POST["apellido"]));
+                        $stmt->bindParam(':xest',$_POST["rb-tuser"]);
+                        $stmt->bindParam(':xcodperf',$_POST["codperf"]);
+                        $stmt->execute();
+                        echo "{ success:true }";
+                    }elseif($_POST["xcaso_"]==2){
+                        $sql="update tb_users set pasuser=:xpasuser where coduser=:xcoduser;";
+                        $stmt = $dbh->prepare($sql);
+                        $stmt->bindParam(':xcoduser',$_POST["id"]);
+                        $stmt->bindParam(':xpasuser',md5($_POST["pass"]));
+                        $stmt->execute();
+                        echo "{ success:true }";
+					}
+                    
+
 
                 }catch (PDOException $e){
-                    $dbh->rollBack();
-                    // echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
+                    
+                     echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
                 }
                 break;
         }
@@ -253,12 +278,16 @@ switch ($x){
 		 * Lista los perfiles
 		 */
                 $i = (isset($_POST['i']) ? $_POST['i'] : $_GET['i']);
-                
-                if(!(empty($i))){  
-                    $isql_="SELECT codperf,desperf FROM tb_perfil where codperf=$i ORDER BY 2 ASC;";
-                }else{
-                    $isql_="SELECT codperf,desperf FROM tb_perfil ORDER BY 2 ASC;";
-                }
+
+				if($i==1){
+					//Pertenece a Pro Outsourcing
+					$isql_="SELECT codperf,desperf FROM tb_perfil ORDER BY 2 ASC;";
+				}else{
+					//Si es un cliente solo puede tener el perfil Cliente
+					$isql_="SELECT codperf,desperf FROM tb_perfil where codperf=3 ORDER BY 2 ASC;";
+				}
+
+
                 $iqry_=mysql_query($isql_);
                 while($obj = mysql_fetch_object($iqry_)) {
                     $arr[] = $obj;
