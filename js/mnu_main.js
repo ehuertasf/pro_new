@@ -50,26 +50,29 @@ function main_menu(){
                             menu: [{
                                 text: 'Personas',
                                 menu:[{
-                                    text: 'Estados'
-                                },{
-                                    text: 'Tipos de Documento',
-                                    cls:'x-btn-text-icon',
-                                    icon:'files/images_app/document-search-result.png',
-                                    handler:mttotipodoc
-                                },{
                                     text: 'Tipos de Cliente',
                                     cls:'x-btn-text-icon',
-                                    icon:'files/images_app/document-search-result.png',
+                                    icon:'files/images_app/User_3_Idea.png',
                                     handler:mttotipocli
                                 },{
                                     text: 'Usuarios',
                                     cls:'x-btn-text-icon',
-                                    icon:'files/images_app/document-search-result.png',
+                                    icon:'files/images_app/users.png',
                                     handler:mttousers
-								},{
+                                }/*,{
                                     text: 'Cargos'
+                                },{
+                                    text: 'Estados'
+                                }*/]
+                            },{
+                                text:'Documentos',
+                                menu:[{
+                                    text: 'Tipos de Documento',
+                                    cls:'x-btn-text-icon',
+                                    icon:'files/images_app/books-stack.png',
+                                    handler:mttotipodoc
                                 }]
-							}]
+                            }]
 			},{
                             xtype: 'tbfill'
 			},{

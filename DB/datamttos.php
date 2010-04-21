@@ -22,8 +22,8 @@ $x = (isset($_POST['x']) ? $_POST['x'] : $_GET['x']);
 switch ($x){
     case 1:
         /*
-		* Listar tipos de documento
-		*/
+        * Listar tipos de documento
+        */
         $isql_="SELECT codtipdoc,destipdoc,IF(esttipdoc=1,'Activo','Inactivo') as esttipdoc,esttipdoc as est FROM tb_tipdoc ORDER BY 2";
         $iqry_=mysql_query($isql_);
         while($obj = mysql_fetch_object($iqry_)) {
@@ -38,10 +38,10 @@ switch ($x){
         switch ($accion){
             case 1:
                 /*
-				* Grabar nuevo tipo de documento
-				* Agregar indice unico a la tabla tb_tipdoc, para evitar que se repitan los nombres de tipos de documentos
-				* ALTER TABLE `prodb`.`tb_tipdoc` ADD UNIQUE `idx_desctipdoc` (`destipdoc`);
-				*/
+                * Grabar nuevo tipo de documento
+                * Agregar indice unico a la tabla tb_tipdoc, para evitar que se repitan los nombres de tipos de documentos
+                * ALTER TABLE `prodb`.`tb_tipdoc` ADD UNIQUE `idx_desctipdoc` (`destipdoc`);
+                */
 
                 if($_POST["activo"]=='true') $estado=1;
                 if($_POST["inactivo"]=='true') $estado=0;
@@ -67,13 +67,13 @@ switch ($x){
 
                 }catch (PDOException $e){
                     $dbh->rollBack();
-					// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
+		// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
                 }
                 break;
             case 2:
                 /*
-				* Grabar cambios en el tipo de documento
-				*/
+                * Grabar cambios en el tipo de documento
+                */
                 if($_POST["activo"]=='true') $estado=1;
                 if($_POST["inactivo"]=='true') $estado=0;
 
@@ -90,7 +90,7 @@ switch ($x){
 
                 }catch (PDOException $e){
                     $dbh->rollBack();
-					// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
+		// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
                 }
                 break;
 
@@ -98,8 +98,8 @@ switch ($x){
         break;
     case 3:
         /*
-		* Listar tipos de cliente
-		*/
+        * Listar tipos de cliente
+        */
         $isql_="SELECT codtipcli,destipcli,IF(esttipcli=1,'Activo','Inactivo') as esttipcli,esttipcli as est FROM tb_tipcliente ORDER BY 2";
         $iqry_=mysql_query($isql_);
         while($obj = mysql_fetch_object($iqry_)) {
@@ -113,10 +113,10 @@ switch ($x){
         switch ($accion){
             case 1:
                 /*
-				* Grabar nuevo tipo de cliente
-				* Agregar indice unico a la tabla tb_tipcliente, para evitar que se repitan los nombres de tipos de cliente
-				* ALTER TABLE `prodb`.`tb_tipcliente` ADD UNIQUE `idx_desctipcliente` (`destipcli`);
-				*/
+                * Grabar nuevo tipo de cliente
+                * Agregar indice unico a la tabla tb_tipcliente, para evitar que se repitan los nombres de tipos de cliente
+                * ALTER TABLE `prodb`.`tb_tipcliente` ADD UNIQUE `idx_desctipcliente` (`destipcli`);
+                */
 
                 if($_POST["activo"]=='true') $estado=1;
                 if($_POST["inactivo"]=='true') $estado=0;
@@ -142,13 +142,13 @@ switch ($x){
 
                 }catch (PDOException $e){
                     $dbh->rollBack();
-					// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
+		// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
                 }
                 break;
             case 2:
                 /*
-				* Grabar cambios en el tipo de documento
-				*/
+                * Grabar cambios en el tipo de documento
+                */
                 if($_POST["activo"]=='true') $estado=1;
                 if($_POST["inactivo"]=='true') $estado=0;
 
@@ -165,7 +165,7 @@ switch ($x){
 
                 }catch (PDOException $e){
                     $dbh->rollBack();
-					// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
+		// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
                 }
                 break;
         }
@@ -174,7 +174,11 @@ switch ($x){
 		/*
 		 * Listar usuarios
 		 */
-		$isql_="SELECT coduser,nomuser,apeuser,loguser,pasuser,IF(estuser=1,'Activo','Inactivo') AS estuser,estuser as est FROM tb_users ORDER BY nomuser ASC;";
+		$isql_="SELECT a.coduser,a.nomuser,a.apeuser,a.loguser,a.pasuser,IF(a.estuser=1,'Activo','Inactivo') AS estuser,a.estuser AS est,
+                        b.nomcli,c.desperf
+                        FROM tb_users a,tb_cliente b,tb_perfil c
+                        WHERE a.codcli=b.codcli AND a.codperf=c.codperf
+                        ORDER BY nomuser ASC;";
         $iqry_=mysql_query($isql_);
         while($obj = mysql_fetch_object($iqry_)) {
             $arr[] = $obj;
@@ -188,8 +192,8 @@ switch ($x){
         switch ($accion){
             case 1:
                 /*
-				* Grabar nuevo usuario
-				*/
+                * Grabar nuevo usuario
+                */
 
                 try{
                     $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
@@ -223,15 +227,13 @@ switch ($x){
                 break;
             case 2:
                 /*
-				* Grabar cambios en el tipo de documento
-				*/
-                if($_POST["activo"]=='true') $estado=1;
-                if($_POST["inactivo"]=='true') $estado=0;
+                * Grabar cambios en el tipo de documento
+                */
 
                 try{
                     $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 
-                    $sql="update tb_tipcliente set destipcli=:xdesc,esttipcli=:xest where codtipcli=:xid;";
+                    $sql="update tb_users set nomuser=:xnomuser,apeuser=:xapeuser,pasuser=:xpasuser where codtipcli=:xid;";
                     $stmt = $dbh->prepare($sql);
                     $stmt->bindParam(':xid',$_POST["id"]);
                     $stmt->bindParam(':xdesc',trim($_POST["desc"]));
@@ -241,7 +243,7 @@ switch ($x){
 
                 }catch (PDOException $e){
                     $dbh->rollBack();
-					// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
+                    // echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
                 }
                 break;
         }
@@ -250,37 +252,71 @@ switch ($x){
 		/*
 		 * Lista los perfiles
 		 */
-		$isql_="SELECT codperf,desperf FROM tb_perfil ORDER BY 2 ASC;";
-        $iqry_=mysql_query($isql_);
-        while($obj = mysql_fetch_object($iqry_)) {
-            $arr[] = $obj;
-        }
-        echo '{"perfiles":'.json_encode($arr).'}';
+                $i = (isset($_POST['i']) ? $_POST['i'] : $_GET['i']);
+                
+                if(!(empty($i))){  
+                    $isql_="SELECT codperf,desperf FROM tb_perfil where codperf=$i ORDER BY 2 ASC;";
+                }else{
+                    $isql_="SELECT codperf,desperf FROM tb_perfil ORDER BY 2 ASC;";
+                }
+                $iqry_=mysql_query($isql_);
+                while($obj = mysql_fetch_object($iqry_)) {
+                    $arr[] = $obj;
+                }
+                echo '{"perfiles":'.json_encode($arr).'}';
 		break;
 	case 8:
 		/*
 		 * Consulto los datos de un usuario para editar
 		 */
 		$id=$_POST["id"];
-		$qry="SELECT coduser,nomuser,apeuser,loguser,pasuser,codperf,estuser,codcli FROM tb_users WHERE coduser=$id";
+		$qry="SELECT a.coduser,a.nomuser,a.apeuser,a.loguser,a.pasuser,a.codperf,b.desperf,a.estuser,a.codcli,c.nomcli
+                    FROM tb_users a,tb_perfil b,tb_cliente c WHERE a.codperf=b.codperf AND a.codcli=c.codcli AND a.coduser=$id";
 		$rqry=mysql_query($qry);
-        while($obj = mysql_fetch_array($rqry)) {
-			$coduser=$obj[0];
-            $nombre=$obj[1];
-			$apeuser=$obj[2];
-			$login=$obj[3];
-			$pass=$obj[4];
-			$codperf=$obj[5];
-			$estado=$obj[6];
-			$codcli=$obj[7];
-        }
-		$response = array('nombre'=>$nombre, 'apeuser'=>$apeuser,'login'=>$login,'pass'=>$pass,'codperf'=>$codperf,'estado'=>$estado,'codcli'=>$codcli );
-	    $json_response = json_encode($response);
-		echo $json_response;
+                while($obj = mysql_fetch_array($rqry)) {
+			$coduser=$obj['coduser'];
+                        $nombre=$obj['nomuser'];
+			$apeuser=$obj['apeuser'];
+			$login=$obj['loguser'];
+			$pass=$obj['pasuser'];
+			$codperf=$obj['codperf'];
+			$estado=$obj['estuser'];
+			$codcli=$obj['codcli'];
+                        $nomperfil=$obj['desperf'];
+                        $nomcliente=$obj['nomcli'];
+                }
+		$response = array('nombre'=>$nombre, 'apeuser'=>$apeuser,'login'=>$login,'pass'=>$pass,
+                        'codperf'=>$codperf,'estado'=>$estado,'codcli'=>$codcli,'desperf'=>$nomperfil,'nomcliente'=>$nomcliente );
+                $json_response = json_encode($response);
+		echo $json_response;		
+            break;
+        case 9:
+                /*
+                 * Verificamos si el login ya existe, cuando se ingresa un nuev usuario
+                 */
+            try{
+                $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+                $j_ubica="select count(*) as total from tb_users where loguser=:xvalor";
 
-        
-		
-		break;
+                $stmt =$dbh->prepare($j_ubica);
+                $stmt->bindParam(':xvalor',trim($_POST["v"]));
+                $stmt->execute();
+
+                while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+                    $cant = $row['total'];
+                }
+
+                if($cant>0){
+                    print 2;
+                }else{
+                    print 1;
+                }
+            }catch (PDOException $e){
+                //solo lo descomento para ver los errores
+                //echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
+            }
+            break;
+
 }
 
 ?>

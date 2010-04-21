@@ -136,21 +136,21 @@ switch ($n){
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
             echo '{"solcliente":'.json_encode($arr).'}';
             break;
-		case 7: //Listado de clientes sin usar limit
-			$i=$_GET["i"];
-			if($i==3){
-				$query = "select codcli,codestcli,codtipcli,nomcli,ruccli,dircli,telcli from tb_cliente order by nomcli";
-			}else{
-				$query = "select codcli,codestcli,codtipcli,nomcli,ruccli,dircli,telcli from tb_cliente where codcli=4 order by nomcli";
-			}
+        case 7: //Listado de clientes sin usar limit
+            $i=$_GET["i"];
+            if($i==3){
+                    $query = "select codcli,codestcli,codtipcli,nomcli,ruccli,dircli,telcli from tb_cliente order by nomcli";
+            }else{
+                    $query = "select codcli,codestcli,codtipcli,nomcli,ruccli,dircli,telcli from tb_cliente where codcli=4 order by nomcli";
+            }
             $result = mysql_query($query);
 
 
-			while($obj = mysql_fetch_object($result)) {
-				$arr[] = $obj;
-			}
-			echo '{"listadocli":'.json_encode($arr).'}';
-			break;
+            while($obj = mysql_fetch_object($result)) {
+                    $arr[] = $obj;
+            }
+            echo '{"listadocli":'.json_encode($arr).'}';
+            break;
 
 }
 ?>
