@@ -1,2 +1,6 @@
-files/
-*.ico
+nbproject/
+favicon.ico
+files/images_dni/
+files/images_dom/
+files/images_app/Logo_PRO.JPG
+files/images_app/Thumbs.db
