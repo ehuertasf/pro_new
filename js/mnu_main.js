@@ -65,13 +65,33 @@ function main_menu(){
                                     text: 'Estados'
                                 }*/]
                             },{
-                                text:'Documentos',
+                                text:'Varios',
                                 menu:[{
                                     text: 'Tipos de Documento',
                                     cls:'x-btn-text-icon',
                                     icon:'files/images_app/books-stack.png',
                                     handler:mttotipodoc
-                                }]
+                                },{
+                                    text: 'Zonificaciones',
+                                    cls:'x-btn-text-icon',
+                                    icon:'files/images_app/plugin.gif',
+                                    handler:mttotipzona
+								},{
+                                    text: 'Zonas de Riesgo',
+                                    cls:'x-btn-text-icon',
+                                    icon:'files/images_app/error.png',
+                                    handler:mttoriesgo
+								},{
+                                    text: 'Tipos de Delito',
+                                    cls:'x-btn-text-icon',
+                                    icon:'files/images_app/information.png',
+                                    handler:mttotipdelito
+								},{
+                                    text: 'Puestos',
+                                    cls:'x-btn-text-icon',
+                                    icon:'files/images_app/user_suit.png',
+                                    handler:mttopuesto
+								}]
                             }]
 			},{
                             xtype: 'tbfill'

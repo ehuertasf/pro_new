@@ -158,11 +158,13 @@ switch ($n){
             $codestsol = $_POST['codestsol'];
             $desde = $_POST['desde'];
             $hasta = $_POST['hasta'];
-            $sqlquery ="select s.codsol,s.codcli,c.nomcli,s.fecregsol,s.fecvensol,CONCAT(DATEDIFF(s.fecvensol,s.fecregsol),' dias') as plazo,s.codestsol,e.desestsol,concat(u.nomuser,' ',u.apeuser) as usuario,
-                        (select count(ds.codsol) from tb_detallesolicitud ds where ds.codsol=s.codsol) as canper
-                        from tb_solicitud s left join tb_cliente c on s.codcli=c.codcli
-                        left join tb_estsol e on s.codestsol=e.codestsol
-                        left join tb_users u on s.usuregsol=u.loguser";
+            $sqlquery ="SELECT s.codsol,s.codcli,c.nomcli,s.fecregsol,s.fecvensol,CONCAT(DATEDIFF(s.fecvensol,s.fecregsol),' dias') AS plazo,
+						DATEDIFF(s.fecvensol,NOW()) AS diasrest,
+						s.codestsol,e.desestsol,CONCAT(u.nomuser,' ',u.apeuser) AS usuario,
+						(SELECT COUNT(ds.codsol) FROM tb_detallesolicitud ds WHERE ds.codsol=s.codsol) AS canper
+						FROM tb_solicitud s LEFT JOIN tb_cliente c ON s.codcli=c.codcli
+						LEFT JOIN tb_estsol e ON s.codestsol=e.codestsol
+						LEFT JOIN tb_users u ON s.usuregsol=u.loguser";
             if($codsol!='' || $codcli!='' || $codestsol!='' || $desde!='' || $hasta!=''){
                 $sqlquery=$sqlquery.' WHERE';
                 if($codsol!=''){

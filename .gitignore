@@ -5,4 +5,6 @@ files/images_dni/
 files/images_dom/
 files/images_app/Logo_PRO.JPG
 files/images_app/Thumbs.db
-
+consultas.sql
+crea_prodb.sql
+ejecutar_querys.txt

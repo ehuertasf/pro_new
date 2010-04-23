@@ -2212,6 +2212,12 @@ var dp_consolhasta=new Ext.form.DateField({
         allowBlank  :true
     });
 
+function change_r(val){
+	if(val > 0) return '<span style="font-weight:bold;color:white;background-color: red;cursor:pointer;">&nbsp;' + val + '&nbsp;&nbsp;</span>';
+	else return '<span style="color:white;background-color: red">' + val + '</span>';
+	return val;
+}
+
 var cm_consolicitud = new Ext.grid.ColumnModel(
         [{
             header: 'N° Solicitud',
@@ -2253,8 +2259,15 @@ var cm_consolicitud = new Ext.grid.ColumnModel(
             dataIndex: 'plazo',
             hidden: false,
             width: 60
-        },
-        {
+        },{
+            header: 'Dias Restantes',
+            readonly: true,
+			align:'center',
+            dataIndex: 'diasrest',
+            hidden: false,
+			renderer:change_r,
+            width: 60			
+		},{
             header: 'Cant. Per.',
             readonly: true,
             dataIndex: 'canper',
@@ -2301,7 +2314,8 @@ var cm_consolicitud = new Ext.grid.ColumnModel(
                         {name: 'canper', mapping: 'canper'},
                         {name: 'codestsol',  mapping: 'codestsol'},
                         {name: 'desestsol',  mapping: 'desestsol'},
-                        {name: 'usuario',  mapping: 'usuario'}
+                        {name: 'usuario',  mapping: 'usuario'},
+						{name: 'diasrest', mapping:'diasrest'}
                         ]),
                     autoLoad : false
                 });
