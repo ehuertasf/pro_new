@@ -11,7 +11,7 @@ function mttousers(){
     var rdo_activo_user,rdo_inactivo_user,idfi_;
     var j_empresa,dsClientes,dsPerfiles;
     var cboperf;
-	var xcaso_=0;
+    var xcaso_=0;
 	
 
     
@@ -623,7 +623,8 @@ function mttousers(){
         height:450,
         closable: true,
         items: frm_user,
-        resizable:false
+        resizable:false,
+        modal       :true
     });
 
     view_window_users.show();

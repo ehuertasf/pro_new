@@ -275,6 +275,7 @@ function mttotipodoc(){
         iconCls : 'regper',
         height:316,
         closable: true,
+        modal       :true,
         items: frm_mtto_tipodoc,
         resizable:false
     });

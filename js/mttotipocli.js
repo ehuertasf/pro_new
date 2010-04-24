@@ -276,6 +276,7 @@ function mttotipocli(){
         height:316,
         closable: true,
         items: frm_mtto_tipocli,
+        modal       :true,
         resizable:false
     });
 

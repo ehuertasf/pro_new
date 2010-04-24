@@ -274,6 +274,7 @@ function mttotipzona(){
         width:350,
         iconCls : 'zona',
         height:400,
+        modal       :true,
         closable: true,
         items: frm_mtto_tipozona,
         resizable:false

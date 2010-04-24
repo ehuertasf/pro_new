@@ -5923,7 +5923,7 @@ var ds_obtieneCheckDomici = new Ext.data.Store({
                                         listeners:{
                                             load : function(store){
                                                 var numimages=store.getCount();
-                                                alert(numimages);
+                                                //alert(numimages);
                                             }
                                         }
                                     });

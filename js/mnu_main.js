@@ -46,6 +46,17 @@ function main_menu(){
                             xtype: 'tbseparator'
 			},{
                             xtype: 'tbbutton',
+                            text: 'Reportes',
+                            menu: [{
+                                text: 'Reporte por Cliente',
+                                cls: 'x-btn-text-icon',
+                                icon: 'files/images_app/document-search-result.png',
+                                handler: frm_rpt_cliente
+                            }]                            
+                        },{
+                            xtype: 'tbseparator'                            
+                        },{
+                            xtype: 'tbbutton',
                             text: 'Mantenimientos',
                             menu: [{
                                 text: 'Personas',

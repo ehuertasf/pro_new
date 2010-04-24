@@ -294,6 +294,7 @@ function mttotipdelito(){
         title:'Tipos de Delito',
         width:450,
         iconCls : 'delito',
+        modal       :true,
         height:400,
         closable: true,
         items: frm_mtto_tipodelito,

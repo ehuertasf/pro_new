@@ -275,6 +275,7 @@ function mttoriesgo(){
         iconCls : 'riesgo',
         height:400,
         closable: true,
+        modal       :true,
         items: frm_mtto_tiporiesgo,
         resizable:false
     });

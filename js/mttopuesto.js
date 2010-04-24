@@ -273,6 +273,7 @@ function mttopuesto(){
         title:'Puestos',
         width:350,
         iconCls : 'puesto',
+        modal :true,
         height:316,
         closable: true,
         items: frm_mtto_tipopuesto,
