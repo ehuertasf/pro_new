@@ -5,6 +5,7 @@
 * @version 1.0 Codigo PHP para los mantenimientos de tipo de documento y de clientes (17-04-2010)
 * @version 1.1 Se agrego scripts para el mantenimiento de usuarios (20-04-2010)
 * @version 1.2 Se agrego scripts para el mantenimiento de zonificacion, tipos de zona de rieso, tipos de delitos y tipos de puestos (22-04-2010)
+* @version 1.3 Se agrego script para consultar el perfil de un usuario (25-04-2010)
 * @author Ricardo De la Torre
 */
 header("Content-type: application/json; charset=UTF-8");
@@ -648,9 +649,28 @@ switch ($x){
 		// echo 'Error: ' .$e->getMessage() . ' en el archivo: ' . $e->getFile() . ' en la linea: ' . $e->getLine() . '<br />';
                 }
                 break;
+            }
+            break;
 
-        }
-        break;
+        case 18:
+            /**
+             * Consultamos el perfil de un usuario
+             */
+            session_start();
+            $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+            $qry="SELECT a.codcli,a.codperf,b.desperf FROM tb_users a,tb_perfil b WHERE a.codperf=b.codperf AND a.loguser=:session";
+            $stmt = $dbh->prepare($qry);
+            $stmt->bindParam(':session', $_SESSION['us3r1d']);
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $idcli=$row["codcli"];
+                $cperf=$row["codperf"];
+                $dperf=$row["desperf"];
+            }
+            $response = array('cperf'=>$cperf, 'dperf'=>$dperf);
+            $json_response = json_encode($response);
+            echo $json_response;
+            break;
 }
 
 ?>

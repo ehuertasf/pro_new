@@ -150,7 +150,7 @@ function mttousers(){
                     Ext.getCmp('btn_nuevouser').disable();
                     Ext.getCmp('btn_editauser').disable();
 
-					Ext.getCmp('idbtnreset').disable();
+                    Ext.getCmp('idbtnreset').disable();
 
 
                     var selectedRow =grdusers.getSelectionModel().getSelected();
@@ -181,17 +181,17 @@ function mttousers(){
 							
                             rdo_tuser.setValue(jsonData.estado);
 
-							if(jsonData.codcli==1){
-								Ext.getCmp('idcboperfil').enable();
+                            if(jsonData.codcli==1){
+                                    Ext.getCmp('idcboperfil').enable();
 
-								dsPerfiles.reset;
-								Ext.getCmp('idcboperfil').setValue('');
-								dsPerfiles.proxy=new Ext.data.HttpProxy({
-										url: 'DB/datamttos.php?x=7&i=1'
-								});
-								dsPerfiles.load();
-								xcaso_=1;
-							}
+                                    dsPerfiles.reset;
+                                    Ext.getCmp('idcboperfil').setValue('');
+                                    dsPerfiles.proxy=new Ext.data.HttpProxy({
+                                                    url: 'DB/datamttos.php?x=7&i=1'
+                                    });
+                                    dsPerfiles.load();
+                                    xcaso_=1;
+                            }
                         }
                     });
 
