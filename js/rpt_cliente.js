@@ -106,6 +106,7 @@ function frm_rpt_cliente(){
         minWidth    :400,
         minHeight   :150,
         plain       :true,
+        iconCls     :'rpt_cliente',
         y           :230,
         id          :'LoginWin4',
         bodyStyle   :'padding:5px',

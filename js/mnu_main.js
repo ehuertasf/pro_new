@@ -50,7 +50,7 @@ function main_menu(){
                             menu: [{
                                 text: 'Reporte por Cliente',
                                 cls: 'x-btn-text-icon',
-                                icon: 'files/images_app/document-search-result.png',
+                                icon: 'files/images_app/application_view_columns.png',
                                 handler: frm_rpt_cliente
                             }]                            
                         },{

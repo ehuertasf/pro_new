@@ -34,7 +34,9 @@
 .puesto {
     background-image: url(../files/images_app/user_suit.png);
 }
-
+.rpt_cliente{
+    background-image: url(../files/images_app/application_view_columns.png);
+}
 
 
 /*CSS para fileuploadfield*/

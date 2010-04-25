@@ -171,20 +171,20 @@ switch ($x){
         }
         break;
 	case 5:
-		/*
-		 * Listar usuarios
-		 */
-		$isql_="SELECT a.coduser,a.nomuser,a.apeuser,a.loguser,a.pasuser,IF(a.estuser=1,'Activo','Inactivo') AS estuser,a.estuser AS est,
-                        b.nomcli,c.desperf,a.codperf
-                        FROM tb_users a,tb_cliente b,tb_perfil c
-                        WHERE a.codcli=b.codcli AND a.codperf=c.codperf
-                        ORDER BY nomuser ASC;";
-        $iqry_=mysql_query($isql_);
-        while($obj = mysql_fetch_object($iqry_)) {
-            $arr[] = $obj;
-        }
-        echo '{"users":'.json_encode($arr).'}';
-		break;
+            /*
+             * Listar usuarios
+             */
+            $isql_="SELECT a.coduser,a.nomuser,a.apeuser,a.loguser,a.pasuser,IF(a.estuser=1,'Activo','Inactivo') AS estuser,a.estuser AS est,
+                    b.nomcli,c.desperf,a.codperf
+                    FROM tb_users a,tb_cliente b,tb_perfil c
+                    WHERE a.codcli=b.codcli AND a.codperf=c.codperf
+                    ORDER BY nomuser ASC;";
+            $iqry_=mysql_query($isql_);
+            while($obj = mysql_fetch_object($iqry_)) {
+                $arr[] = $obj;
+            }
+            echo '{"users":'.json_encode($arr).'}';
+                    break;
 	case 6:
 		$accion=$_POST["accion"];
 		session_start();
@@ -281,13 +281,13 @@ switch ($x){
 		 */
                 $i = (isset($_POST['i']) ? $_POST['i'] : $_GET['i']);
 
-				if($i==1){
-					//Pertenece a Pro Outsourcing
-					$isql_="SELECT codperf,desperf FROM tb_perfil ORDER BY 2 ASC;";
-				}else{
-					//Si es un cliente solo puede tener el perfil Cliente
-					$isql_="SELECT codperf,desperf FROM tb_perfil where codperf=3 ORDER BY 2 ASC;";
-				}
+                if($i==1){
+                        //Pertenece a Pro Outsourcing
+                        $isql_="SELECT codperf,desperf FROM tb_perfil ORDER BY 2 ASC;";
+                }else{
+                        //Si es un cliente solo puede tener el perfil Cliente
+                        $isql_="SELECT codperf,desperf FROM tb_perfil where codperf=3 ORDER BY 2 ASC;";
+                }
 
 
                 $iqry_=mysql_query($isql_);
@@ -510,7 +510,7 @@ switch ($x){
 		break;
     case 15 :
 
-		session_start();
+        session_start();
         $accion=$_POST["accion"];
 
         switch ($accion){
@@ -532,8 +532,8 @@ switch ($x){
                     $stmt = $dbh->prepare($sql);
                     $stmt->execute(array(
                         ':xdesc'=>trim($_POST["desc"]),
-						':xmensaje'=>trim($_POST["mensaje"]),
-						':xcodusuario'=> $_SESSION['us3r1d'],
+                        ':xmensaje'=>trim($_POST["mensaje"]),
+                        ':xcodusuario'=> $_SESSION['us3r1d'],
                         ':xesta'=>$estado
 
                     ));

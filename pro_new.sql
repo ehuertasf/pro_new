@@ -1,6 +1,6 @@
 /*
-SQLyog Community v8.3 
-MySQL - 5.0.51b-community-nt-log : Database - prodb
+SQLyog Community Edition- MySQL GUI v8.2 RC2
+MySQL - 5.0.45-community-nt-log : Database - prodb
 *********************************************************************
 */
 
@@ -102,7 +102,7 @@ CREATE TABLE `tb_chkdomicilio` (
   CONSTRAINT `fk_{C61B265E-F024-4FEC-96C5-8413A7B75EE1}` FOREIGN KEY (`codzonif`) REFERENCES `tb_zonificacion` (`codzonif`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_{D22B8B0C-BBF9-4C6C-BA98-A5B3D654CA53}` FOREIGN KEY (`codcon`) REFERENCES `tb_conclusion` (`codcon`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_{FB02766F-9ABB-49B3-A8B4-3FE3802D0321}` FOREIGN KEY (`codestcon`) REFERENCES `tb_estadoconstruccion` (`codestcon`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 PACK_KEYS=0;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Table structure for table `tb_chklaboral` */
 
@@ -131,7 +131,7 @@ CREATE TABLE `tb_chklaboral` (
   CONSTRAINT `fk_tb_chklaboral_tb_estadocheck1` FOREIGN KEY (`codestchk`) REFERENCES `tb_estadocheck` (`codestchk`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_{703E680B-E944-4DCD-8E47-7A9FD754A438}` FOREIGN KEY (`codpue`) REFERENCES `tb_puesto` (`codpue`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_{B569A64B-2690-4E0A-B33F-0DCC9122AE88}` FOREIGN KEY (`codsol`, `codper`) REFERENCES `tb_detallesolicitud` (`codsol`, `codper`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 PACK_KEYS=0;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Table structure for table `tb_chkservice` */
 
@@ -164,7 +164,7 @@ CREATE TABLE `tb_chkservice` (
   CONSTRAINT `fk_tb_chkservice_tb_delito1` FOREIGN KEY (`coddel`) REFERENCES `tb_delito` (`coddel`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tb_chkservice_tb_estadocheck1` FOREIGN KEY (`codestchk`) REFERENCES `tb_estadocheck` (`codestchk`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_{3DFEFC22-9415-440B-8F6F-4759CBCF235E}` FOREIGN KEY (`codsol`, `codper`) REFERENCES `tb_detallesolicitud` (`codsol`, `codper`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 PACK_KEYS=0;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Table structure for table `tb_cliente` */
 
@@ -186,7 +186,7 @@ CREATE TABLE `tb_cliente` (
   KEY `fk_{0C03C078-9AAC-42D6-BF94-FB2F7B468636}` (`codestcli`),
   CONSTRAINT `fk_{0C03C078-9AAC-42D6-BF94-FB2F7B468636}` FOREIGN KEY (`codestcli`) REFERENCES `tb_estcliente` (`codestcli`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_{6822434B-078D-46EC-B17C-6BD8EFA14EBC}` FOREIGN KEY (`codtipcli`) REFERENCES `tb_tipcliente` (`codtipcli`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 PACK_KEYS=0;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Table structure for table `tb_conclusion` */
 
@@ -221,8 +221,9 @@ CREATE TABLE `tb_delito` (
   `usuregdel` varchar(20) NOT NULL,
   `fecregdel` datetime NOT NULL,
   `estdel` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`coddel`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  PRIMARY KEY  (`coddel`),
+  UNIQUE KEY `idx_nomdel` (`nomdel`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `tb_departamento` */
 
@@ -347,7 +348,7 @@ CREATE TABLE `tb_imgdomicilio` (
   KEY `fk_{E191B052-32F0-4094-82BD-15889A918C89}` (`codchkdom`,`codper`,`codsol`),
   CONSTRAINT `fk_{39F06787-8BCD-4B05-94FA-8481A99DAF0D}` FOREIGN KEY (`codtipimg`) REFERENCES `tb_tipoimagen` (`codtipimg`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_{E191B052-32F0-4094-82BD-15889A918C89}` FOREIGN KEY (`codchkdom`, `codper`, `codsol`) REFERENCES `tb_chkdomicilio` (`codchkdom`, `codper`, `codsol`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 PACK_KEYS=0;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Table structure for table `tb_opciones` */
 
@@ -391,13 +392,13 @@ CREATE TABLE `tb_parentesco` (
 DROP TABLE IF EXISTS `tb_perfil`;
 
 CREATE TABLE `tb_perfil` (
-  `codperf` int(5) unsigned zerofill NOT NULL auto_increment,
+  `codperf` int(5) unsigned NOT NULL auto_increment,
   `desperf` varchar(45) NOT NULL,
   `estperf` tinyint(1) NOT NULL,
   `usuregperf` varchar(20) NOT NULL,
   `fecregperf` datetime NOT NULL,
   PRIMARY KEY  (`codperf`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `tb_perfilopciones` */
 
@@ -469,8 +470,9 @@ CREATE TABLE `tb_puesto` (
   `codpue` int(5) unsigned NOT NULL auto_increment COMMENT 'Código del puesto',
   `despue` varchar(25) NOT NULL COMMENT 'Descripción del puesto',
   `estpue` tinyint(1) NOT NULL COMMENT 'Estado del puesto',
-  PRIMARY KEY  (`codpue`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1 PACK_KEYS=0;
+  PRIMARY KEY  (`codpue`),
+  UNIQUE KEY `idx_despue` (`despue`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Table structure for table `tb_residentes` */
 
@@ -534,7 +536,7 @@ CREATE TABLE `tb_solicitud` (
   KEY `fk_{41145C50-667A-4575-B0CB-27782C2DB542}` (`codcli`),
   CONSTRAINT `fk_tb_solicitud_tb_estsol1` FOREIGN KEY (`codestsol`) REFERENCES `tb_estsol` (`codestsol`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_{41145C50-667A-4575-B0CB-27782C2DB542}` FOREIGN KEY (`codcli`) REFERENCES `tb_cliente` (`codcli`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1 PACK_KEYS=0;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Table structure for table `tb_tipcliente` */
 
@@ -545,8 +547,8 @@ CREATE TABLE `tb_tipcliente` (
   `destipcli` varchar(50) NOT NULL COMMENT 'Descripción del tipo de cliente',
   `esttipcli` char(1) NOT NULL COMMENT 'Estado del tipo de cliente',
   PRIMARY KEY  (`codtipcli`),
-  UNIQUE KEY `idx_desctipcliente` (`destipcli`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 PACK_KEYS=0;
+  UNIQUE KEY `idxdestipcli` (`destipcli`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Table structure for table `tb_tipdoc` */
 
@@ -554,11 +556,11 @@ DROP TABLE IF EXISTS `tb_tipdoc`;
 
 CREATE TABLE `tb_tipdoc` (
   `codtipdoc` int(5) NOT NULL auto_increment,
-  `destipdoc` varchar(45) NOT NULL,
+  `destipdoc` varchar(45) character set latin1 NOT NULL,
   `esttipdoc` tinyint(1) NOT NULL,
   PRIMARY KEY  (`codtipdoc`),
   UNIQUE KEY `idx_desctipdoc` (`destipdoc`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 /*Table structure for table `tb_tipoimagen` */
 
@@ -613,16 +615,17 @@ CREATE TABLE `tb_users` (
   `nomuser` varchar(50) NOT NULL,
   `apeuser` varchar(50) NOT NULL,
   `loguser` varchar(20) NOT NULL,
-  `pasuser` varchar(45) NOT NULL,
+  `pasuser` varchar(100) NOT NULL default '',
   `usuregusu` varchar(20) NOT NULL,
   `fecregusu` datetime NOT NULL,
-  `codperf` int(5) unsigned zerofill NOT NULL,
+  `codperf` int(5) unsigned NOT NULL,
   `estuser` tinyint(1) NOT NULL,
+  `codcli` int(10) default NULL,
   PRIMARY KEY  (`coduser`),
   UNIQUE KEY `user` (`loguser`),
   KEY `fk_tb_users_tb_perfil1` (`codperf`),
   CONSTRAINT `fk_tb_users_tb_perfil1` FOREIGN KEY (`codperf`) REFERENCES `tb_perfil` (`codperf`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `tb_vivienda` */
 
@@ -643,8 +646,9 @@ CREATE TABLE `tb_zonariesgo` (
   `codzonrie` int(5) unsigned NOT NULL auto_increment,
   `deszonrie` varchar(25) default NULL,
   `estzonrie` int(1) unsigned default NULL,
-  PRIMARY KEY  (`codzonrie`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 PACK_KEYS=0;
+  PRIMARY KEY  (`codzonrie`),
+  UNIQUE KEY `idx_deszonrie` (`deszonrie`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Table structure for table `tb_zonificacion` */
 
@@ -654,8 +658,9 @@ CREATE TABLE `tb_zonificacion` (
   `codzonif` int(5) unsigned NOT NULL auto_increment,
   `deszonif` varchar(25) default NULL,
   `estzonif` int(1) unsigned default NULL,
-  PRIMARY KEY  (`codzonif`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1 PACK_KEYS=0;
+  PRIMARY KEY  (`codzonif`),
+  UNIQUE KEY `idx_deszonif` (`deszonif`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Table structure for table `tmp_estactchk` */
 
@@ -686,3 +691,32 @@ CREATE TABLE `tmp_estperchk` (
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+
+ALTER TABLE `prodb`.`tb_tipdoc` ADD UNIQUE `idx_desctipdoc` (`destipdoc`);
+ALTER TABLE `prodb`.`tb_tipcliente` ADD UNIQUE `idx_desctipcliente` (`destipcli`);
+ALTER TABLE `prodb`.`tb_zonificacion` ADD UNIQUE `idx_deszonif` (`deszonif`);
+ALTER TABLE `prodb`.`tb_zonariesgo` ADD UNIQUE `idx_deszonrie` (`deszonrie`);
+ALTER TABLE `prodb`.`tb_delito` ADD UNIQUE `idx_nomdel` (`nomdel`);
+ALTER TABLE `prodb`.`tb_puesto` ADD UNIQUE `idx_despue` (`despue`);
+
+INSERT INTO tb_cliente (codcli,codestcli,codtipcli,nomcli,fecregcli,usuregcli) VALUES(1,1,1,'Pro Outsourcing',NOW(),'admin');
+
+/*El password del usuario admin es admin123 */
+
+INSERT INTO tb_users (coduser,nomuser,apeuser,loguser,pasuser,usuregusu,fecregusu,codperf,estuser,codcli)
+VALUES(1,'Administrador','Sistemas','admin','0192023a7bbd73250516f069df18b500','',NOW(),1,1,1);
+
+UPDATE tb_cliente SET usuregcli='admin' WHERE codcli=1;
+
+INSERT INTO tb_perfil (codperf,desperf,estperf,usuregperf,fecregperf) VALUES (1,'Administrador',1,'admin',NOW());
+INSERT INTO tb_perfil (codperf,desperf,estperf,usuregperf,fecregperf) VALUES (2,'Usuario',1,'admin',NOW());
+INSERT INTO tb_perfil (codperf,desperf,estperf,usuregperf,fecregperf) VALUES (3,'Consulta',1,'admin',NOW());
+
+INSERT  INTO `tb_parentesco`(`codpar`,`despar`,`estpar`) VALUES 
+	(1,'Padre',1),
+	(2,'Madre',1),
+	(3,'Hermano(a)',1),
+	(4,'Primo(a)',1),
+	(5,'Cuñado(a)',1),
+	(6,'Otros',1);
