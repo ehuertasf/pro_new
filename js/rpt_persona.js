@@ -14,11 +14,14 @@ function frm_rpt_persona(){
                 root: 'lista',
                 id: 'idlista'
                 },[{	name: 'apenom',     mapping: 'apenom'
-                }, {	name: 'numdocper',  mapping: 'numdocper'
-                }, {	name: 'fecsol',     mapping: 'fecsol'
-                }, {	name: 'nomcli',     mapping: 'nomcli'
-                }, {	name: 'despacchk',  mapping: 'despacchk'
-                }, {	name: 'desestsol',  mapping: 'desestsol'}
+                },{	name: 'numdocper',  mapping: 'numdocper'
+                },{	name: 'fecsol',     mapping: 'fecsol'
+                },{	name: 'nomcli',     mapping: 'nomcli'
+                },{	name: 'despacchk',  mapping: 'despacchk'
+                },{	name: 'desestsol',  mapping: 'desestsol'
+                },{     name: 'codsol',     mapping: 'codsol'
+                },{     name: 'codper',     mapping: 'codper'
+                }
         ]),
         proxy: new Ext.data.HttpProxy({
                 url: 'DB/datamttos.php?x=20'
@@ -74,6 +77,16 @@ function frm_rpt_persona(){
 
     var cm_personas = new Ext.grid.ColumnModel(
         [{
+            header: 'codsol',
+            readonly: true,
+            dataIndex: 'codsol',
+            hidden: true                                
+        },{
+            header: 'codper',
+            readonly: true,
+            dataIndex: 'codper',
+            hidden: true
+        },{
             header: 'Apellidos y Nombres',
             readonly: true,
             dataIndex: 'apenom',
@@ -125,6 +138,15 @@ function frm_rpt_persona(){
 	autoScroll: true,
         selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
         tbar:[cmbPersona]
+    });
+
+    grdPersona.on('rowclick', function(grid, rowIndex, e) {
+        var registro 	=grid.getStore().getAt(rowIndex);
+        var cam1	=grid.getColumnModel().getDataIndex(0);
+        var cam2	=grid.getColumnModel().getDataIndex(1);
+        j_codsol	=registro.get(cam1);
+        j_codper	=registro.get(cam2);
+        frm_checks_persona(j_codsol, j_codper);
     });
 
     rpt_persona = new Ext.FormPanel({

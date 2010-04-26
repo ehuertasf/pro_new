@@ -693,7 +693,7 @@ switch ($x){
             $valor=$_POST["valor"];
             $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
             $qry="SELECT UPPER(CONCAT(a.apepatper,', ',a.nomper)) AS apenom,a.numdocper,c.fecregsol AS fecsol,e.nomcli,
-                    f.despacchk,d.desestsol
+                    f.despacchk,d.desestsol,e.codcli,a.codper
                     FROM tb_persona a,tb_detallesolicitud b,tb_solicitud c,tb_estsol d,tb_cliente e,tb_packcheck f
                     WHERE a.codper=b.codper AND b.codsol=c.codsol AND c.codestsol=d.codestsol AND c.codcli=e.codcli
                     AND b.codpacchk=f.codpacchk
