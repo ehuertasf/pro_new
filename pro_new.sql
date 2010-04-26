@@ -228,6 +228,8 @@ CREATE TABLE `tb_cuestionario` (
 
 /*Data for the table `tb_cuestionario` */
 
+insert  into `tb_cuestionario`(`codcue`,`descue`,`estcue`) values (1,'Cuestionario Laboral I',1);
+
 /*Table structure for table `tb_delito` */
 
 DROP TABLE IF EXISTS `tb_delito`;
@@ -519,6 +521,8 @@ CREATE TABLE `tb_preguntas` (
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1 PACK_KEYS=0;
 
 /*Data for the table `tb_preguntas` */
+
+insert  into `tb_preguntas`(`codpre`,`codcue`,`despre`,`estpre`) values (1,1,'¿En que fecha trabajo para Ud? ¿Cuanto tiempo?',1),(2,1,'¿Que pues to ocupaba y que funciones o responsabilidades desempenaba?',1),(3,1,'¿Como calificaria su rendimiento en el trabajo?',1),(4,1,'¿Realizo labores en que tuviera que cumplir objetivos de ventas y como fue su desempeño en ese aspecto?',1),(5,1,'¿Presento atrasos o inasistencias frecuentes? ¿Por que motivos?',1),(6,1,'¿Cual considera que es la mejor area o funcion que domina?',1),(7,1,'¿Cuales son sus cualidades mas sobresalientes?',1),(8,1,'¿Alguna dificultad que haya presentado o aspectos que podria mejorar?',1),(9,1,'¿Como era la relación con sus superiores y el personal en general?',1),(10,1,'¿Por que razon se retiro de la empresa?',1),(11,1,'¿Trabajaria con el nuevamente y por que?',1),(12,1,'¿Fue usted su jefe directo?',1),(13,1,'¿Algun comentario que desee agregar sobre dicha persona?',1);
 
 /*Table structure for table `tb_provincia` */
 
