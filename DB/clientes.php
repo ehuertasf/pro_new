@@ -112,15 +112,7 @@ switch ($n){
                 echo "{respuesta: {error : 0, mensaje: 'Se grabaron correctamente los datos', codcli: $codcli} }";
             } catch (Exception $e) {
                 $dbh->rollBack();
-//                echo 'PDO Excepciones.	';
-//                echo 'Error con la base de datos: <br />';
-//                echo 'SQL Query: ', $sql;
-//                echo '<pre>';
-//                echo 'Error: ,'.$e->getMessage();
-//                echo 'Archivo: ' . $e->getFile() . '<br />';
-//                echo 'Linea: ' . $e->getLine() . '<br />';
-//                echo '</pre>';
-                echo "{respuesta: {error : 1, mensaje: 'Ocurrio un error al grabar los datos comuniquese con Sistemas' }}";
+//                echo "{respuesta: {error : 1, mensaje: 'Ocurrio un error al grabar los datos comuniquese con Sistemas' }}";
             }
             break;
         case 5: //Tipos de Documentos
@@ -136,5 +128,16 @@ switch ($n){
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
             echo '{"solcliente":'.json_encode($arr).'}';
             break;
+        case 7: //Listado de clientes sin usar limit
+			$query = "select codcli,codestcli,codtipcli,nomcli,ruccli,dircli,telcli from tb_cliente order by nomcli";
+            $result = mysql_query($query);
+
+
+            while($obj = mysql_fetch_object($result)) {
+                    $arr[] = $obj;
+            }
+            echo '{"listadocli":'.json_encode($arr).'}';
+            break;
+
 }
 ?>

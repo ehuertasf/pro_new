@@ -3,6 +3,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+header("Content-type: application/json; charset=UTF-8");
+header("Cache-control: No-Cache");
+header("Pragma: No-Cache");
+
 ini_set("display_errors", "On");
 error_reporting(E_ALL ^ E_NOTICE);
 include_once("connect.php");
@@ -154,11 +158,13 @@ switch ($n){
             $codestsol = $_POST['codestsol'];
             $desde = $_POST['desde'];
             $hasta = $_POST['hasta'];
-            $sqlquery ="select s.codsol,s.codcli,c.nomcli,s.fecregsol,s.fecvensol,CONCAT(DATEDIFF(s.fecvensol,s.fecregsol),' dias') as plazo,s.codestsol,e.desestsol,concat(u.nomuser,' ',u.apeuser) as usuario,
-                        (select count(ds.codsol) from tb_detallesolicitud ds where ds.codsol=s.codsol) as canper
-                        from tb_solicitud s left join tb_cliente c on s.codcli=c.codcli
-                        left join tb_estsol e on s.codestsol=e.codestsol
-                        left join tb_users u on s.usuregsol=u.loguser";
+            $sqlquery ="SELECT s.codsol,s.codcli,c.nomcli,s.fecregsol,s.fecvensol,CONCAT(DATEDIFF(s.fecvensol,s.fecregsol),' dias') AS plazo,
+						DATEDIFF(s.fecvensol,NOW()) AS diasrest,
+						s.codestsol,e.desestsol,CONCAT(u.nomuser,' ',u.apeuser) AS usuario,
+						(SELECT COUNT(ds.codsol) FROM tb_detallesolicitud ds WHERE ds.codsol=s.codsol) AS canper
+						FROM tb_solicitud s LEFT JOIN tb_cliente c ON s.codcli=c.codcli
+						LEFT JOIN tb_estsol e ON s.codestsol=e.codestsol
+						LEFT JOIN tb_users u ON s.usuregsol=u.loguser";
             if($codsol!='' || $codcli!='' || $codestsol!='' || $desde!='' || $hasta!=''){
                 $sqlquery=$sqlquery.' WHERE';
                 if($codsol!=''){
@@ -214,13 +220,20 @@ switch ($n){
             echo '{"cabsolicitud":'.json_encode($arr).'}';
             break;
        case 8: //cabecera solicitud
+            include("ftn_actestchk.php");
             $codsol	= $_POST['codsol'];
-            $sqlquery ="select ds.codsol,ds.codper,concat(p.nomper,' ',p.apepatper,' ',p.apematper) as nombre,p.codtipdoc,doc.destipdoc,p.numdocper,ds.codpacchk,pc.despacchk,ds.codpue,pu.despue
-                        from tb_detallesolicitud ds left join tb_persona p on ds.codper=p.codper
-                        left join tb_packcheck pc on ds.codpacchk=pc.codpacchk
-                        left join tb_puesto pu on ds.codpue=pu.codpue
-                        left join tb_tipdoc doc on p.codtipdoc=doc.codtipdoc
-                        where codsol=".$codsol;
+			ftn_act_estadochk($codsol);
+            $sqlquery ="SELECT ds.codsol,ds.codper,CONCAT(p.nomper,' ',p.apepatper,' ',p.apematper) AS nombre,p.codtipdoc,doc.destipdoc,p.numdocper,
+						ds.codpacchk,pc.despacchk,ds.codpue,pu.despue,(
+							SELECT r.desestchk FROM tb_estadocheck r,tmp_estactchk i
+							WHERE r.codestchk=i.codestchk AND i.codsol=ds.codsol AND i.codper=ds.codper
+						) AS estado
+						FROM tb_detallesolicitud ds LEFT JOIN tb_persona p ON ds.codper=p.codper
+						LEFT JOIN tb_packcheck pc ON ds.codpacchk=pc.codpacchk
+						LEFT JOIN tb_puesto pu ON ds.codpue=pu.codpue
+						LEFT JOIN tb_tipdoc doc ON p.codtipdoc=doc.codtipdoc
+						WHERE codsol=".$codsol;
+
             $stmt = mysql_query($sqlquery);
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
             echo '{"detpersol":'.json_encode($arr).'}';

@@ -2,8 +2,8 @@
 include("../DB/connect.php");
 $link=conectarse();
 $usuario = $_POST["username"];
-$password = $_POST["password"];
-$query = "select * from tb_users where loguser='$usuario' and pasuser='$password'";
+$password = md5(trim($_POST["password"]));
+$query = "select * from tb_users where loguser='$usuario' and pasuser='$password' and estuser=1;";
 $sql = mysql_query($query,$link);
 $check = mysql_num_rows($sql);
 
