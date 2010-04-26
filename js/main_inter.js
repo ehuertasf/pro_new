@@ -5495,7 +5495,7 @@ var txt_nomemp = new Ext.form.TextField({
     readOnly	: true,
     disabled    : false,
     name	: 'nomemp',
-    anchor	: '-10'
+    anchor	: '100%'
 });
 
 var txt_telemp = new Ext.form.TextField({
@@ -5522,7 +5522,7 @@ var txt_motces = new Ext.form.TextField({
     readOnly	: true,
     disabled    : false,
     name	: 'motces',
-    anchor	: '-10'
+    anchor	: '100%'
 });
 
 var dp_fecent=new Ext.form.DateField({
@@ -5562,7 +5562,7 @@ var txt_noment = new Ext.form.TextField({
     readOnly	: true,
     disabled    : false,
     name	: 'noment',
-    anchor	: '-10'
+    anchor	: '100%'
 });
 
 var txt_carpercont = new Ext.form.TextField({
@@ -5571,7 +5571,7 @@ var txt_carpercont = new Ext.form.TextField({
     readOnly	: true,
     disabled    : false,
     name	: 'carpercont',
-    anchor	: '-10'
+    anchor	: '100%'
 });
 
 var frmDatosCheckLaboral2 = new Ext.FormPanel({
