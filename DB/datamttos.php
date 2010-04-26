@@ -671,6 +671,42 @@ switch ($x){
             $json_response = json_encode($response);
             echo $json_response;
             break;
+        case 19;
+            /**
+             * Buscamos una persona por coindencia
+             */
+            $buscar=$_POST["query"];
+            $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+            $qry="SELECT codper,UPPER(CONCAT(apepatper,', ',nomper)) AS apenom,numdocper
+                    FROM tb_persona
+                    WHERE (nomper LIKE :buscar OR apepatper LIKE :buscar OR numdocper LIKE :buscar);";
+            $stmt =$dbh->prepare($qry);
+            $buscar='%'.$buscar.'%';
+            $stmt->bindParam(':buscar',$buscar,PDO::PARAM_STR);
+            $stmt->execute();
+            while($row=$stmt->fetchObject()){
+                $arr[] = $row;
+            }
+            echo '{"lstpersona":'.json_encode($arr).'}';
+            break;
+        case 20;
+            $valor=$_POST["valor"];
+            $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
+            $qry="SELECT UPPER(CONCAT(a.apepatper,', ',a.nomper)) AS apenom,a.numdocper,c.fecregsol AS fecsol,e.nomcli,
+                    f.despacchk,d.desestsol
+                    FROM tb_persona a,tb_detallesolicitud b,tb_solicitud c,tb_estsol d,tb_cliente e,tb_packcheck f
+                    WHERE a.codper=b.codper AND b.codsol=c.codsol AND c.codestsol=d.codestsol AND c.codcli=e.codcli
+                    AND b.codpacchk=f.codpacchk
+                    AND a.codper =:valor
+                    ORDER BY fecregsol DESC;";
+            $stmt =$dbh->prepare($qry);
+            $stmt->bindParam(':valor',$valor);
+            $stmt->execute();
+            while($row=$stmt->fetchObject()){
+                $arr[] = $row;
+            }
+            echo '{"lista":'.json_encode($arr).'}';
+            break;
 }
 
 ?>

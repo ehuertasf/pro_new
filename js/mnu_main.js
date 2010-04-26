@@ -88,6 +88,11 @@ function main_menu(){
                             cls: 'x-btn-text-icon',
                             icon: 'files/images_app/application_view_columns.png',
                             handler: frm_rpt_cliente
+                        },{
+                            text: 'Reporte por Persona',
+                            cls: 'x-btn-text-icon',
+                            icon: 'files/images_app/table-join.png',
+                            handler: frm_rpt_persona
                         }]
                     },{
                         xtype: 'tbseparator'

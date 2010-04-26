@@ -38,5 +38,6 @@
 		<script src="js/mttotipdelito.js" type="text/javascript"></script>
 		<script src="js/mttopuesto.js" type="text/javascript"></script>
                 <script src="js/rpt_cliente.js" type="text/javascript"></script>
+                <script src="js/rpt_persona.js" type="text/javascript"></script>
     </body>
 </html>
