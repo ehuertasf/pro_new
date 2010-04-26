@@ -91,8 +91,8 @@ switch ($n){
                                         VALUES (:codper,:codsol,1,1)";
                             break;
                         case 'tb_chklaboral' :
-                            $sql="INSERT INTO tb_chklaboral (codper,codsol,codpue,codestchk)
-                                        VALUES (:codper,:codsol,1,1)";
+                            $sql="INSERT INTO tb_chklaboral (codper,codsol,codcue,codestchk,cueresp)
+                                        VALUES (:codper,:codsol,1,1,0)";
                             break;
                         case 'tb_chkdomicilio' :
                             $sql="INSERT INTO tb_chkdomicilio (codper,codsol,coddpto,codpro,coddist,codtipvia,codpar,codviv,codtipviv,codtipmat,codestcon,codzonif,codzonrie,codcon,codestchk)
