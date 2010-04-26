@@ -67,7 +67,8 @@
             z.nomcli AS CLIENTE,w.fecregsol AS FECHA_ENTREGA,r.despue AS PUESTO,w.obssol AS OBSERVACION
             FROM tb_persona a,tb_detallesolicitud u,tb_solicitud w,tb_cliente z,tb_puesto r
             WHERE a.codper=u.codper  AND u.codsol=w.codsol AND w.codcli=z.codcli AND u.codpue=r.codpue 
-            AND DATE_FORMAT(w.fecregsol,'%Y-%m-%d') BETWEEN :fini AND :ffin AND z.codcli=:ccli";
+            AND DATE_FORMAT(w.fecregsol,'%Y-%m-%d') BETWEEN :fini AND :ffin AND z.codcli=:ccli
+            ORDER BY z.nomcli ASC";
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':fini', $f_ini);
         $stmt->bindParam(':ffin', $f_fin);
@@ -90,7 +91,7 @@
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>ITEM</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>APELLIDOS Y NOMBRES</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>DNI</b></td>
-                <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>|CHECK DELICTIVO</b></td>
+                <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>CHECK DELICTIVO</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>CHECK DOMICILIARIO</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>CLIENTE</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>FECHA DE ENTREGA</b></td>
@@ -99,7 +100,7 @@
             </tr>
             
             <?php
-            $cont=0;
+            $cont=1;
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 ?>
                 <tr>
