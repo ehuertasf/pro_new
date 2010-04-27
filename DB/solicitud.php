@@ -95,8 +95,8 @@ switch ($n){
                                         VALUES (:codper,:codsol,1,1)";
                             break;
                         case 'tb_chklaboral' :
-                            $sql="INSERT INTO tb_chklaboral (codper,codsol,codpue,codestchk)
-                                        VALUES (:codper,:codsol,1,1)";
+                            $sql="INSERT INTO tb_chklaboral (codper,codsol,codcue,codestchk,cueresp)
+                                        VALUES (:codper,:codsol,1,1,0)";
                             break;
                         case 'tb_chkdomicilio' :
                             $sql="INSERT INTO tb_chkdomicilio (codper,codsol,coddpto,codpro,coddist,codtipvia,codpar,codviv,codtipviv,codtipmat,codestcon,codzonif,codzonrie,codcon,codestchk)
@@ -221,7 +221,8 @@ switch ($n){
             break;
        case 8: //cabecera solicitud
             include("ftn_actestchk.php");
-            $codsol= $_POST['codsol'];
+
+            $codsol	= $_POST['codsol'];
             ftn_act_estadochk($codsol);
             $sqlquery ="SELECT ds.codsol,ds.codper,CONCAT(p.nomper,' ',p.apepatper,' ',p.apematper) AS nombre,p.codtipdoc,doc.destipdoc,p.numdocper,
                         ds.codpacchk,pc.despacchk,ds.codpue,pu.despue,(
@@ -233,6 +234,7 @@ switch ($n){
                         LEFT JOIN tb_puesto pu ON ds.codpue=pu.codpue
                         LEFT JOIN tb_tipdoc doc ON p.codtipdoc=doc.codtipdoc
                         WHERE codsol=".$codsol;
+
 
             $stmt = mysql_query($sqlquery);
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}

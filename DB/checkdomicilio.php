@@ -1,8 +1,5 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 ini_set("display_errors", "On");
 error_reporting(E_ALL ^ E_NOTICE);
 include_once("connect.php");

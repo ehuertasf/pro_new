@@ -40,11 +40,18 @@
 .rpt_persona{
     background-image: url(../files/images_app/table-join.png);
 }
+<<<<<<< HEAD
 
 
 /*CSS para fileuploadfield*/
 .upload-icon {
     background: url('../lib/extjs311/examples/shared/icons/fam/image_add.png') no-repeat 0 0 !important;
+=======
+
+/*CSS para fileuploadfield*/
+.upload-icon {
+    background: url('../../librerias/ext-3.1.1/examples/shared/icons/fam/image_add.png') no-repeat 0 0 !important;
+>>>>>>> 4f6747e3526a6691cfa957ae01f8b36ede840fee
 }
 #fi-button-msg {
     border: 2px solid #ccc;

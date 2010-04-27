@@ -49,34 +49,38 @@ function AcceptPageBreak()
 }
 ini_set("display_errors", "On");
 error_reporting(E_ALL ^ E_NOTICE);
-include_once("connect.php");
+include_once("../DB/connect.php");
 $link=conectarse();
-//$dbh=conectaPDO();
+
+
 
 $codper=$_GET["codper"];
 $codsol=$_GET["codsol"];
 
 
+
 $result=mysql_query("SELECT a.codchkser,    
-CONCAT(c.apepatper,' ',c.apematper,', ',c.nomper) AS nombre,
-d.despue AS puesto,
-a.imgreniec,
-a.obsimgreniec,
-a.indrefpol, a.refpolchk, 
-a.indantpol, 
-a.indreqjud, 
-a.indrefter, 
-a.indrefdro, 
-a.indimpsalpai, 
-a.indinvpen,a.invpenchk,
-e.desdel,
-a.recchk
-FROM tb_chkservice AS a 
-LEFT JOIN tb_detallesolicitud AS b ON b.codper=a.codper AND b.codsol=a.codsol
-LEFT JOIN tb_persona AS c ON c.codper=a.codper 
-LEFT JOIN tb_puesto AS d ON d.codpue=b.codpue
-LEFT JOIN tb_delito AS e ON e.coddel=a.coddel
-WHERE a.codper=$codper AND a.codsol=$codsol",$link);
+    CONCAT(c.apepatper,' ',c.apematper,', ',c.nomper) AS nombre,
+    d.despue AS puesto,
+    a.imgreniec,
+    a.obsimgreniec,
+    a.indrefpol, a.refpolchk,
+    a.indantpol,
+    a.indreqjud,
+    a.indrefter,
+    a.indrefdro,
+    a.indimpsalpai,
+    a.indinvpen,a.invpenchk,
+    e.desdel,
+    a.recchk
+    FROM tb_chkservice AS a
+    LEFT JOIN tb_detallesolicitud AS b ON b.codper=a.codper AND b.codsol=a.codsol
+    LEFT JOIN tb_persona AS c ON c.codper=a.codper
+    LEFT JOIN tb_puesto AS d ON d.codpue=b.codpue
+    LEFT JOIN tb_delito AS e ON e.coddel=a.coddel
+    WHERE a.codper=$codper AND a.codsol=$codsol",$link);
+
+
 
 while($row = mysql_fetch_array($result))
 {
@@ -176,7 +180,7 @@ while($row = mysql_fetch_array($result))
 		$pdf->Cell(0,7,$TXTindinvpen,1,1,'C');
 		
 		$pdf->AddPage();
-$pdf->SetXY(20,25);
+                $pdf->SetXY(20,25);
 		//$pdf->SetDisplayMode('fullpage');
 		//$pdf->SetMargins(20, 20,20);
 		$pdf->SetFont('Arial','BU',14);

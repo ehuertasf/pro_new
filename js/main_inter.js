@@ -2498,6 +2498,7 @@ ds_cabsol.on('load',function(){
 //Detalle de la solicitud
 
 
+
 ds_detsol = new Ext.data.Store({
                     proxy: new Ext.data.HttpProxy({
                         url: 'DB/solicitud.php',
@@ -2796,6 +2797,7 @@ function frm_checks_persona(cod_sol, cod_per){
 
 var refpol=false,antpol=false,reqjud=false,refter=false,refdro=false,impsal=false,invpen=false;
 var selResidente=false, vcodres="", vdesres="";
+var NewChkLab='no';
 //var resiregist=0;
 ///////////////
 /*Data Stores*/
@@ -2874,7 +2876,7 @@ var hid_imgactreniec = new Ext.form.Hidden({
 var txt_chksrvnomper = new Ext.form.TextField({
     id          : 'txt_chksrvnomper',
     fieldLabel	: 'Check Identidad',
-    width : 300,
+    width : 250,
     readOnly	: true,
     disabled    : false,
     name	: 'nombrechksrvc',
@@ -3744,7 +3746,7 @@ var txt_chkdomnomper = new Ext.form.TextField({
     fieldLabel	: 'Check Identidad',
     readOnly	: false,
     disabled    : false,
-    width       : 300,
+    width       : 250,
     name	: 'nombrechkdom',
     anchor	: '98%'
 });
@@ -3758,7 +3760,7 @@ var txt_persentre = new Ext.form.TextField({
     disabled    : false,
    // width       : 300,
     name	: 'perent',
-    anchor	: '-5'
+    anchor	: '-10'
 });
 
 //Tiempo en años
@@ -5279,6 +5281,7 @@ var frmCheckDomiciliario = new Ext.FormPanel({
     items       : [SubPnlDirecc,pnl_Entrevistado,SubPnlEntrev,pnl_DescZona,pnl_ConcluDomi]
 });
 
+
 //Botones de los Checks
 var btn_pdf_checkservice = new Ext.Button({
     text	:'Pdf',
@@ -5292,9 +5295,528 @@ var btn_pdf_checkservice = new Ext.Button({
 
 
 function pdf_checkservice(){
-    alert(codper);
-    //document.location = 'reportes/rptCheckService.php?codper='+codper+'&codsol='+codsol;
+    
+    document.location = 'reportes/rptCheckService.php?codper='+cod_per+'&codsol='+cod_sol;
 }
+
+///////////////////////////////Controles de Check Laboral/////////////////////////////////////
+
+//Nombre
+var txt_chklabnomper = new Ext.form.TextField({
+    id          : 'txt_chklabnomper',
+    fieldLabel	: 'Check Identidad',
+    width       : 250,
+    readOnly	: true,
+    disabled    : false,
+    name	: 'nombrechklab',
+    anchor	: '98%'
+});
+
+//Puestos
+var cboCheckPuestosLab = new Ext.form.ComboBox({
+    fieldLabel  : 'Puesto al que postula',
+    id          : 'cboCheckPuestosLab',
+    store       : ds_chksrvpuestos,
+    displayField: 'despue',
+    valueField  : 'codpue',
+    typeAhead   : true,
+    mode        : 'local',
+    triggerAction: 'all',
+    anchor      :'100%',
+    disabled    : false,
+    forceSelection : true,
+    hideTrigger : false,
+    lazyRender : true,
+    selectOnFocus:true
+});
+
+//DataStore para obtener datos grabados del CheckService
+var ds_obtieneListaCheckLaboral = new Ext.data.Store({
+        reader: new Ext.data.JsonReader({
+            root            : 'listachecklab',
+            totalProperty	: 'total',
+            id              : 'codchklab'
+            },
+            [{name: 'codchklab', mapping: 'codchklab'},
+            {name: 'codpue', mapping: 'codpue'},
+            {name: 'despue', mapping: 'despue'},
+            {name: 'nomemp', mapping: 'nomemp'},
+            {name: 'codcue', mapping: 'codcue'},
+            {name: 'descue', mapping: 'descue'},
+            {name: 'telemp', mapping: 'telemp'},
+            {name: 'codestchk', mapping: 'codestchk'},
+            {name: 'desestchk', mapping: 'desestchk'},
+            {name: 'cueresp', mapping: 'cueresp'}
+            ]),
+        proxy: new Ext.data.HttpProxy({
+            url: 'DB/checklaboral.php',
+            method : 'POST'
+        }),
+        baseParams:{n:1, codsol:cod_sol, codper:cod_per},
+        autoLoad: false
+});
+
+var cm_detchkLaboral = new Ext.grid.ColumnModel(
+        [{
+            id : 'codchklab',
+            header: 'codchklab',
+            readonly: true,
+            dataIndex: 'codchklab',
+            hidden: true
+        },{
+            header: 'Empresa',
+            readonly: true,
+            dataIndex: 'nomemp',
+            hidden: false,
+            width:250
+        },{
+            header: 'codcue',
+            readonly: true,
+            dataIndex: 'codcue',
+            hidden: true
+        },{
+            header: 'Cuestionario',
+            readonly: true,
+            dataIndex: 'descue',
+            hidden: false,
+            width:200
+        },{
+            header: 'Telefono',
+            readonly: true,
+            dataIndex: 'telemp',
+            hidden: false
+        },{
+            header: 'codestchk',
+            readonly: true,
+            dataIndex: 'codestchk',
+            hidden: true
+        },{
+            header: 'Estado',
+            readonly: true,
+            dataIndex: 'desestchk',
+            hidden: false
+        },{
+            header: 'cueresp',
+            readonly: true,
+            dataIndex: 'cueresp',
+            hidden: true
+        }]
+    );
+
+    var grd_detListaChkLab = new Ext.grid.EditorGridPanel({
+        id      : 'grd_detListaChkLab',
+        store   : ds_obtieneListaCheckLaboral,
+        title   : 'Checks Laborales Registrados',
+        cm      : cm_detchkLaboral,
+        width   : 350,
+        anchor  : '100%',
+        height  : 130,
+        frame   : true,
+	layout    : 'fit',
+	autoScroll: true,
+        selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
+        listeners:{
+            rowdblclick: function(grid, rowIndex, e){
+                                var chklab = ds_obtieneListaCheckLaboral.getAt(rowIndex).data.codchklab;
+                                //var per = ds_obtieneListaCheckLaboral.getAt(rowIndex).data.codper;
+                                ds_obtieneCheckLaboral.load({params: {n:4, codchklab:chklab}});
+                                grd_detListaChkLab.disable();
+                                NewChkLab = 'no';
+                                Ext.getCmp('btn_CancelarCheckLaboral').enable();
+                                Ext.getCmp('btn_GrabarCheckLaboral').enable();
+                                Ext.getCmp('btn_NuevoCheckLaboral').disable();
+                                txt_nomperref.focus(true);
+                                //frm_checks_persona(sol, per);
+                        }
+                }
+    });
+
+var ds_preguntas = new Ext.data.Store({
+                    reader: new Ext.data.JsonReader({
+                        root            : 'cuestionario',
+                        totalProperty	: 'total',
+                        id              : 'codpre'
+                        },
+                        [{name: 'codsol', mapping: 'codsol'},
+                        {name: 'codper', mapping: 'codper'},
+                        {name: 'codchklab', mapping: 'codchklab'},
+                        {name: 'codcue', mapping: 'codcue'},
+                        {name: 'codpre', mapping: 'codpre'},
+                        {name: 'despre', mapping: 'despre'},
+                        {name: 'respre', mapping: 'telemp'},
+                        ]),
+                    proxy: new Ext.data.HttpProxy({
+                        url: 'DB/checklaboral.php',
+                        method : 'POST'
+                    }),
+                    autoLoad: false
+});
+
+var cm_preguntas = new Ext.grid.ColumnModel(
+        [{
+            header: 'codsol',
+            readonly: true,
+            dataIndex: 'codsol',
+            hidden: true
+        },{
+            header: 'codper',
+            readonly: true,
+            dataIndex: 'codper',
+            hidden: true
+        },{
+            header: 'codchklab',
+            readonly: true,
+            dataIndex: 'codchklab',
+            hidden: true
+        },{
+            header: 'codcue',
+            readonly: true,
+            dataIndex: 'codcue',
+            hidden: true
+
+        },{
+            id : 'codpre',
+            header: 'codpre',
+            readonly: true,
+            dataIndex: 'codpre',
+            hidden: true
+        },{
+            header: 'Pregunta',
+            readonly: true,
+            dataIndex: 'despre',
+            hidden: false,
+            width:355
+        },{
+            header: 'Respuesta',
+            readonly: false,
+            dataIndex: 'respre',
+            hidden: false,
+            width:355,
+            editor: new Ext.form.TextField({
+                anchor : '100%',
+                fieldLabel : 'Check Identidad'
+            })
+        }]
+    );
+
+var grd_preguntas = new Ext.grid.EditorGridPanel({
+        id      : 'grd_preguntas',
+        store   : ds_preguntas,
+        title   : 'Preguntas del Cuestionario',
+        cm      : cm_preguntas,
+        width   : 350,
+        anchor  : '100%',
+        height  : 150,
+        frame   : true,
+        editable : true,
+	layout    : 'fit',
+	autoScroll: true,
+        clicksToEdit : 'auto',
+        selModel: new Ext.grid.RowSelectionModel({singleSelect:false})
+    });
+
+var frmListaPreguntas = new Ext.FormPanel({
+    frame       : false,
+    border      : false,
+    //width       : 740,
+    style       : 'padding:1px 1px 1px 1px',
+    items       : [grd_preguntas]
+});
+
+var hid_codchklab = new Ext.form.Hidden({
+    id          : 'hid_codchklab',
+    readOnly	: false,
+    name	: 'codchklab',
+    hidemode    : 'display',
+    hidelabel   : true
+});
+
+var txt_nomperref = new Ext.form.TextField({
+    id          : 'txt_nomperref',
+    fieldLabel	: 'Persona Referencia',
+    readOnly	: true,
+    disabled    : false,
+    name	: 'nomperref',
+    anchor	: '-10',
+    allowBlank  :false
+});
+
+var txt_nomemp = new Ext.form.TextField({
+    id          : 'txt_nomemp',
+    fieldLabel	: 'Empresa',
+    readOnly	: true,
+    disabled    : false,
+    name	: 'nomemp',
+    anchor	: '100%',
+    allowBlank  :false
+});
+
+var txt_telemp = new Ext.form.TextField({
+    id          : 'txt_telemp',
+    fieldLabel	: 'Teléfono',
+    readOnly	: true,
+    disabled    : false,
+    name	: 'telemp',
+    anchor	: '-10',
+    allowBlank  :false
+});
+
+var txt_perlab = new Ext.form.TextField({
+    id          : 'txt_perlab',
+    fieldLabel	: 'Periodo Laboral',
+    readOnly	: true,
+    disabled    : false,
+    name	: 'telemp',
+    anchor	: '-10',
+    allowBlank  :false
+});
+
+var txt_motces = new Ext.form.TextField({
+    id          : 'txt_motces',
+    fieldLabel	: 'Motivo Cese',
+    readOnly	: true,
+    disabled    : false,
+    name	: 'motces',
+    anchor	: '100%',
+    allowBlank  :false
+});
+
+var dp_fecent=new Ext.form.DateField({
+        fieldLabel  :'Fecha',
+        id          :'dp_fecent',
+        name        :'fecent',
+//        width       :110,
+        format      :'d/m/Y',
+        anchor      :'98%',
+        readOnly    :true,
+        renderer    :function(value) {return value ? new Date(value).dateFormat('Y-m-d') : '';},
+        allowBlank  :false
+});
+
+var txt_percont = new Ext.form.TextField({
+    id          : 'txt_percont',
+    fieldLabel	: 'Persona de Contacto',
+    readOnly	: true,
+    disabled    : false,
+    name	: 'percont',
+    anchor	: '-10',
+    allowBlank  :false
+});
+
+var txt_obsent = new Ext.form.TextArea({
+    id          : 'txt_obsent',
+    fieldLabel	: 'Observaciones',
+    readOnly	: true,
+    disabled    : false,
+    name	: 'obsent',
+    anchor	: '-10',
+    height      : 38,
+    allowBlank  :false
+});
+
+var txt_noment = new Ext.form.TextField({
+    id          : 'txt_noment',
+    fieldLabel	: 'Entrevistador',
+    readOnly	: true,
+    disabled    : false,
+    name	: 'noment',
+    anchor	: '-10',
+    allowBlank  :false
+});
+
+var txt_carpercont = new Ext.form.TextField({
+    id          : 'txt_carpercont',
+    fieldLabel	: 'Cargo',
+    readOnly	: true,
+    disabled    : false,
+    name	: 'carpercont',
+    anchor	: '100%',
+    allowBlank  :false
+});
+
+//Conclusiones
+var cbo_conclusionlab = new Ext.form.ComboBox({
+        id              : 'cbo_conclusionlab',
+        name            : 'codcon',
+        fieldLabel      : 'Conclusión',
+        mode            : 'local',
+        disabled        : false,
+        allowBlank      : false,
+//        width           : 50,
+        store           : ds_conclusion,
+        editable        : false,
+        readOnly	: true,
+        triggerAction   : 'all',
+        displayField    : 'descon',
+        valueField      : 'codcon',
+        hiddenName      : 'vcodcon',
+        anchor          : '100%'
+});
+
+var cboEstadoCheckLaboral = new Ext.form.ComboBox({
+        id              : 'cboEstadoCheckLaboral',
+        name            : 'codestchklab',
+        fieldLabel      : 'Estado',
+        mode            : 'local',
+        disabled        : false,
+        allowBlank      : false,
+        store           : ds_estadoscheck,
+        editable        : false,
+        readOnly	: true,
+        triggerAction   : 'all',
+        displayField    : 'desestchk',
+        valueField      : 'codestchk',
+        hiddenName      : 'vcodestchkdom',
+        anchor          : '100%'
+});
+
+var frmDatosCheckLaboral2 = new Ext.FormPanel({
+    frame       : true,
+    border      : false,
+    style       : 'padding:1px 1px 1px 1px',
+    //width       : 770,
+    items       : [{
+            layout  : 'column',
+            border  : false,
+            frame   : false,
+            style   : 'padding: 0px 0px 0px 0px',
+            items   : [
+                {
+                    columnWidth	: 0.6,
+                    layout : 'form',
+                    labelWidth : 120,
+                    border : false,
+                    items  : [txt_percont]
+                },
+                {
+                    columnWidth	: 0.4,
+                    layout : 'form',
+                    labelWidth : 50,
+                    border : false,
+                    items  : [txt_carpercont]
+                }
+            ]
+        },{
+            layout  : 'column',
+            border  : false,
+            frame   : false,
+            style   : 'padding: 0px 0px 0px 0px',
+            items   : [
+                {
+                    columnWidth	: 0.2,
+                    layout : 'form',
+                    labelWidth : 40,
+                    border : false,
+                    defaultType	: 'datefield',
+                    items  : [dp_fecent]
+                },
+                {
+                    columnWidth	: 0.5,
+                    layout : 'form',
+                    labelWidth : 80,
+                    border : false,
+                    items  : [txt_noment]
+                },
+                {
+                    columnWidth	: 0.3,
+                    layout : 'form',
+                    labelWidth : 60,
+                    border : false,
+                    items  : [cbo_conclusionlab]
+                }
+            ]
+        },{
+            layout  : 'column',
+            border  : false,
+            frame   : false,
+            style   : 'padding: 0px 0px 0px 0px',
+            items   : [
+                {
+                    columnWidth	: 0.7,
+                    layout : 'form',
+                    labelWidth : 90,
+                    border : false,
+                    items  : [txt_obsent]
+                },{
+                    columnWidth	: 0.3,
+                    layout : 'form',
+                    labelWidth : 50,
+                    border : false,
+                    items  : [cboEstadoCheckLaboral]
+                }
+            ]
+        }]
+});
+
+var frmDatosCheckLaboral = new Ext.FormPanel({
+    frame       : true,
+    border      : false,
+    title       : 'Datos Check Laboral',
+    style       : 'padding:1px 1px 1px 1px',
+    //width       : 740,
+    items       : [{
+            layout  : 'column',
+            border  : false,
+            frame   : false,
+            style   : 'padding: 0px 0px 0px 0px',
+            items   : [hid_codchklab,
+                {
+                    columnWidth	: 0.6,
+                    layout : 'form',
+                    labelWidth : 120,
+                    border : false,
+                    items  : [txt_nomperref]
+                },
+                {
+                    columnWidth	: 0.4,
+                    layout : 'form',
+                    labelWidth : 65,
+                    border : false,
+                    items  : [txt_nomemp]
+                }
+            ]
+        },{
+            layout  : 'column',
+            border  : false,
+            frame   : false,
+            style   : 'padding: 0px 0px 0px 0px',
+            items   : [
+                {
+                    columnWidth	: 0.2,
+                    layout : 'form',
+                    labelWidth : 60,
+                    border : false,
+                    items  : [txt_telemp]
+                },
+                {
+                    columnWidth	: 0.4,
+                    layout : 'form',
+                    labelWidth : 95,
+                    border : false,
+                    items  : [txt_perlab]
+                },
+                {
+                    columnWidth	: 0.4,
+                    layout : 'form',
+                    labelWidth : 80,
+                    border : false,
+                    items  : [txt_motces]
+                }
+            ]
+        }]
+});
+
+var frmListaCheckLaboral = new Ext.FormPanel({
+    frame       : false,
+    border      : false,
+    fileUpload  : true,
+    //autoScroll : true,
+    //width       : 740,
+    style       : 'padding:1px 1px 1px 1px',
+    items       : [grd_detListaChkLab]
+});
+
+
 
 //TabPanel que contiene los diferentes Checks
 var tabPanelCheck = new Ext.TabPanel({
@@ -5648,7 +6170,99 @@ var tabPanelCheck = new Ext.TabPanel({
     },{
             title   : 'Check Laboral',
             id      : 'tbp_checklaboral',
-            disabled    : true
+            disabled    : true,
+            frame : true,
+            border : false,
+            autoScroll : true,
+            items : [frmListaCheckLaboral,frmDatosCheckLaboral,frmListaPreguntas,frmDatosCheckLaboral2],
+            tbar    : ['Nombre : ',txt_chklabnomper,'Puesto : ',cboCheckPuestosLab,{
+                        xtype: 'tbfill'
+                        },
+                        {
+                            text : 'Nuevo',
+                            cls  : 'x-btn-text-icon',
+                            id  : 'btn_NuevoCheckLaboral',
+                            icon : 'files/images_app/document-share.png',
+                            handler : function(){
+                                            NewChkLab = 'si';
+                                            txt_nomperref.setReadOnly(false);
+                                            txt_nomperref.setValue("");
+                                            txt_nomemp.setReadOnly(false);
+                                            txt_nomemp.setValue("");
+                                            txt_telemp.setReadOnly(false);
+                                            txt_telemp.setValue("");
+                                            txt_perlab.setReadOnly(false);
+                                            txt_perlab.setValue("");
+                                            txt_motces.setReadOnly(false);
+                                            txt_motces.setValue("");
+                                            txt_percont.setReadOnly(false);
+                                            txt_percont.setValue("");
+                                            txt_carpercont.setReadOnly(false);
+                                            txt_carpercont.setValue("");
+                                            dp_fecent.setReadOnly(false);
+                                            dp_fecent.setValue("");
+                                            txt_noment.setReadOnly(false);
+                                            txt_noment.setValue("");
+                                            txt_obsent.setReadOnly(false);
+                                            txt_obsent.setValue("");
+                                            cboEstadoCheckLaboral.setReadOnly(false);
+                                            cboEstadoCheckLaboral.setValue(1);
+                                            cbo_conclusionlab.setReadOnly(false);
+                                            cbo_conclusionlab.setValue(1);
+                                            Ext.getCmp('btn_CancelarCheckLaboral').enable();
+                                            Ext.getCmp('btn_GrabarCheckLaboral').enable();
+                                            Ext.getCmp('btn_NuevoCheckLaboral').disable();
+                                            grd_detListaChkLab.disable();
+                                            ds_preguntas.load({params: {n:5, codcue:1, codsol:cod_sol, codper:cod_per}})
+                                            txt_nomperref.focus(true);
+                            }
+                        },
+                        {
+                            text : 'Cancelar',
+                            cls  : 'x-btn-text-icon',
+                            id  : 'btn_CancelarCheckLaboral',
+                            disabled : true,
+                            icon : 'files/images_app/delete.gif',
+                            handler : function(){
+                                            txt_nomperref.setReadOnly(true);
+                                            txt_nomperref.setValue("");
+                                            txt_nomemp.setReadOnly(true);
+                                            txt_nomemp.setValue("");
+                                            txt_telemp.setReadOnly(true);
+                                            txt_telemp.setValue("");
+                                            txt_perlab.setReadOnly(true);
+                                            txt_perlab.setValue("");
+                                            txt_motces.setReadOnly(true);
+                                            txt_motces.setValue("");
+                                            txt_percont.setReadOnly(true);
+                                            txt_percont.setValue("");
+                                            txt_carpercont.setReadOnly(true);
+                                            txt_carpercont.setValue("");
+                                            dp_fecent.setReadOnly(true);
+                                            dp_fecent.setValue("");
+                                            txt_noment.setReadOnly(true);
+                                            txt_noment.setValue("");
+                                            txt_obsent.setReadOnly(true);
+                                            txt_obsent.setValue("");
+                                            cboEstadoCheckLaboral.setReadOnly(true);
+                                            cboEstadoCheckLaboral.setValue(1);
+                                            cbo_conclusionlab.setReadOnly(true);
+                                            cbo_conclusionlab.setValue(1);
+                                            Ext.getCmp('btn_CancelarCheckLaboral').disable();
+                                            Ext.getCmp('btn_GrabarCheckLaboral').disable();
+                                            Ext.getCmp('btn_NuevoCheckLaboral').enable();
+                                            grd_detListaChkLab.enable();
+                                            ds_preguntas.removeAll();
+                            }
+                        },
+                        {
+                            text : 'Grabar',
+                            cls  : 'x-btn-text-icon',
+                            id  : 'btn_GrabarCheckLaboral',
+                            disabled : true,
+                            icon : 'files/images_app/disk.png',
+                            handler : function(){}
+                        }]
     }]
 });
 
@@ -5994,6 +6608,114 @@ var ds_obtieneCheckDomici = new Ext.data.Store({
                     }
 });
 
+
+//DataStore para obtener datos grabados del CheckService
+var ds_obtieneCheckLaboral = new Ext.data.Store({
+                    reader: new Ext.data.JsonReader({
+                        root            : 'checklaboralpersona',
+                        totalProperty	: 'total',
+                        id              : 'codchklab'
+                        },
+                        [{name: 'codchklab', mapping: 'codchklab'},
+                        {name: 'codper', mapping: 'codper'},
+                        {name: 'codsol', mapping: 'codsol'},
+                        {name: 'nomperref', mapping: 'nomperref'},
+                        {name: 'nomemp', mapping: 'nomemp'},
+                        {name: 'telemp', mapping: 'telemp'},
+                        {name: 'perlab', mapping: 'perlab'},
+                        {name: 'motces', mapping: 'motces'},
+                        {name: 'percont', mapping: 'percont'},
+                        {name: 'carpercont', mapping: 'carpercont'},
+                        {name: 'fecent', mapping: 'fecent'},
+                        {name: 'obsent', mapping: 'obsent'},
+                        {name: 'noment', mapping: 'noment'},
+                        {name: 'codestchk', mapping: 'codestchk'},
+                        {name: 'codcue', mapping: 'codcue'},
+                        {name: 'cueresp', mapping: 'cueresp'},
+                        {name: 'codcon', mapping: 'codcon'}
+                        ]),
+                    proxy: new Ext.data.HttpProxy({
+                        url: 'DB/checklaboral.php',
+                        method : 'POST'
+                    }),
+                    autoLoad: false,
+                    listeners:{
+                        load : function(store){
+                                var numchecks=store.getCount();
+                                //alert(numchecks);
+                                for (var i = 0; i < numchecks; i++){
+                                    var codchklab=store.getAt(i).data.codchklab;
+                                    hid_codchklab.setValue(codchklab);
+                                    var nomperref=store.getAt(i).data.nomperref;
+                                    txt_nomperref.setValue(nomperref);
+                                    var nomemp=store.getAt(i).data.nomemp;
+                                    txt_nomemp.setValue(nomemp);
+                                    var telemp=store.getAt(i).data.telemp;
+                                    txt_telemp.setValue(telemp);
+                                    var perlab=store.getAt(i).data.perlab;
+                                    txt_perlab.setValue(perlab);
+                                    var motces=store.getAt(i).data.motces;
+                                    txt_motces.setValue(motces);
+                                    var cueresp = store.getAt(i).data.cueresp;
+                                    var codcue = store.getAt(i).data.codcue;
+                                    var codsol = store.getAt(i).data.codsol;
+                                    var codper = store.getAt(i).data.codper;
+                                    if (cueresp==0){
+                                        ds_preguntas.load({params: {n:3, codper:codper, codsol:codsol, codchklab:codchklab, codcue:codcue}})
+                                    }
+                                    else{
+                                        ds_preguntas.load({params: {n:2, codchklab:codchklab}})
+                                    }
+                                    var percont = store.getAt(i).data.percont;
+                                    txt_percont.setValue(percont);
+                                    var carpercont = store.getAt(i).data.carpercont;
+                                    txt_carpercont.setValue(carpercont);
+                                    var fecent = store.getAt(i).data.fecent;
+                                    dp_fecent.setValue(Ext.util.Format.substr(fecent,8,2)+'/'+Ext.util.Format.substr(fecent,5,2)+'/'+Ext.util.Format.substr(fecent,0,4));
+                                    var noment = store.getAt(i).data.noment;
+                                    txt_noment.setValue(noment);
+                                    var obsent = store.getAt(i).data.obsent;
+                                    txt_obsent.setValue(obsent);
+                                    var codestchk = store.getAt(i).data.codestchk;
+                                    cboEstadoCheckLaboral.setValue(codestchk);
+                                    var codcon = store.getAt(i).data.codcon;
+                                    cbo_conclusionlab.setValue(codcon);
+                                    if (codestchk=='3'){
+                                        txt_nomperref.setReadOnly(true);
+                                        txt_nomemp.setReadOnly(true);
+                                        txt_telemp.setReadOnly(true);
+                                        txt_perlab.setReadOnly(true);
+                                        txt_motces.setReadOnly(true);
+                                        txt_percont.setReadOnly(true);
+                                        txt_carpercont.setReadOnly(true);
+                                        dp_fecent.setReadOnly(true);
+                                        txt_noment.setReadOnly(true);
+                                        txt_obsent.setReadOnly(true);
+                                        cboEstadoCheckLaboral.setReadOnly(true);
+                                        cbo_conclusionlab.setReadOnly(true);
+                                    }else{
+                                        txt_nomperref.setReadOnly(false);
+                                        txt_nomemp.setReadOnly(false);
+                                        txt_telemp.setReadOnly(false);
+                                        txt_perlab.setReadOnly(false);
+                                        txt_motces.setReadOnly(false);
+                                        txt_percont.setReadOnly(false);
+                                        txt_carpercont.setReadOnly(false);
+                                        dp_fecent.setReadOnly(false);
+                                        txt_noment.setReadOnly(false);
+                                        txt_obsent.setReadOnly(false);
+                                        cboEstadoCheckLaboral.setReadOnly(false);
+                                        cbo_conclusionlab.setReadOnly(false);
+                                        Ext.getCmp('btn_CancelarCheckLaboral').enable();
+                                        Ext.getCmp('btn_GrabarCheckLaboral').enable();
+                                        Ext.getCmp('btn_NuevoCheckLaboral').disable();
+                                    }
+                                }
+                        }
+                    }
+});
+
+
 //DataStore que Construye las pestañas de Checks
 var ds_cabchecksrv = new Ext.data.Store({
                 reader: new Ext.data.JsonReader({
@@ -6020,10 +6742,10 @@ var ds_cabchecksrv = new Ext.data.Store({
                         for (var i = 0; i < numchecks; i++) {
                             var objeto=store.getAt(i).data.nomobj
                             Ext.getCmp(objeto).enable();
+                            var nombre = ds_cabchecksrv.getAt(0).data.nombre;
+                            var puesto = ds_cabchecksrv.getAt(0).data.codpue;
                             switch (objeto){
                                 case 'tbp_checkservice' :
-                                    var nombre = ds_cabchecksrv.getAt(0).data.nombre;
-                                    var puesto = ds_cabchecksrv.getAt(0).data.codpue;
                                     txt_chksrvnomper.setValue(nombre);
                                     cboCheckPuestos.setValue(puesto);
                                     cboCheckPuestos.setReadOnly(true);
@@ -6038,6 +6760,10 @@ var ds_cabchecksrv = new Ext.data.Store({
                                     //alert(hid_checkDom.getValue());
                                     break;
                                 case 'tbp_checklaboral' :
+                                    txt_chklabnomper.setValue(nombre);
+                                    cboCheckPuestosLab.setValue(puesto);
+                                    cboCheckPuestosLab.setReadOnly(true);
+                                    ds_obtieneListaCheckLaboral.load();
                                     break;
                                 default :
                                     alert('es otro check q no manyo')
@@ -6058,7 +6784,7 @@ ds_cabchecksrv.load();
             iconCls     : 'regsol',
             layout	: 'fit',
             width	: 785,
-            height	: 580,
+            height	: 582,
             resizable   : false,
             closable    : true,
             modal       : true,
