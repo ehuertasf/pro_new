@@ -5292,7 +5292,8 @@ var btn_pdf_checkservice = new Ext.Button({
 
 
 function pdf_checkservice(){
-    alert("ok")
+    alert(codper);
+    //document.location = 'reportes/rptCheckService.php?codper='+codper+'&codsol='+codsol;
 }
 
 //TabPanel que contiene los diferentes Checks

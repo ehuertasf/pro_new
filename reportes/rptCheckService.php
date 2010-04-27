@@ -53,6 +53,10 @@ include_once("connect.php");
 $link=conectarse();
 //$dbh=conectaPDO();
 
+$codper=$_GET["codper"];
+$codsol=$_GET["codsol"];
+
+
 $result=mysql_query("SELECT a.codchkser,    
 CONCAT(c.apepatper,' ',c.apematper,', ',c.nomper) AS nombre,
 d.despue AS puesto,
@@ -72,7 +76,7 @@ LEFT JOIN tb_detallesolicitud AS b ON b.codper=a.codper AND b.codsol=a.codsol
 LEFT JOIN tb_persona AS c ON c.codper=a.codper 
 LEFT JOIN tb_puesto AS d ON d.codpue=b.codpue
 LEFT JOIN tb_delito AS e ON e.coddel=a.coddel
-WHERE a.codper=1 AND a.codsol=5",$link);
+WHERE a.codper=$codper AND a.codsol=$codsol",$link);
 
 while($row = mysql_fetch_array($result))
 {
