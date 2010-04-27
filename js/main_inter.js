@@ -1559,12 +1559,12 @@ vcodper=0,vapepatper='',vapematper='',vnomper='',vdestipdoc='',vnumdocper='',vco
         lazyRender : true,
         selectOnFocus:true,
         onSelect    : function(record){
-                            selPuesto=true;
-                            cboPuestos.setValue(record.data.despue);
-                            cboPuestos.collapse();
-                            vcodpue=record.data.codpue;
-                            vdespue=record.data.despue;
-                        }
+                    selPuesto=true;
+                    cboPuestos.setValue(record.data.despue);
+                    cboPuestos.collapse();
+                    vcodpue=record.data.codpue;
+                    vdespue=record.data.despue;
+                }
     });
 
 var cm_solpersonas = new Ext.grid.ColumnModel(
@@ -5280,6 +5280,20 @@ var frmCheckDomiciliario = new Ext.FormPanel({
 });
 
 //Botones de los Checks
+var btn_pdf_checkservice = new Ext.Button({
+    text	:'Pdf',
+    id		:'xls279',
+    width       :100,
+    tooltip     :'Imprimir el documento en Pdf',
+    handler	:pdf_checkservice,
+    cls         :'x-btn-text-icon',
+    icon        :'files/images_app/document-pdf-text.png'
+});
+
+
+function pdf_checkservice(){
+    alert("ok")
+}
 
 //TabPanel que contiene los diferentes Checks
 var tabPanelCheck = new Ext.TabPanel({
@@ -5288,14 +5302,14 @@ var tabPanelCheck = new Ext.TabPanel({
     items   :   [{
             title   : 'Check Service',
             id      : 'tbp_checkservice',
-            disabled    : true,
+            disabled: true,
             frame   : true,
             border  : false,
             items   : [frmCheckService],
-            tbar    : ['Nombre : ',txt_chksrvnomper,'Puesto : ',cboCheckPuestos,{
-                        xtype: 'tbfill'
-                        },
+            tbar    : ['Nombre : ',txt_chksrvnomper,'Puesto : ',cboCheckPuestos,'-',btn_pdf_checkservice,'-',
                         {
+                        xtype: 'tbfill'
+                        },{
                             text : 'Grabar',
                             cls  : 'x-btn-text-icon',
                             id  : 'btn_GrabarCheckSrevice',

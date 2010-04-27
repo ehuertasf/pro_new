@@ -10,8 +10,6 @@
 
 function ftn_act_estadochk($codsol){
 
-
-
 	$jquery_=mysql_query("SELECT ds.codsol,ds.codper,ds.codpacchk
 			FROM tb_detallesolicitud ds LEFT JOIN tb_persona p ON ds.codper=p.codper
 			LEFT JOIN tb_packcheck pc ON ds.codpacchk=pc.codpacchk
