@@ -22,15 +22,33 @@
 .consol {
     background-image: url(../files/images_app/document-search-result.png);
 }
+.zona {
+    background-image: url(../files/images_app/plugin.gif);
+}
+.riesgo {
+    background-image: url(../files/images_app/error.png);
+}
+.delito {
+    background-image: url(../files/images_app/information.png);
+}
+.puesto {
+    background-image: url(../files/images_app/user_suit.png);
+}
+.rpt_cliente{
+    background-image: url(../files/images_app/application_view_columns.png);
+}
+.rpt_persona{
+    background-image: url(../files/images_app/table-join.png);
+}
 
 /*CSS para fileuploadfield*/
 .upload-icon {
-            background: url('../lib/extjs311/examples/shared/icons/fam/image_add.png') no-repeat 0 0 !important;
-        }
-        #fi-button-msg {
-            border: 2px solid #ccc;
-            padding: 5px 10px;
-            background: #eee;
-            margin: 5px;
-            float: left;
-        }
+    background: url('../../librerias/ext-3.1.1/examples/shared/icons/fam/image_add.png') no-repeat 0 0 !important;
+}
+#fi-button-msg {
+    border: 2px solid #ccc;
+    padding: 5px 10px;
+    background: #eee;
+    margin: 5px;
+    float: left;
+}

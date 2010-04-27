@@ -32,11 +32,27 @@ Ext.onReady(function(){
             width:190,
             inputType:'password',
             id: 'pass',
-            allowBlank:false
+            allowBlank:false,
+			listeners	:{
+				specialkey: function(f,e){
+					if (e.getKey() == e.ENTER) {
+						Ingresar()
+					}
+				}
+		   }
             }],
         buttons:[{
                 text:'Ingresar',
-                handler:function(){
+                handler:Ingresar
+                },{
+                text: 'Borrar',
+                handler: function(){
+                            login.getForm().reset();
+                }
+                }]
+    });
+
+	function Ingresar(){
                             login.getForm().submit({
                             method:'POST',
                             waitTitle:'Espere.....',
@@ -61,14 +77,7 @@ Ext.onReady(function(){
                                         login.getForm().reset();
                             }
                             });
-                }
-                },{
-                text: 'Borrar',
-                handler: function(){
-                            login.getForm().reset();
-                }
-                }]
-    });
+	}
 
     var createwindow = new Ext.Window({
         frame:true,
