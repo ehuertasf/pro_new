@@ -2498,7 +2498,7 @@ ds_cabsol.on('load',function(){
 //Detalle de la solicitud
 
 
-var ds_detsol = new Ext.data.Store({
+ds_detsol = new Ext.data.Store({
                     proxy: new Ext.data.HttpProxy({
                         url: 'DB/solicitud.php',
                         method : 'POST'
@@ -2589,7 +2589,8 @@ var cm_detpersonas = new Ext.grid.ColumnModel(
     );
 
 
-    var grd_detpersonas = new Ext.grid.EditorGridPanel({
+
+var grd_detpersonas = new Ext.grid.EditorGridPanel({
         id      : 'grd_detpersonas',
         store   : ds_detsol,
         title   : 'Personas',
@@ -2797,6 +2798,7 @@ function frm_checks_persona(cod_sol, cod_per){
 var refpol=false,antpol=false,reqjud=false,refter=false,refdro=false,impsal=false,invpen=false;
 var selResidente=false, vcodres="", vdesres="";
 var NewChkLab='no';
+var Cuestionario=0;
 //var resiregist=0;
 ///////////////
 /*Data Stores*/
@@ -2979,8 +2981,8 @@ var btnImgCargada = new Ext.Button({
                                     id          : 'frm_imgDni',
                                     iconCls     : 'regper',
                                     layout	: 'fit',
-                                    width	: 300,
-                                    height	: 300,
+                                    width	: 600,
+                                    height	: 400,
                                     resizable   : false,
                                     closable    : true,
                                     modal       : true,
@@ -3962,8 +3964,8 @@ var btnImgDom1 = new Ext.Button({
                                     id          : 'frm_imgdom1',
                                     iconCls     : 'regper',
                                     layout	: 'fit',
-                                    width	: 300,
-                                    height	: 300,
+                                    width	: 600,
+                                    height	: 400,
                                     resizable   : false,
                                     closable    : true,
                                     modal       : true,
@@ -4039,8 +4041,8 @@ var btnImgDom2 = new Ext.Button({
                                     id          : 'frm_imgdom2',
                                     iconCls     : 'regper',
                                     layout	: 'fit',
-                                    width	: 300,
-                                    height	: 300,
+                                    width	: 600,
+                                    height	: 400,
                                     resizable   : false,
                                     closable    : true,
                                     modal       : true,
@@ -4112,12 +4114,12 @@ var btnImgMap = new Ext.Button({
                             });
                             if (!win_imdmap){
                                 new Ext.Window({
-                                    title	: 'Imagen 1 Domicilio',
+                                    title	: 'Mapa Domicilio',
                                     id          : 'frm_imgmap',
                                     iconCls     : 'regper',
                                     layout	: 'fit',
-                                    width	: 300,
-                                    height	: 300,
+                                    width	: 600,
+                                    height	: 400,
                                     resizable   : false,
                                     closable    : true,
                                     modal       : true,
@@ -5282,6 +5284,51 @@ var frmCheckDomiciliario = new Ext.FormPanel({
 
 ///////////////////////////////Controles de Check Laboral/////////////////////////////////////
 
+var btn_pdf_checkservice = new Ext.Button({
+   text    :'Pdf',
+   id        :'xls279',
+   width       :60,
+   tooltip     :'Imprimir el documento en Pdf',
+   handler    :pdf_checkservice,
+   cls         :'x-btn-text-icon',
+   icon        :'files/images_app/document-pdf-text.png'
+});
+
+var btn_pdf_checkdomiciliario = new Ext.Button({
+   text    :'Pdf',
+   id        :'xls280',
+   width       :60,
+   tooltip     :'Imprimir el documento en Pdf',
+   handler    :pdf_checkdomiciliario,
+   cls         :'x-btn-text-icon',
+   icon        :'files/images_app/document-pdf-text.png'
+});
+
+var btn_pdf_checklaboral = new Ext.Button({
+   text    :'Pdf',
+   id        :'xls281',
+   width       :60,
+   tooltip     :'Imprimir el documento en Pdf',
+   handler    :pdf_checklaboral,
+   cls         :'x-btn-text-icon',
+   icon        :'files/images_app/document-pdf-text.png'
+});
+
+function pdf_checkservice(){
+
+   window.open("http://localhost/pro_new/reportes/rptCheckService.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
+}
+
+function pdf_checkdomiciliario(){
+
+    window.open("http://localhost/pro_new/reportes/rptCheckDomiciliario.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
+}
+
+function pdf_checklaboral(){
+
+    window.open("http://localhost/pro_new/reportes/rptCheckLaboral.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
+}
+
 //Nombre
 var txt_chklabnomper = new Ext.form.TextField({
     id          : 'txt_chklabnomper',
@@ -5403,6 +5450,8 @@ var cm_detchkLaboral = new Ext.grid.ColumnModel(
                                 ds_obtieneCheckLaboral.load({params: {n:4, codchklab:chklab}});
                                 grd_detListaChkLab.disable();
                                 NewChkLab = 'no';
+                                Cuestionario = ds_obtieneListaCheckLaboral.getAt(rowIndex).data.cueresp;
+                                //alert(Cuestionario);
                                 Ext.getCmp('btn_CancelarCheckLaboral').enable();
                                 Ext.getCmp('btn_GrabarCheckLaboral').enable();
                                 Ext.getCmp('btn_NuevoCheckLaboral').disable();
@@ -5424,7 +5473,7 @@ var ds_preguntas = new Ext.data.Store({
                         {name: 'codcue', mapping: 'codcue'},
                         {name: 'codpre', mapping: 'codpre'},
                         {name: 'despre', mapping: 'despre'},
-                        {name: 'respre', mapping: 'telemp'},
+                        {name: 'respre', mapping: 'respre'},
                         ]),
                     proxy: new Ext.data.HttpProxy({
                         url: 'DB/checklaboral.php',
@@ -5476,6 +5525,7 @@ var cm_preguntas = new Ext.grid.ColumnModel(
             editor: new Ext.form.TextField({
                 anchor : '100%',
                 fieldLabel : 'Check Identidad'
+
             })
         }]
     );
@@ -5809,7 +5859,7 @@ var tabPanelCheck = new Ext.TabPanel({
             frame   : true,
             border  : false,
             items   : [frmCheckService],
-            tbar    : ['Nombre : ',txt_chksrvnomper,'Puesto : ',cboCheckPuestos,{
+            tbar    : ['Nombre : ',txt_chksrvnomper,'Puesto : ',cboCheckPuestos,'-',btn_pdf_checkservice,'-',{
                         xtype: 'tbfill'
                         },
                         {
@@ -5885,8 +5935,7 @@ var tabPanelCheck = new Ext.TabPanel({
                                                             });
 
                                                             stcondetsolper.baseParams={
-                                                                    n:5,
-                                                                    codestsol:cboEstadosol.getValue()
+                                                                    n:5
                                                             };
                                                             stcondetsolper.load();
 
@@ -5936,7 +5985,7 @@ var tabPanelCheck = new Ext.TabPanel({
             border : false,
             autoScroll : true,
             items : [frmCheckDomiciliario,pnl_imagenes],
-            tbar    : ['Nombre : ',txt_chkdomnomper,'Puesto : ',cboCheckPuestosDom,{
+            tbar    : ['Nombre : ',txt_chkdomnomper,'Puesto : ',cboCheckPuestosDom,'-',btn_pdf_checkdomiciliario,'-',{
                         xtype: 'tbfill'
                         },
                         {
@@ -6116,6 +6165,31 @@ var tabPanelCheck = new Ext.TabPanel({
                                                                     buttons: Ext.MessageBox.OK,
                                                                     icon: Ext.MessageBox.INFO
                                                                 });
+
+                                                            //Ricardo 14-04-10
+                                                            ds_detsol.proxy= new Ext.data.HttpProxy({
+                                                                    url: 'DB/solicitud.php',
+                                                                    method : 'POST'
+                                                            });
+                                                            ds_detsol.baseParams={
+                                                                    n:8,
+                                                                    codsol:cod_sol
+                                                            };
+                                                            ds_detsol.load();
+
+                                                            ftnactestsol(cod_sol);
+
+                                                            stcondetsolper.proxy= new Ext.data.HttpProxy({
+                                                                    url: 'DB/solicitud.php',
+                                                                    method : 'POST'
+                                                            });
+
+                                                            stcondetsolper.baseParams={
+                                                                    n:5
+                                                                    
+                                                            };
+                                                            stcondetsolper.load();
+
                                                             }
                                                             }
                                                             else {
@@ -6155,7 +6229,7 @@ var tabPanelCheck = new Ext.TabPanel({
             border : false,
             autoScroll : true,
             items : [frmListaCheckLaboral,frmDatosCheckLaboral,frmListaPreguntas,frmDatosCheckLaboral2],
-            tbar    : ['Nombre : ',txt_chklabnomper,'Puesto : ',cboCheckPuestosLab,{
+            tbar    : ['Nombre : ',txt_chklabnomper,'Puesto : ',cboCheckPuestosLab,'-',btn_pdf_checklaboral,'-',{
                         xtype: 'tbfill'
                         },
                         {
@@ -6241,7 +6315,154 @@ var tabPanelCheck = new Ext.TabPanel({
                             id  : 'btn_GrabarCheckLaboral',
                             disabled : true,
                             icon : 'files/images_app/disk.png',
-                            handler : function(){}
+                            handler : function(){
+                                var cant_preguntas = ds_preguntas.getCount();
+                                var array_respuestas = [];
+                                if (frmDatosCheckLaboral.getForm().isValid() && frmDatosCheckLaboral2.getForm().isValid()){
+                                    Ext.Msg.confirm('Confirmación','¿Confirma que desea grabar el Check Laboral?', function GrabaCheckLaboral(btn){
+                                        if (btn == 'yes') {
+                                        //arma información del detalle
+                                            for (var i = 0; i < cant_preguntas; i++) {
+                                                var record = grd_preguntas.getStore().getAt(i);
+                                                var xcodsol = record.data.codsol;
+                                                var xcodper = record.data.codper;
+                                                var xcodchklab = record.data.codchklab;
+                                                var xcodcue = record.data.codcue;
+                                                var xcodpre = record.data.codpre;
+                                                var xrespre = record.data.respre;
+                                                var item = xcodsol + '$$' + xcodper + '$$' + xcodcue + '$$' + xcodpre + '$$' + xrespre;
+                                                array_respuestas.push(item);
+                                            }
+                                            var codsol = cod_sol;
+                                            var codper = cod_per;
+                                            var codchklab = hid_codchklab.getValue();
+                                            var nuevo = NewChkLab;
+                                            var nomperref = txt_nomperref.getValue();
+                                            var nomemp = txt_nomemp.getValue();
+                                            var telemp = txt_telemp.getValue();
+                                            var perlab = txt_perlab.getValue();
+                                            var motces = txt_motces.getValue();
+                                            var percont = txt_percont.getValue();
+                                            var carpercont = txt_carpercont.getValue();
+                                            var fectem = dp_fecent.getValue()
+                                            var fecent = Ext.util.Format.trim(fectem.format('Y-m-d'))+' 00:00:00';
+                                            var noment = txt_noment.getValue();
+                                            var codcon = cbo_conclusionlab.getValue();
+                                            var obsent = txt_obsent.getValue();
+                                            var codestchk = cboEstadoCheckLaboral.getValue();
+                                            var detrespuestas = array_respuestas.join('|,|');
+                                            Ext.Ajax.request({
+                                                url : 'DB/checklaboral.php',
+                                                params : {
+                                                    n   : 6,
+                                                    nuevo : nuevo,
+                                                    codchklab : codchklab,
+                                                    codper : codper,
+                                                    codsol : codsol,
+                                                    nomperref : nomperref,
+                                                    nomemp : nomemp,
+                                                    telemp : telemp,
+                                                    perlab : perlab,
+                                                    motces : motces,
+                                                    percont : percont,
+                                                    carpercont : carpercont,
+                                                    fecent : fecent,
+                                                    noment : noment,
+                                                    codcon : codcon,
+                                                    obsent : obsent,
+                                                    codestchk : codestchk,
+                                                    cueresp : Cuestionario,
+                                                    respuestas : detrespuestas
+                                                },
+                                                callback : function(opt,success,response){
+                                                    if (success) {
+                                                            var responseData = Ext.util.JSON.decode(response.responseText);
+                                                            var error = responseData.respuesta.error;
+                                                            var mensaje = responseData.respuesta.mensaje;
+                                                            if (error==0){
+                                                                frmDatosCheckLaboral.getForm().reset();
+                                                                frmDatosCheckLaboral2.getForm().reset();
+                                                                txt_nomperref.setReadOnly(true);
+                                                                txt_nomperref.setValue("");
+                                                                txt_nomemp.setReadOnly(true);
+                                                                txt_nomemp.setValue("");
+                                                                txt_telemp.setReadOnly(true);
+                                                                txt_telemp.setValue("");
+                                                                txt_perlab.setReadOnly(true);
+                                                                txt_perlab.setValue("");
+                                                                txt_motces.setReadOnly(true);
+                                                                txt_motces.setValue("");
+                                                                txt_percont.setReadOnly(true);
+                                                                txt_percont.setValue("");
+                                                                txt_carpercont.setReadOnly(true);
+                                                                txt_carpercont.setValue("");
+                                                                dp_fecent.setReadOnly(true);
+                                                                dp_fecent.setValue("");
+                                                                txt_noment.setReadOnly(true);
+                                                                txt_noment.setValue("");
+                                                                txt_obsent.setReadOnly(true);
+                                                                txt_obsent.setValue("");
+                                                                cboEstadoCheckLaboral.setReadOnly(true);
+                                                                cboEstadoCheckLaboral.setValue(1);
+                                                                cbo_conclusionlab.setReadOnly(true);
+                                                                cbo_conclusionlab.setValue(1);
+                                                                Ext.getCmp('btn_CancelarCheckLaboral').disable();
+                                                                Ext.getCmp('btn_GrabarCheckLaboral').disable();
+                                                                Ext.getCmp('btn_NuevoCheckLaboral').enable();
+                                                                grd_detListaChkLab.enable();
+                                                                ds_obtieneListaCheckLaboral.load();
+                                                                ds_preguntas.removeAll();
+                                                                NewChkLab = 'si';
+                                                            }
+                                                            Ext.Msg.show({title: 'Aviso',
+                                                                     msg: mensaje,
+                                                                     buttons: Ext.MessageBox.OK,
+                                                                     icon: Ext.MessageBox.INFO
+                                                                 });
+
+                                                            //Ricardo 14-04-10
+                                                            ds_detsol.proxy= new Ext.data.HttpProxy({
+                                                                    url: 'DB/solicitud.php',
+                                                                    method : 'POST'
+                                                            });
+                                                            ds_detsol.baseParams={
+                                                                    n:8,
+                                                                    codsol:cod_sol
+                                                            };
+                                                            ds_detsol.load();
+
+                                                            ftnactestsol(cod_sol);
+
+                                                            stcondetsolper.proxy= new Ext.data.HttpProxy({
+                                                                    url: 'DB/solicitud.php',
+                                                                    method : 'POST'
+                                                            });
+
+                                                            stcondetsolper.baseParams={
+                                                                    n:5
+                                                            };
+                                                            stcondetsolper.load();
+
+                                                        } else {
+                                                           Ext.Msg.show({title: 'Error',
+                                                                     msg: 'Sin respuesta del servidor, comuniquese con Sistemas',
+                                                                     buttons: Ext.MessageBox.OK,
+                                                                     icon: Ext.MessageBox.ERROR
+                                                                 });
+                                                        }
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                                else{
+                                    Ext.Msg.show({title: 'Advertencia',
+                                         msg: 'Faltan Datos obligatorios en el Check Laboral',
+                                         buttons: Ext.MessageBox.OK,
+                                         icon: Ext.MessageBox.INFO
+                                     });
+                                }
+                            }
                         }]
     }]
 });
@@ -6532,7 +6753,19 @@ var ds_obtieneCheckDomici = new Ext.data.Store({
                                         listeners:{
                                             load : function(store){
                                                 var numimages=store.getCount();
-                                                //alert(numimages);
+                                                var img1 = ds_imagenesdomicilio.getAt(0).data.nomimgdom;
+                                                var tip1 = ds_imagenesdomicilio.getAt(0).data.codtipimg;
+                                                var img2 = ds_imagenesdomicilio.getAt(1).data.nomimgdom;
+                                                var tip2 = ds_imagenesdomicilio.getAt(1).data.codtipimg;
+                                                var img3 = ds_imagenesdomicilio.getAt(2).data.nomimgdom;
+                                                var tip3 = ds_imagenesdomicilio.getAt(2).data.codtipimg;
+                                                hid_imgdom1act.setValue(img1);
+                                                cbo_tipimg1.setValue(tip1);
+                                                hid_imgdom2act.setValue(img2);
+                                                cbo_tipimg2.setValue(tip2);
+                                                hid_imgmapact.setValue(img3);
+                                                cbo_imgpama.setValue(tip3);
+                                                //alert(ds_imagenesdomicilio.getAt(0).data.nomimgdom);
                                             }
                                         }
                                     });
@@ -6673,6 +6906,7 @@ var ds_obtieneCheckLaboral = new Ext.data.Store({
                                         txt_obsent.setReadOnly(true);
                                         cboEstadoCheckLaboral.setReadOnly(true);
                                         cbo_conclusionlab.setReadOnly(true);
+                                        Ext.getCmp('btn_GrabarCheckLaboral').disable();
                                     }else{
                                         txt_nomperref.setReadOnly(false);
                                         txt_nomemp.setReadOnly(false);
