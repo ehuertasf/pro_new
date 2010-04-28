@@ -22,15 +22,15 @@ insert  into `tb_check`(`codchk`,`deschk`,`nomobj`,`nomtbl`,`usuregchk`,`fecregc
 
 /*Data for the table `tb_chkdomicilio` */
 
-insert  into `tb_chkdomicilio`(`codchkdom`,`codper`,`codsol`,`coddpto`,`codpro`,`coddist`,`codtipvia`,`nomviadom`,`numdom`,`urbdom`,`domici`,`perent`,`codpar`,`otroparent`,`anoresdom`,`mesresdom`,`otrrescon`,`codviv`,`codtipviv`,`otrtipviv`,`numpis`,`pisres`,`codtipmat`,`otrmatcon`,`codestcon`,`arever`,`colfac`,`numpue`,`numven`,`tipmat`,`rejpro`,`pueaccveh`,`obsinmu`,`codzonif`,`otrzonif`,`codzonrie`,`codcon`,`obscon`,`fecciechkdom`,`usuciechkdom`,`codestchk`) values (1,1,5,015,001,035,3,'Apurimac',3321,'P',1,'Eduardo Huertas',2,'',28,0,NULL,1,1,'',2,2,1,'',2,1,'Tabaco',2,1,'Madera',1,0,'Limpia y Ordenada',1,'',1,1,'Recomendado','2010-04-11 21:44:03','ehuertasf',3),(2,10,5,015,001,001,1,'Arequipa',4521,'A',1,'Domingo Llanos',3,NULL,12,10,NULL,1,1,NULL,4,1,1,NULL,1,0,'Lucuma',1,2,'Fierro',0,0,'Zona de mucho transito',2,NULL,2,1,'Vive en zona comercial',NULL,NULL,1),(3,11,6,015,001,001,4,'32',125,'E',NULL,NULL,1,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,1,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,1,1,NULL,NULL,NULL,1),(7,2,10,015,001,001,1,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,1,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,1,1,NULL,NULL,NULL,1);
+insert  into `tb_chkdomicilio`(`codchkdom`,`codper`,`codsol`,`coddpto`,`codpro`,`coddist`,`codtipvia`,`nomviadom`,`numdom`,`urbdom`,`domici`,`perent`,`codpar`,`otroparent`,`anoresdom`,`mesresdom`,`otrrescon`,`codviv`,`codtipviv`,`otrtipviv`,`numpis`,`pisres`,`codtipmat`,`otrmatcon`,`codestcon`,`arever`,`colfac`,`numpue`,`numven`,`tipmat`,`rejpro`,`pueaccveh`,`obsinmu`,`codzonif`,`otrzonif`,`codzonrie`,`codcon`,`obscon`,`fecciechkdom`,`usuciechkdom`,`codestchk`) values (1,1,5,015,001,035,3,'Apurimac',3321,'P',1,'Eduardo Huertas',2,'',28,0,NULL,1,1,'',2,2,1,'',2,1,'Tabaco',2,1,'Madera',1,0,'Limpia y Ordenada',1,'',1,1,'Recomendado','2010-04-11 21:44:03','ehuertasf',1),(2,10,5,015,001,001,1,'Arequipa',4521,'A',1,'Domingo Llanos',3,NULL,12,10,NULL,1,1,NULL,4,1,1,NULL,1,0,'Lucuma',1,2,'Fierro',0,0,'Zona de mucho transito',2,NULL,2,1,'Vive en zona comercial',NULL,NULL,1),(3,11,6,015,001,001,4,'32',125,'E',NULL,NULL,1,NULL,NULL,NULL,NULL,1,1,NULL,NULL,NULL,1,NULL,1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,1,1,NULL,NULL,NULL,1),(7,2,10,015,001,004,1,'PerÃº',1245,'B',1,'Jose Zumaeta',2,'',12,10,NULL,2,1,'',3,2,1,'',1,1,'Melon',2,1,'Hierro',1,1,'Una observaciÃ³n',1,'',1,1,'ObservaciÃ³n del Check Domiciliario','2010-04-27 23:35:02','admin',1);
 
 /*Data for the table `tb_chklaboral` */
 
-insert  into `tb_chklaboral`(`codchklab`,`codper`,`codsol`,`nomperref`,`nomemp`,`telemp`,`perlab`,`motces`,`percont`,`carpercont`,`fecent`,`obsent`,`noment`,`usuciechklab`,`fecciechklab`,`codestchk`,`codcue`,`cueresp`,`codcon`) values (1,1,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,1),(2,10,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,1),(3,11,6,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,1),(4,2,10,'Juan Perez','Telefonica','2105467','Enero 2010','Voluntario','Miguel Araujo','Supervisor','2010-04-11','Recomiendan a la persona en referencia','Luisa Lane',NULL,NULL,1,1,0,2);
+insert  into `tb_chklaboral`(`codchklab`,`codper`,`codsol`,`nomperref`,`nomemp`,`telemp`,`perlab`,`motces`,`percont`,`carpercont`,`fecent`,`obsent`,`noment`,`usuciechklab`,`fecciechklab`,`codestchk`,`codcue`,`cueresp`,`codcon`) values (1,1,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,1),(2,10,5,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,1),(3,11,6,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,1),(4,2,10,'Juan Perez','Telefonica','2105467','Enero 2010','Voluntario','Miguel Araujo','Supervisor','2010-04-11','ObservaciÃ³n de Check Laboral','Luisa Lane','admin','2010-04-27 23:35:49',1,1,1,2),(7,2,10,'Luisa Rojas','BCP','41526389','Enero 2009 - Junio 2009','Fin de campaÃ±a','Roberto Linares','Jefe de Ventas','2010-04-27','Presentaba inasistencias','Yo mismo pues','admin','2010-04-27 23:35:39',1,1,1,3);
 
 /*Data for the table `tb_chkservice` */
 
-insert  into `tb_chkservice`(`codchkser`,`codper`,`codsol`,`imgreniec`,`obsimgreniec`,`indrefpol`,`indantpol`,`indreqjud`,`indrefter`,`indrefdro`,`indimpsalpai`,`refpolchk`,`indinvpen`,`invpenchk`,`recchk`,`coddel`,`codestchk`,`usuciechksrv`,`fecciechksrv`) values (1,1,5,'pic_090609_13.jpg','',0,0,0,0,0,0,NULL,0,NULL,'Recomendable PARA CONTRATACIÃ“N',1,3,NULL,NULL),(2,10,5,'default.jpg',NULL,0,0,0,0,0,0,NULL,0,NULL,NULL,1,1,NULL,NULL),(3,13,5,'default.jpg',NULL,0,0,0,0,0,0,NULL,0,NULL,NULL,1,1,NULL,NULL),(4,11,6,'mila_jovovich.jpg','',1,0,0,0,0,0,'',0,NULL,'Musa',1,1,NULL,NULL),(8,2,10,'1.png','Â¿Hola?',0,0,0,0,0,0,NULL,0,NULL,'Â¿hola?',1,1,NULL,NULL);
+insert  into `tb_chkservice`(`codchkser`,`codper`,`codsol`,`imgreniec`,`obsimgreniec`,`indrefpol`,`indantpol`,`indreqjud`,`indrefter`,`indrefdro`,`indimpsalpai`,`refpolchk`,`indinvpen`,`invpenchk`,`recchk`,`coddel`,`codestchk`,`usuciechksrv`,`fecciechksrv`) values (1,1,5,'DNI1.jpg','',0,0,0,0,0,0,NULL,0,NULL,'Recomendable PARA CONTRATACIÃ“N',1,1,NULL,NULL),(2,10,5,'DNI2.jpg','Posible Homonimia',0,0,0,0,0,0,NULL,0,NULL,'Recomendable PARA CONTRATACIÃ“N',1,1,NULL,NULL),(3,13,5,'DNI3.jpg','Homonimia',0,0,0,0,0,0,NULL,0,NULL,'Recomendable PARA CONTRATACIÃ“N',1,1,NULL,NULL),(4,11,6,'DNI4.jpg','No ha votado en ultimas elecciones',1,0,0,0,0,0,'',0,NULL,'Recomendable PARA CONTRATACIÃ“N',1,1,NULL,NULL),(8,2,10,'DNI5.jpg','Â¿Hola?',0,0,1,0,0,0,'Se robo algo',0,NULL,'Puede reincidir',2,1,NULL,NULL);
 
 /*Data for the table `tb_cliente` */
 
@@ -82,7 +82,7 @@ insert  into `tb_estsol`(`codestsol`,`desestsol`,`estestsol`) values (1,'Registr
 
 /*Data for the table `tb_imgdomicilio` */
 
-insert  into `tb_imgdomicilio`(`codimgdom`,`codsol`,`codper`,`codchkdom`,`codtipimg`,`nomimgdom`,`numimgdom`) values (1,10,2,7,4,'defaut.jpg',1),(2,10,2,7,4,'defaut.jpg',2),(3,10,2,7,4,'defaut.jpg',3);
+insert  into `tb_imgdomicilio`(`codimgdom`,`codsol`,`codper`,`codchkdom`,`codtipimg`,`nomimgdom`,`numimgdom`) values (1,10,2,7,4,'VIV11.jpg',1),(2,10,2,7,4,'VIV21.jpg',2),(3,10,2,7,4,'MAP1.jpg',3);
 
 /*Data for the table `tb_opciones` */
 
@@ -122,13 +122,15 @@ insert  into `tb_residentes`(`codres`,`desres`,`estres`) values (1,'Conyugue',1)
 
 /*Data for the table `tb_residentesdomicilio` */
 
-insert  into `tb_residentesdomicilio`(`codsol`,`codper`,`codchkdom`,`codres`) values (5,1,1,2),(5,1,1,3),(5,1,1,4);
+insert  into `tb_residentesdomicilio`(`codsol`,`codper`,`codchkdom`,`codres`) values (10,2,7,1),(5,1,1,2),(10,2,7,2),(5,1,1,3),(5,1,1,4);
 
 /*Data for the table `tb_respuestas` */
 
+insert  into `tb_respuestas`(`codsol`,`codper`,`codchklab`,`codcue`,`codpre`,`respre`) values (10,2,4,1,1,'Nuevo Valor en respuesta'),(10,2,4,1,2,'Respuesta'),(10,2,4,1,3,'Respuesta'),(10,2,4,1,4,'Respuesta'),(10,2,4,1,5,'Respuesta'),(10,2,4,1,6,'Respuesta'),(10,2,4,1,7,'Respuesta'),(10,2,4,1,8,'Respuesta'),(10,2,4,1,9,'Respuesta'),(10,2,4,1,10,'Respuesta'),(10,2,4,1,11,'Respuesta'),(10,2,4,1,12,'Respuesta'),(10,2,4,1,13,'Respuesta'),(10,2,7,1,1,'Valor 1'),(10,2,7,1,2,'Valor 1'),(10,2,7,1,3,'Valor 1'),(10,2,7,1,4,'Valor 1'),(10,2,7,1,5,'Valor 1'),(10,2,7,1,6,'Valor 1'),(10,2,7,1,7,'Valor 1'),(10,2,7,1,8,'Valor 1'),(10,2,7,1,9,'Valor 1'),(10,2,7,1,10,'Valor 1'),(10,2,7,1,11,'Valor 1'),(10,2,7,1,12,'Valor 1'),(10,2,7,1,13,'Valor 1');
+
 /*Data for the table `tb_solicitud` */
 
-insert  into `tb_solicitud`(`codsol`,`fecregsol`,`fecvensol`,`codcli`,`usuregsol`,`obssol`,`codestsol`) values (5,'2010-03-28 00:51:38','2010-04-11 05:00:00',1,'ehuertasf','www',1),(6,'2010-04-11 19:57:44','2010-04-22 03:00:00',1,'ehuertasf','eeee',1),(10,'2010-04-11 23:19:00','2010-04-17 02:00:00',3,'ehuertasf','',1);
+insert  into `tb_solicitud`(`codsol`,`fecregsol`,`fecvensol`,`codcli`,`usuregsol`,`obssol`,`codestsol`) values (5,'2010-03-28 00:51:38','2010-04-11 05:00:00',1,'admin','www',1),(6,'2010-04-11 19:57:44','2010-04-22 03:00:00',1,'admin','eeee',1),(10,'2010-04-11 23:19:00','2010-04-17 02:00:00',3,'admin','',3);
 
 /*Data for the table `tb_tipcliente` */
 
@@ -172,11 +174,11 @@ insert  into `tb_zonificacion`(`codzonif`,`deszonif`,`estzonif`) values (1,'Resi
 
 /*Data for the table `tmp_estactchk` */
 
-insert  into `tmp_estactchk`(`codsol`,`codper`,`codestchk`) values (5,1,1),(5,10,1),(5,13,1),(10,2,1);
+insert  into `tmp_estactchk`(`codsol`,`codper`,`codestchk`) values (5,1,1),(5,10,1),(5,13,1),(10,2,1),(6,11,1);
 
 /*Data for the table `tmp_estperchk` */
 
-insert  into `tmp_estperchk`(`codsol`,`codper`,`codchk`,`codestchk`) values (5,1,3,1),(5,1,2,3),(5,1,1,3),(5,10,3,1),(5,10,2,1),(5,10,1,1),(5,13,1,1),(10,2,3,1),(10,2,2,1),(10,2,1,1);
+insert  into `tmp_estperchk`(`codsol`,`codper`,`codchk`,`codestchk`) values (5,1,3,1),(5,1,2,3),(5,1,1,3),(5,10,3,1),(5,10,2,1),(5,10,1,1),(5,13,1,1),(10,2,3,1),(10,2,3,1),(10,2,2,1),(6,11,1,1),(6,11,2,1),(6,11,3,1),(10,2,1,1);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

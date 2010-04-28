@@ -5315,31 +5315,17 @@ var btn_pdf_checklaboral = new Ext.Button({
 
 function pdf_checkservice(){
 
-    var view_pdf_checkservice = new Ext.Window({
-        frame:true,
-        autoLoad:'reportes/rptCheckService.php?codper='+cod_per+'&codsol='+cod_sol,
-        title:'Impresi\u00F3n del Documento',
-        width:350,
-        iconCls : 'zona',
-        height:400,
-        modal       :true,
-        closable: true,
-        resizable:false
-    });
-
-    view_pdf_checkservice.show();
-
-//    document.location = 'reportes/rptCheckService.php?codper='+cod_per+'&codsol='+cod_sol;
+    window.open("http://localhost/pro_new/reportes/rptCheckService.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
 }
 
 function pdf_checkdomiciliario(){
 
-    document.location = 'reportes/rptCheckService.php?codper='+cod_per+'&codsol='+cod_sol;
+     window.open("http://localhost/pro_new/reportes/rptCheckDomiciliario.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
 }
 
 function pdf_checklaboral(){
 
-    document.location = 'reportes/rptCheckService.php?codper='+cod_per+'&codsol='+cod_sol;
+     window.open("http://localhost/pro_new/reportes/rptCheckLaboral.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
 }
 ///////////////////////////////Controles de Check Laboral/////////////////////////////////////
 
@@ -5947,8 +5933,7 @@ var tabPanelCheck = new Ext.TabPanel({
                                                             });
 
                                                             stcondetsolper.baseParams={
-                                                                    n:5,
-                                                                    codestsol:cboEstadosol.getValue()
+                                                                    n:5
                                                             };
                                                             stcondetsolper.load();
 
@@ -6178,6 +6163,30 @@ var tabPanelCheck = new Ext.TabPanel({
                                                                     buttons: Ext.MessageBox.OK,
                                                                     icon: Ext.MessageBox.INFO
                                                                 });
+
+                                                                  //Ricardo 14-04-10
+                                                                ds_detsol.proxy= new Ext.data.HttpProxy({
+                                                                        url: 'DB/solicitud.php',
+                                                                        method : 'POST'
+                                                                });
+                                                                ds_detsol.baseParams={
+                                                                        n:8,
+                                                                        codsol:cod_sol
+                                                                };
+                                                                ds_detsol.load();
+
+                                                                ftnactestsol(cod_sol);
+
+                                                                stcondetsolper.proxy= new Ext.data.HttpProxy({
+                                                                        url: 'DB/solicitud.php',
+                                                                        method : 'POST'
+                                                                });
+
+                                                                stcondetsolper.baseParams={
+                                                                        n:5
+                                                                };
+                                                                stcondetsolper.load();
+
                                                             }
                                                             }
                                                             else {
