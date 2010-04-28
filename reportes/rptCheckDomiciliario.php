@@ -276,9 +276,9 @@ while($row = mysql_fetch_array($result))
 		$pdf->MultiCell(0,5,$domicilio,1,'L');
 
 		$pdf->Ln(5);
-		$pdf->Image("../files/images_dom/$fotos[0]",40,null,0,100);
+		$pdf->Image("../files/images_dom/$fotos[0]",40,null,130,100);
 		$pdf->Ln(2);
-		$pdf->Image("../files/images_dom/$fotos[1]",40,null,0,100);
+		$pdf->Image("../files/images_dom/$fotos[1]",40,null,130,100);
 		$pdf->Ln(2);
 
 
