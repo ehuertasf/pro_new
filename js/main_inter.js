@@ -5282,23 +5282,65 @@ var frmCheckDomiciliario = new Ext.FormPanel({
 });
 
 
-//Botones de los Checks
+// botones pdf
 var btn_pdf_checkservice = new Ext.Button({
     text	:'Pdf',
     id		:'xls279',
-    width       :100,
+    width       :60,
     tooltip     :'Imprimir el documento en Pdf',
     handler	:pdf_checkservice,
     cls         :'x-btn-text-icon',
     icon        :'files/images_app/document-pdf-text.png'
 });
 
+var btn_pdf_checkdomiciliario = new Ext.Button({
+    text	:'Pdf',
+    id		:'xls280',
+    width       :60,
+    tooltip     :'Imprimir el documento en Pdf',
+    handler	:pdf_checkdomiciliario,
+    cls         :'x-btn-text-icon',
+    icon        :'files/images_app/document-pdf-text.png'
+});
+
+var btn_pdf_checklaboral = new Ext.Button({
+    text	:'Pdf',
+    id		:'xls280',
+    width       :60,
+    tooltip     :'Imprimir el documento en Pdf',
+    handler	:pdf_checklaboral,
+    cls         :'x-btn-text-icon',
+    icon        :'files/images_app/document-pdf-text.png'
+});
 
 function pdf_checkservice(){
-    
+
+    var view_pdf_checkservice = new Ext.Window({
+        frame:true,
+        autoLoad:'reportes/rptCheckService.php?codper='+cod_per+'&codsol='+cod_sol,
+        title:'Impresi\u00F3n del Documento',
+        width:350,
+        iconCls : 'zona',
+        height:400,
+        modal       :true,
+        closable: true,
+        resizable:false
+    });
+
+    view_pdf_checkservice.show();
+
+//    document.location = 'reportes/rptCheckService.php?codper='+cod_per+'&codsol='+cod_sol;
+}
+
+function pdf_checkdomiciliario(){
+
     document.location = 'reportes/rptCheckService.php?codper='+cod_per+'&codsol='+cod_sol;
 }
 
+function pdf_checklaboral(){
+
+    document.location = 'reportes/rptCheckService.php?codper='+cod_per+'&codsol='+cod_sol;
+}
 ///////////////////////////////Controles de Check Laboral/////////////////////////////////////
 
 //Nombre
@@ -5956,7 +5998,7 @@ var tabPanelCheck = new Ext.TabPanel({
             border : false,
             autoScroll : true,
             items : [frmCheckDomiciliario,pnl_imagenes],
-            tbar    : ['Nombre : ',txt_chkdomnomper,'Puesto : ',cboCheckPuestosDom,{
+            tbar    : ['Nombre : ',txt_chkdomnomper,'Puesto : ',cboCheckPuestosDom,'-',btn_pdf_checkdomiciliario,'-',{
                         xtype: 'tbfill'
                         },
                         {
@@ -6175,7 +6217,7 @@ var tabPanelCheck = new Ext.TabPanel({
             border : false,
             autoScroll : true,
             items : [frmListaCheckLaboral,frmDatosCheckLaboral,frmListaPreguntas,frmDatosCheckLaboral2],
-            tbar    : ['Nombre : ',txt_chklabnomper,'Puesto : ',cboCheckPuestosLab,{
+            tbar    : ['Nombre : ',txt_chklabnomper,'Puesto : ',cboCheckPuestosLab,'-',btn_pdf_checklaboral,'-',{
                         xtype: 'tbfill'
                         },
                         {
@@ -6783,7 +6825,7 @@ ds_cabchecksrv.load();
             id          : 'frm_checks_persona',
             iconCls     : 'regsol',
             layout	: 'fit',
-            width	: 785,
+            width	: 850,
             height	: 582,
             resizable   : false,
             closable    : true,
