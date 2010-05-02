@@ -1559,12 +1559,12 @@ vcodper=0,vapepatper='',vapematper='',vnomper='',vdestipdoc='',vnumdocper='',vco
         lazyRender : true,
         selectOnFocus:true,
         onSelect    : function(record){
-                            selPuesto=true;
-                            cboPuestos.setValue(record.data.despue);
-                            cboPuestos.collapse();
-                            vcodpue=record.data.codpue;
-                            vdespue=record.data.despue;
-                        }
+                    selPuesto=true;
+                    cboPuestos.setValue(record.data.despue);
+                    cboPuestos.collapse();
+                    vcodpue=record.data.codpue;
+                    vdespue=record.data.despue;
+                }
     });
 
 var cm_solpersonas = new Ext.grid.ColumnModel(
@@ -2498,6 +2498,7 @@ ds_cabsol.on('load',function(){
 //Detalle de la solicitud
 
 
+
 ds_detsol = new Ext.data.Store({
                     proxy: new Ext.data.HttpProxy({
                         url: 'DB/solicitud.php',
@@ -2794,15 +2795,31 @@ var tp_dethoraentrega = new Ext.form.TimeField({
  *******************************************/
 
 function frm_checks_persona(cod_sol, cod_per){
+var cperf;
+var dperf;
+
+    Ext.Ajax.request({
+        url : 'DB/datamttos.php',
+        params : {
+            x:18
+        },
+        success:function(response,options){
+            var stringData	=response.responseText;
+            var jsonData 	=Ext.util.JSON.decode(stringData);
+            cperf=jsonData.cperf;
+            dperf=jsonData.dperf;
+        }
+    });
+
+alert(cperf);
+
 
 var refpol=false,antpol=false,reqjud=false,refter=false,refdro=false,impsal=false,invpen=false;
 var selResidente=false, vcodres="", vdesres="";
 var NewChkLab='no';
 var Cuestionario=0;
-//var resiregist=0;
-///////////////
-/*Data Stores*/
-///////////////
+
+
 
 ///////////////////////////////Elementos Compartidos/////////////////////////////////////
 
@@ -5284,6 +5301,52 @@ var frmCheckDomiciliario = new Ext.FormPanel({
     items       : [SubPnlDirecc,pnl_Entrevistado,SubPnlEntrev,pnl_DescZona,pnl_ConcluDomi]
 });
 
+
+// botones pdf
+var btn_pdf_checkservice = new Ext.Button({
+    text	:'Pdf',
+    id		:'xls279',
+    width       :60,
+    tooltip     :'Imprimir el documento en Pdf',
+    handler	:pdf_checkservice,
+    cls         :'x-btn-text-icon',
+    icon        :'files/images_app/document-pdf-text.png'
+});
+
+var btn_pdf_checkdomiciliario = new Ext.Button({
+    text	:'Pdf',
+    id		:'xls280',
+    width       :60,
+    tooltip     :'Imprimir el documento en Pdf',
+    handler	:pdf_checkdomiciliario,
+    cls         :'x-btn-text-icon',
+    icon        :'files/images_app/document-pdf-text.png'
+});
+
+var btn_pdf_checklaboral = new Ext.Button({
+    text	:'Pdf',
+    id		:'xls280',
+    width       :60,
+    tooltip     :'Imprimir el documento en Pdf',
+    handler	:pdf_checklaboral,
+    cls         :'x-btn-text-icon',
+    icon        :'files/images_app/document-pdf-text.png'
+});
+
+function pdf_checkservice(){
+
+    window.open("http://localhost/pro_new/reportes/rptCheckService.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
+}
+
+function pdf_checkdomiciliario(){
+
+     window.open("http://localhost/pro_new/reportes/rptCheckDomiciliario.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
+}
+
+function pdf_checklaboral(){
+
+     window.open("http://localhost/pro_new/reportes/rptCheckLaboral.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
+}
 ///////////////////////////////Controles de Check Laboral/////////////////////////////////////
 
 var btn_pdf_checkservice = new Ext.Button({
@@ -5335,7 +5398,7 @@ function pdf_checklaboral(){
 var txt_chklabnomper = new Ext.form.TextField({
     id          : 'txt_chklabnomper',
     fieldLabel	: 'Check Identidad',
-    width : 250,
+    width       : 250,
     readOnly	: true,
     disabled    : false,
     name	: 'nombrechklab',
@@ -5362,28 +5425,28 @@ var cboCheckPuestosLab = new Ext.form.ComboBox({
 
 //DataStore para obtener datos grabados del CheckService
 var ds_obtieneListaCheckLaboral = new Ext.data.Store({
-                    reader: new Ext.data.JsonReader({
-                        root            : 'listachecklab',
-                        totalProperty	: 'total',
-                        id              : 'codchklab'
-                        },
-                        [{name: 'codchklab', mapping: 'codchklab'},
-                        {name: 'codpue', mapping: 'codpue'},
-                        {name: 'despue', mapping: 'despue'},
-                        {name: 'nomemp', mapping: 'nomemp'},
-                        {name: 'codcue', mapping: 'codcue'},
-                        {name: 'descue', mapping: 'descue'},
-                        {name: 'telemp', mapping: 'telemp'},
-                        {name: 'codestchk', mapping: 'codestchk'},
-                        {name: 'desestchk', mapping: 'desestchk'},
-                        {name: 'cueresp', mapping: 'cueresp'}
-                        ]),
-                    proxy: new Ext.data.HttpProxy({
-                        url: 'DB/checklaboral.php',
-                        method : 'POST'
-                    }),
-                    baseParams:{n:1, codsol:cod_sol, codper:cod_per},
-                    autoLoad: false
+        reader: new Ext.data.JsonReader({
+            root            : 'listachecklab',
+            totalProperty	: 'total',
+            id              : 'codchklab'
+            },
+            [{name: 'codchklab', mapping: 'codchklab'},
+            {name: 'codpue', mapping: 'codpue'},
+            {name: 'despue', mapping: 'despue'},
+            {name: 'nomemp', mapping: 'nomemp'},
+            {name: 'codcue', mapping: 'codcue'},
+            {name: 'descue', mapping: 'descue'},
+            {name: 'telemp', mapping: 'telemp'},
+            {name: 'codestchk', mapping: 'codestchk'},
+            {name: 'desestchk', mapping: 'desestchk'},
+            {name: 'cueresp', mapping: 'cueresp'}
+            ]),
+        proxy: new Ext.data.HttpProxy({
+            url: 'DB/checklaboral.php',
+            method : 'POST'
+        }),
+        baseParams:{n:1, codsol:cod_sol, codper:cod_per},
+        autoLoad: false
 });
 
 var cm_detchkLaboral = new Ext.grid.ColumnModel(
@@ -5850,6 +5913,7 @@ var frmListaCheckLaboral = new Ext.FormPanel({
 });
 
 
+
 //TabPanel que contiene los diferentes Checks
 var tabPanelCheck = new Ext.TabPanel({
     activeTab: 0,
@@ -5857,14 +5921,18 @@ var tabPanelCheck = new Ext.TabPanel({
     items   :   [{
             title   : 'Check Service',
             id      : 'tbp_checkservice',
-            disabled    : true,
+            disabled: true,
             frame   : true,
             border  : false,
             items   : [frmCheckService],
+
             tbar    : ['Nombre : ',txt_chksrvnomper,'Puesto : ',cboCheckPuestos,'-',btn_pdf_checkservice,'-',{
                         xtype: 'tbfill'
                         },
+
                         {
+                        xtype: 'tbfill'
+                        },{
                             text : 'Grabar',
                             cls  : 'x-btn-text-icon',
                             id  : 'btn_GrabarCheckSrevice',
@@ -6168,6 +6236,7 @@ var tabPanelCheck = new Ext.TabPanel({
                                                                     icon: Ext.MessageBox.INFO
                                                                 });
 
+
                                                             //Ricardo 14-04-10
                                                             ds_detsol.proxy= new Ext.data.HttpProxy({
                                                                     url: 'DB/solicitud.php',
@@ -6191,6 +6260,7 @@ var tabPanelCheck = new Ext.TabPanel({
                                                                     
                                                             };
                                                             stcondetsolper.load();
+
 
                                                             }
                                                             }
@@ -6755,6 +6825,7 @@ var ds_obtieneCheckDomici = new Ext.data.Store({
                                         listeners:{
                                             load : function(store){
                                                 var numimages=store.getCount();
+
                                                 var img1 = ds_imagenesdomicilio.getAt(0).data.nomimgdom;
                                                 var tip1 = ds_imagenesdomicilio.getAt(0).data.codtipimg;
                                                 var img2 = ds_imagenesdomicilio.getAt(1).data.nomimgdom;
@@ -6768,6 +6839,7 @@ var ds_obtieneCheckDomici = new Ext.data.Store({
                                                 hid_imgmapact.setValue(img3);
                                                 cbo_imgpama.setValue(tip3);
                                                 //alert(ds_imagenesdomicilio.getAt(0).data.nomimgdom);
+
                                             }
                                         }
                                     });
@@ -6999,7 +7071,7 @@ ds_cabchecksrv.load();
             id          : 'frm_checks_persona',
             iconCls     : 'regsol',
             layout	: 'fit',
-            width	: 785,
+            width	: 850,
             height	: 582,
             resizable   : false,
             closable    : true,

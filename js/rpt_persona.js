@@ -61,7 +61,9 @@ function frm_rpt_persona(){
         tpl: resultTpl,
         itemSelector: 'div.search-item',
         onSelect: function(record){
+
             cmbPersona.collapse();
+
             dsResultado.proxy= new Ext.data.HttpProxy({
                 url: 'DB/datamttos.php',
                 method : 'POST'
