@@ -14,7 +14,7 @@ function main_menu(){
         },
         success:function(response,options){
             var stringData	=response.responseText;
-            var jsonData 	= Ext.util.JSON.decode(stringData);
+            var jsonData 	=Ext.util.JSON.decode(stringData);
             cperf=jsonData.cperf;
             dperf=jsonData.dperf;
 
