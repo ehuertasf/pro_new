@@ -1,17 +1,11 @@
-<<<<<<< HEAD
-=======
 
->>>>>>> Ricardo
 nbproject/
 favicon.ico
 files/images_dni/
 files/images_dom/
-<<<<<<< HEAD
-files/images_app/
-=======
 files/images_app/Logo_PRO.JPG
 files/images_app/Thumbs.db
 consultas.sql
 crea_prodb.sql
 ejecutar_querys.txt
->>>>>>> Ricardo
+
