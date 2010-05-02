@@ -2795,15 +2795,31 @@ var tp_dethoraentrega = new Ext.form.TimeField({
  *******************************************/
 
 function frm_checks_persona(cod_sol, cod_per){
+var cperf;
+var dperf;
+
+    Ext.Ajax.request({
+        url : 'DB/datamttos.php',
+        params : {
+            x:18
+        },
+        success:function(response,options){
+            var stringData	=response.responseText;
+            var jsonData 	=Ext.util.JSON.decode(stringData);
+            cperf=jsonData.cperf;
+            dperf=jsonData.dperf;
+        }
+    });
+
+alert(cperf);
+
 
 var refpol=false,antpol=false,reqjud=false,refter=false,refdro=false,impsal=false,invpen=false;
 var selResidente=false, vcodres="", vdesres="";
 var NewChkLab='no';
 var Cuestionario=0;
-//var resiregist=0;
-///////////////
-/*Data Stores*/
-///////////////
+
+
 
 ///////////////////////////////Elementos Compartidos/////////////////////////////////////
 
