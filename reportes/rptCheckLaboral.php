@@ -81,7 +81,7 @@ while($row = mysql_fetch_array($result))
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(0,7,$nomemp,1,1,'C');
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(70,7,'Telefono',1,0,'L');
+		$pdf->Cell(70,7,utf8_decode('Teléfono'),1,0,'L');
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(0,7,$telemp,1,1,'C');
 		$pdf->SetFont('Arial','B',12);
@@ -123,7 +123,7 @@ while($row = mysql_fetch_array($result))
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(0,7,$percont,1,1,'C');
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(70,7,'Cargo del informante',1,0,'L');
+		$pdf->Cell(70,7,'Cargo de contacto',1,0,'L');
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(0,7,$carpercont,1,1,'C');
 		$pdf->SetFont('Arial','B',12);

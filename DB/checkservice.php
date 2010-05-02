@@ -58,18 +58,19 @@ switch ($n){
             $codestchk  = $_POST['vcodestchk'];
             //print_r($_FILES);
             $target_path = "../files/images_dni/";
-            $target_path = $target_path . basename( $_FILES['imgreniec']['name']);
+            //$target_path = $target_path . basename( $_FILES['imgreniec']['name']);
 
             if($nomimgreniec!=''){
-                if(move_uploaded_file($_FILES['imgreniec']['tmp_name'], $target_path)) {
-                    $archivorecibido =  basename( $_FILES['imgreniec']['name']);
+                $nombre = $codsol."_".$codper."_dni.".end(explode(".", $nomimgreniec));
+                if(move_uploaded_file($_FILES['imgreniec']['tmp_name'], $target_path.$nombre)) {
+                    $archivorecibido =  $nombre;
                 } else{
                     echo "{\"success\":\"false\",\"errors\":{\"reason\":\"Ocurrio un error al cargar el archivo, Intente nuevamente\"},\"respuesta\":{\"estado\":\"-1\"},\"img\":{\"imagen\":\"$archivorecibido\"}}";
                     exit();
                 }
             }
             else{
-                $nomimgreniec=$imgactual;
+                $archivorecibido=$imgactual;
             }
 
             try {
@@ -83,7 +84,7 @@ switch ($n){
                 $stmt->execute(array(
                     ':obsimgreniec' => $obsimgreniec,
                     ':indrefpol' => $indrefpol,
-                    ':nomimgreniec' => $nomimgreniec,
+                    ':nomimgreniec' => $archivorecibido,
                     ':refpolchk' => $refpolchk,
                     ':indantpol' => $indantpol,
                     ':indreqjud' => $indreqjud,
@@ -99,7 +100,7 @@ switch ($n){
                     ':codper' => $codper
                 ));
                 $dbh->commit();
-                echo "{success: true, confirma: {mensaje: 'Se grabaron correctamente los datos'},respuesta: {estado: '$codestchk'}, img: {imagen: '$nomimgreniec' }}";
+                echo "{success: true, confirma: {mensaje: 'Se grabaron correctamente los datos'},respuesta: {estado: '$codestchk'}, img: {imagen: '$archivorecibido' }}";
             } catch (Exception $e) {
 //                echo 'PDO Excepciones.	';
 //                echo 'Error con la base de datos: <br />';

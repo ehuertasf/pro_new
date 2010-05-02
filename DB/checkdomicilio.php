@@ -274,7 +274,7 @@ switch ($n){
             $target_path = "../files/images_dom/";
 
             if($nomimgdom1!=''){
-                $nombre = $codsol."_".$codper."_".$codchkdom."_1".end(explode(".", $nomimgdom1));
+                $nombre = $codsol."_".$codper."_".$codchkdom."_1.".end(explode(".", $nomimgdom1));
                 if(move_uploaded_file($_FILES['imgdom1']['tmp_name'], $target_path.$nombre)) {
                     $archivo1 = $nombre;
                 } else{
@@ -287,7 +287,7 @@ switch ($n){
             }
 
             if($nomimgdom2!=''){
-                $nombre = $codsol."_".$codper."_".$codchkdom."_2".end(explode(".", $nomimgdom2));
+                $nombre = $codsol."_".$codper."_".$codchkdom."_2.".end(explode(".", $nomimgdom2));
                 if(move_uploaded_file($_FILES['imgdom2']['tmp_name'], $target_path.$nombre)) {
                     $archivo2 = $nombre;
                 } else{
@@ -300,7 +300,7 @@ switch ($n){
             }
 
             if($nomimgmap!=''){
-                $nombre = $codsol."_".$codper."_".$codchkdom."_map".end(explode(".", $nomimgmap));
+                $nombre = $codsol."_".$codper."_".$codchkdom."_map.".end(explode(".", $nomimgmap));
                 if(move_uploaded_file($_FILES['imgmap']['tmp_name'], $target_path.$nombre)) {
                     $archivo3 = $nombre;
                 } else{
@@ -315,10 +315,57 @@ switch ($n){
             try {
                 $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
                 $dbh->beginTransaction();
-                $sql = "";
+                    $sql = "UPDATE tb_imgdomicilio set codtipimg=:codtipimg, nomimgdom=:nomimgdom
+                                  where codsol=:codsol and codper=:codper and codchkdom=:codchkdom and numimgdom=:numero";
+                    $stmt2 =$dbh->prepare($sql);
+                    $stmt2->execute(array(
+                        ':nomimgdom' => $archivo1,
+                        ':codtipimg' => $tipimgdom1,
+                        ':codsol' => $codsol,
+                        ':codper' => $codper,
+                        ':codchkdom' => $codchkdom,
+                        ':numero' => 0
+                    ));
+
+                    $sql = "UPDATE tb_imgdomicilio set codtipimg=:codtipimg, nomimgdom=:nomimgdom
+                                  where codsol=:codsol and codper=:codper and codchkdom=:codchkdom and numimgdom=:numero";
+                    $stmt2 =$dbh->prepare($sql);
+                    $stmt2->execute(array(
+                        ':nomimgdom' => $archivo2,
+                        ':codtipimg' => $tipimgdom2,
+                        ':codsol' => $codsol,
+                        ':codper' => $codper,
+                        ':codchkdom' => $codchkdom,
+                        ':numero' => 1
+                    ));
+
+                    $sql = "UPDATE tb_imgdomicilio set codtipimg=:codtipimg, nomimgdom=:nomimgdom
+                                  where codsol=:codsol and codper=:codper and codchkdom=:codchkdom and numimgdom=:numero";
+                    $stmt2 =$dbh->prepare($sql);
+                    $stmt2->execute(array(
+                        ':nomimgdom' => $archivo3,
+                        ':codtipimg' => $tipimgmap,
+                        ':codsol' => $codsol,
+                        ':codper' => $codper,
+                        ':codchkdom' => $codchkdom,
+                        ':numero' => 2
+                    ));
+
+                $dbh->commit();
+                echo "{respuesta: {error : 0, mensaje: 'Se grabaron correctamente las imagenes', imagen1: '$archivo1', imagen2: '$archivo2', mapa: '$archivo3' }}";
 
             } catch (Exception $e) {
-                echo $exc->getTraceAsString();
+                $dbh->rollBack();
+//                echo 'PDO Excepciones.	';
+//                echo 'Error con la base de datos: <br />';
+//                echo 'SQL Query: ', $sql;
+//                echo '<pre>';
+//                echo 'Error: ,'.$e->getMessage();
+//                echo 'Archivo: ' . $e->getFile() . '<br />';
+//                echo 'Linea: ' . $e->getLine() . '<br />';
+//                echo '</pre>';
+//                echo $e->getMessage();
+                echo "{respuesta: {error : 1, mensaje: 'No se pudo grabar las imagenes en el servidor' }}";
             }
 
 
