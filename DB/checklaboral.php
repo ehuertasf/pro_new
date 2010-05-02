@@ -160,7 +160,7 @@ switch ($n){
 
                             $codsol = $elemento[0];
                             $codper = $elemento[1];
-                            $codchklab = $elemento[2];
+                            $codchklab = $codchklabc;
                             $codcue = $elemento[3];
                             $codpre = $elemento[4];
                             $respre = $elemento[5];

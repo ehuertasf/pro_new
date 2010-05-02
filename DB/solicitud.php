@@ -120,7 +120,7 @@ switch ($n){
                                 ':codsol'=>$fila['codsol'],
                                 ':codchkdom'=>$codchkdom,
                                 ':codtipimg'=>4,
-                                ':numimgdom'=>i
+                                ':numimgdom'=>$i
                             ));
                         }
                     }

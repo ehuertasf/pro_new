@@ -2987,6 +2987,7 @@ var btnImgCargada = new Ext.Button({
                                     resizable   : false,
                                     closable    : true,
                                     modal       : true,
+                                    closeAction : 'destroy',
                                     items       : [frmpnlImagen]
                                 }).show();
                             }else{
@@ -5127,6 +5128,7 @@ var pnl_ConcluDomi = new Ext.Panel({
 //Panel Imagenes
 var pnl_imagenes = new Ext.FormPanel({
     frame : true,
+    fileUpload  : true,
     width : 740,
     title : 'Imagenes Domicilio',
     tbar : [{
@@ -5163,7 +5165,7 @@ var pnl_imagenes = new Ext.FormPanel({
                                 failure:function(form, action){
                                     if(action.failureType == 'server'){
                                         var obj = Ext.util.JSON.decode(action.response.responseText);
-                                        Ext.Msg.alert('Check Domiciliario', obj.confirma.mensaje);
+                                        Ext.Msg.alert('Check Domiciliario', obj.respuesta.mensaje);
                                     }
                                     else{
                                         Ext.Msg.alert('Atenci&oacute;n!', 'El servidor no ha podido ser contactado : ' + action.response.responseText + " ");
@@ -5363,17 +5365,17 @@ var btn_pdf_checklaboral = new Ext.Button({
 
 function pdf_checkservice(){
 
-   window.open("http://localhost/pro_new/reportes/rptCheckService.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
+   window.open("http://localhost/sispro/reportes/rptCheckService.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
 }
 
 function pdf_checkdomiciliario(){
 
-    window.open("http://localhost/pro_new/reportes/rptCheckDomiciliario.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
+    window.open("http://localhost/sispro/reportes/rptCheckDomiciliario.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
 }
 
 function pdf_checklaboral(){
 
-    window.open("http://localhost/pro_new/reportes/rptCheckLaboral.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
+    window.open("http://localhost/sispro/reportes/rptCheckLaboral.php?codper="+cod_per+"&codsol="+cod_sol,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
 }
 
 //Nombre
@@ -6384,7 +6386,7 @@ var tabPanelCheck = new Ext.TabPanel({
                                                 var xcodcue = record.data.codcue;
                                                 var xcodpre = record.data.codpre;
                                                 var xrespre = record.data.respre;
-                                                var item = xcodsol + '$$' + xcodper + '$$' + xcodcue + '$$' + xcodpre + '$$' + xrespre;
+                                                var item = xcodsol + '$$' + xcodper + '$$' + xcodchklab + '$$' + xcodcue + '$$' + xcodpre + '$$' + xrespre;
                                                 array_respuestas.push(item);
                                             }
                                             var codsol = cod_sol;
