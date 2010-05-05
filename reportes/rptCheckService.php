@@ -1,16 +1,15 @@
 <?php
-require('../../librerias/fpdf16/fpdf.php');
-require('Class_HeaderFooterPage.php');
-
-ini_set("display_errors", "On");
-error_reporting(E_ALL ^ E_NOTICE);
-include_once("../DB/connect.php");
-$link=conectarse();
-
-$codper=$_GET["codper"];
-$codsol=$_GET["codsol"];
-
-
+if (!isset($swInit)) {
+	require('../../librerias/fpdf16/fpdf.php');
+	require('Class_HeaderFooterPage.php');
+	
+	ini_set("display_errors", "On");
+	error_reporting(E_ALL ^ E_NOTICE);
+	include_once("../DB/connect.php");
+	$link=conectarse();
+	$codper=$_GET["codper"];
+	$codsol=$_GET["codsol"];
+}
 $result=mysql_query("SELECT a.codchkser,
 CONCAT(c.apepatper,' ',c.apematper,', ',c.nomper) AS nombre,
 d.despue AS puesto,
@@ -167,7 +166,9 @@ while($row = mysql_fetch_array($result))
 			$pdf->MultiCell(0,5,$recchk,1,'J');
 			$pdf->Ln(2);
 		}
-		//for($i=1;$i<=40;$i++)  $pdf->Cell(0,10,'Imprimiendo línea número '.$i,0,1);
-		$pdf->Output();
 }
+if (!isset($swInit)) {
+	$pdf->Output();
+}
+
 ?>

@@ -220,10 +220,12 @@ switch ($n){
             echo '{"cabsolicitud":'.json_encode($arr).'}';
             break;
        case 8: //cabecera solicitud
+            session_start();
             include("ftn_actestchk.php");
-
+            $usuregsol  = $_SESSION['us3r1d'];
             $codsol	= $_POST['codsol'];
-            ftn_act_estadochk($codsol);
+
+            ftn_act_estadochk($codsol,$usuregsol);
             $sqlquery ="SELECT ds.codsol,ds.codper,CONCAT(p.nomper,' ',p.apepatper,' ',p.apematper) AS nombre,p.codtipdoc,doc.destipdoc,p.numdocper,
                         ds.codpacchk,pc.despacchk,ds.codpue,pu.despue,(
                                 SELECT r.desestchk FROM tb_estadocheck r,tmp_estactchk i

@@ -1,15 +1,15 @@
 <?php
-require('../../librerias/fpdf16/fpdf.php');
-require('Class_HeaderFooterPage.php');
-
-ini_set("display_errors", "On");
-error_reporting(E_ALL ^ E_NOTICE);
-include_once("../DB/connect.php");
-$link=conectarse();
-
-$codper=$_GET["codper"];
-$codsol=$_GET["codsol"];
-
+if (!isset($swInit)) {
+	require('../../librerias/fpdf16/fpdf.php');
+	require('Class_HeaderFooterPage.php');
+	
+	ini_set("display_errors", "On");
+	error_reporting(E_ALL ^ E_NOTICE);
+	include_once("../DB/connect.php");
+	$link=conectarse();
+	$codper=$_GET["codper"];
+	$codsol=$_GET["codsol"];
+}
 
 $result=mysql_query("SELECT a.codchklab,    
 CONCAT(c.apepatper,' ',c.apematper,', ',c.nomper) AS nombre,
@@ -29,8 +29,14 @@ LEFT JOIN tb_detallesolicitud AS b ON b.codper=a.codper AND b.codsol=a.codsol
 LEFT JOIN tb_persona AS c ON c.codper=a.codper 
 LEFT JOIN tb_puesto AS d ON d.codpue=b.codpue
 WHERE a.codper=$codper AND a.codsol=$codsol",$link);
-		$pdf=new PDF();
-		$pdf->AliasNbPages();
+
+
+if (!isset($pdf)) {
+	$pdf=new PDF();
+	$pdf->AliasNbPages();
+}
+
+
 $sw=0;		
 while($row = mysql_fetch_array($result))
 {		
@@ -50,7 +56,7 @@ while($row = mysql_fetch_array($result))
 		$obsent= utf8_decode($row['obsent']);
 		$noment= utf8_decode($row['noment']);		
 
-		//Creación del objeto de la clase heredada
+		//CreaciÃ³n del objeto de la clase heredada
 
 		$pdf->AddPage();
 		$pdf->SetDisplayMode('fullpage');
@@ -81,7 +87,7 @@ while($row = mysql_fetch_array($result))
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(0,7,$nomemp,1,1,'C');
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(70,7,utf8_decode('Teléfono'),1,0,'L');
+		$pdf->Cell(70,7,utf8_decode('TelÃ©fono'),1,0,'L');
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(0,7,$telemp,1,1,'C');
 		$pdf->SetFont('Arial','B',12);
@@ -145,5 +151,8 @@ while($row = mysql_fetch_array($result))
 		$pdf->Cell(0,7,$noment,1,1,'C');
 
 }
-$pdf->Output();
+
+if (!isset($swInit)) {
+	$pdf->Output();
+}
 ?>

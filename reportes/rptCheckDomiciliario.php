@@ -1,16 +1,15 @@
 <?php
-require('../../librerias/fpdf16/fpdf.php');
-require('Class_HeaderFooterPage.php');
-
-ini_set("display_errors", "On");
-error_reporting(E_ALL ^ E_NOTICE);
-include_once("../DB/connect.php");
-$link=conectarse();
-
-//$codper=1;
-//$codsol=5;
-$codper=$_GET["codper"];
-$codsol=$_GET["codsol"];
+if (!isset($swInit)) {
+	require('../../librerias/fpdf16/fpdf.php');
+	require('Class_HeaderFooterPage.php');
+	
+	ini_set("display_errors", "On");
+	error_reporting(E_ALL ^ E_NOTICE);
+	include_once("../DB/connect.php");
+	$link=conectarse();
+	$codper=$_GET["codper"];
+	$codsol=$_GET["codsol"];
+}
 
 $result=mysql_query("SELECT a.codchkdom,
 CONCAT(c.nomper,' ',c.apepatper,' ',c.apematper) AS nombre,
@@ -86,8 +85,14 @@ while($row = mysql_fetch_array($result))
 		$fotos = explode(",", $row['fotos']);
 
 		//Creación del objeto de la clase heredada
-		$pdf=new PDF();
-		$pdf->AliasNbPages();
+		//$pdf=new PDF();
+		//$pdf->AliasNbPages();
+		
+		if (!isset($pdf)) {
+			$pdf=new PDF();
+			$pdf->AliasNbPages();
+		}
+		
 		$pdf->AddPage();
 		$pdf->SetDisplayMode('fullpage');
 		$pdf->SetMargins(20, 20,20);
@@ -303,7 +308,9 @@ while($row = mysql_fetch_array($result))
 
 		$pdf->Ln(5);
 		$pdf->Image("../files/images_dom/$fotos[2]",30,null,0,120);
+}
 
-$pdf->Output();
+if (!isset($swInit)) {
+	$pdf->Output();
 }
 ?>

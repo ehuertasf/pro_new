@@ -232,7 +232,7 @@ function mttotipdelito(){
                 if(val==1){
                     Ext.Msg.show({
                         title: 'Mensaje',
-                        msg: 'Se agrego un nuevo Tipo de Zonificaci\u00F3n',
+                        msg: 'Se agrego un nuevo Tipo de Delito',
                         buttons: Ext.MessageBox.OK,
                         icon: Ext.MessageBox.INFO
                     });
@@ -249,7 +249,7 @@ function mttotipdelito(){
                 }else if(val==3){
                     Ext.Msg.show({
                         title: 'Mensaje',
-                        msg: 'Se actualiz\u00F3 el Tipo de Zonificaci\u00F3n',
+                        msg: 'Se actualiz\u00F3 el Tipo de Delito',
                         buttons: Ext.MessageBox.OK,
                         icon: Ext.MessageBox.INFO
                     });
@@ -264,7 +264,7 @@ function mttotipdelito(){
                     dstipdelito.load();
 
                 }else{
-                        Ext.Msg.alert('CUIDADO!','El Tipo de Zonificaci\u00F3n que intenta ingresar ya existe');
+                        Ext.Msg.alert('CUIDADO!','El Tipo de Delito que intenta ingresar ya existe');
                 }
                 cancelardelito();
             }

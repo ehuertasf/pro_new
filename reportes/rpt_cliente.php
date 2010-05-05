@@ -5,6 +5,7 @@
      * Si es un usuario administrador se generara un excel con todas las personas de todos los clientes encontrados
      * en el rango de fecha indicado.
      * @version 1.0
+     * @version 1.1 se agrego la columna del check laboral (02-05-2010)
      * @author Ricardo De la Torre
      */
     header("Cache-control: No-Cache");
@@ -64,11 +65,10 @@
         $sql="SELECT CONCAT(a.apepatper,' ',a.apematper,', ',a.nomper) AS APELLIDOS_NOMBRES,a.numdocper AS DNI,
             (SELECT d.nomdel FROM tb_chkservice c,tb_delito d WHERE c.coddel=d.coddel AND c.codper=a.codper) AS CHECK_DELICTIVO,
             (SELECT f.descon FROM tb_chkdomicilio e,tb_conclusion f WHERE e.codcon=f.codcon AND e.codper=a.codper  ) AS CHECK_DOMICILIARIO,
-            z.nomcli AS CLIENTE,w.fecregsol AS FECHA_ENTREGA,r.despue AS PUESTO,w.obssol AS OBSERVACION
+            (SELECT GROUP_CONCAT(g.descon SEPARATOR '/') FROM tb_chklaboral v,tb_conclusion g WHERE v.codcon=g.codcon AND codper=u.codper AND codsol=u.codsol) AS CHECK_LABORAL,
+            z.nomcli AS CLIENTE,w.fecvensol AS FECHA_ENTREGA,w.fecciesol AS FECHA_CIERRE,r.despue AS PUESTO,w.obssol AS OBSERVACION
             FROM tb_persona a,tb_detallesolicitud u,tb_solicitud w,tb_cliente z,tb_puesto r
-            WHERE a.codper=u.codper  AND u.codsol=w.codsol AND w.codcli=z.codcli AND u.codpue=r.codpue 
-            AND DATE_FORMAT(w.fecregsol,'%Y-%m-%d') BETWEEN :fini AND :ffin AND z.codcli=:ccli
-            ORDER BY z.nomcli ASC";
+            WHERE a.codper=u.codper  AND u.codsol=w.codsol AND w.codcli=z.codcli AND u.codpue=r.codpue ";
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':fini', $f_ini);
         $stmt->bindParam(':ffin', $f_fin);
@@ -93,8 +93,10 @@
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>DNI</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>CHECK DELICTIVO</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>CHECK DOMICILIARIO</b></td>
+                <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>CHECK LABORAL</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>CLIENTE</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>FECHA DE ENTREGA</b></td>
+                <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>FECHA DE CIERRE</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>PUESTO</b></td>
                 <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #A1A6A7; color: white"><b>OBSERVACION</b></td>
             </tr>
@@ -109,8 +111,10 @@
                     <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #CCFFCC"><b><?=$row["DNI"]?></b></td>
                     <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #CCFFCC"><b><?=$row["CHECK_DELICTIVO"]?></b></td>
                     <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #CCFFCC"><b><?=$row["CHECK_DOMICILIARIO"]?></b></td>
+                    <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #CCFFCC"><b><?=$row["CHECK_LABORAL"]?></b></td>
                     <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #CCFFCC"><b><?=$row["CLIENTE"]?></b></td>
                     <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #CCFFCC"><b><?=$row["FECHA_ENTREGA"]?></b></td>
+                    <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #CCFFCC"><b><?=$row["FECHA_CIERRE"]?></b></td>
                     <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #CCFFCC"><b><?=$row["PUESTO"]?></b></td>
                     <td align="center" valign="middle" style="border:1px solid #999999; height: 23px; font-family: sans-serif; font-size: 10px; background: #CCFFCC"><b><?=$row["OBSERVACION"]?></b></td>
                 </tr>

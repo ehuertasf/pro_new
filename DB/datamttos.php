@@ -658,7 +658,7 @@ switch ($x){
              */
             session_start();
             $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-            $qry="SELECT a.codcli,a.codperf,b.desperf FROM tb_users a,tb_perfil b WHERE a.codperf=b.codperf AND a.loguser=:session";
+            $qry="SELECT a.codcli,a.codperf,b.desperf,a.loguser FROM tb_users a,tb_perfil b WHERE a.codperf=b.codperf AND a.loguser=:session";
             $stmt = $dbh->prepare($qry);
             $stmt->bindParam(':session', $_SESSION['us3r1d']);
             $stmt->execute();
@@ -666,8 +666,9 @@ switch ($x){
                 $idcli=$row["codcli"];
                 $cperf=$row["codperf"];
                 $dperf=$row["desperf"];
+                $logus=$row["loguser"];
             }
-            $response = array('cperf'=>$cperf, 'dperf'=>$dperf);
+            $response = array('cperf'=>$cperf, 'dperf'=>$dperf,'xcodcli'=>$idcli,'loguser'=>$logus);
             $json_response = json_encode($response);
             echo $json_response;
             break;

@@ -11,6 +11,19 @@ if($check>0){
     session_start();
     $_SESSION['p3r1m1t1d0']='yes'; //session username
     $_SESSION['us3r1d']=$usuario;
+
+    /**
+     * @author Ricardo (04-05-2010)
+     * Nos aseguramos que las tablas temporales esten vacias para su usuario cuando inicia la sesion
+     */
+
+    mysql_query("delete from tmp_estperchk where loguser='".$usuario."';") or die(mysql_error());
+    mysql_query("delete from tmp_estactchk where loguser='".$usuario."';") or die(mysql_error());
+
+    /**
+     * **********************************************************************************************
+     */
+
     echo "{success: true}";
 }
 else{
