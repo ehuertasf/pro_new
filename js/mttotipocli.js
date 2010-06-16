@@ -97,7 +97,7 @@ function mttotipocli(){
 
                     Ext.getCmp('desccli').setValue(desc_);
 
-                    if(esta_==1){
+                    if(esta_=='1'){
                         rdo_tcliente.setValue(1);
                     }else{
                         rdo_tcliente.setValue(2);
@@ -173,7 +173,8 @@ function mttotipocli(){
                 minLength:2,
                 maxLengthText:'El texto es muy extenso',
                 minLengthText:'El texto es muy corto',
-                width:160
+                width:160,
+                plugins     : new Ext.ux.Uppercase()
             },rdo_tcliente,grdtipcli]
     });
 

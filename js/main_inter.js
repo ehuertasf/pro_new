@@ -35,6 +35,17 @@ Ext.apply(Ext.form.VTypes, {
     passwordText : 'Las contraseñas no coinciden'
 });
 
+Ext.ux.Uppercase = Ext.extend(Ext.util.Observable, {
+	init:  function(field) {
+		field.on('render',this.onRender,this);
+	},
+	onRender: function(field) {
+		field.el.applyStyles({textTransform: "uppercase"});
+		field.mon(field.el,'keyup',function() {
+			this.setValue(this.getValue().toUpperCase());
+		},field);
+	}
+});
 
 /****************************************
  * Inicio de formulario frm_reg_persona *
@@ -46,7 +57,17 @@ var ds_detsol;
 var stcondetsolper,vcodcli;
 var codestsol,desde,hasta;
 var cboEstadosol;
+var rval;
 
+var codigos_personas = [];
+function array_codigos_personas(valor,accion){
+	var newArray=[];
+		switch (accion){
+			case 'in'	:codigos_personas.push(valor);break;
+			case 'out'	:newArray = codigos_personas.splice(codigos_personas.indexOf(valor),1);break;
+		}	
+	//return cadena_agendamiento.toString()
+};
 
 //Formulario
 function frm_reg_persona(){
@@ -69,6 +90,7 @@ function frm_reg_persona(){
             this.originalValue = this.getValue();
         }
     });
+
 
     /********
      Stores
@@ -195,7 +217,7 @@ function frm_reg_persona(){
      ************/
 
     var tpl_per = new Ext.XTemplate(
-        '<tpl for="."><div class="search-item">',
+        '<tpl for="."><div class="search-item1">',
         '<h3>{numdocper}</h3>',
         '{nomper} {apepatper} {apematper}',
         '</div></tpl>'
@@ -222,7 +244,7 @@ function frm_reg_persona(){
                                 Ext.getCmp('txt_apepatper').setValue(ds_listadoper.getAt(rowIndex).data.apepatper);
                                 Ext.getCmp('txt_apematper').setValue(ds_listadoper.getAt(rowIndex).data.apematper);
                                 Ext.getCmp('cbo_codtipdoc').setValue(ds_listadoper.getAt(rowIndex).data.codtipdoc);
-                                Ext.getCmp('txt_numdocper').setValue(ds_listadoper.getAt(rowIndex).data.numdocper);
+                                Ext.getCmp('cboNumdocper').setValue(ds_listadoper.getAt(rowIndex).data.numdocper);
                                 Ext.getCmp('cbo_estper').setValue(ds_listadoper.getAt(rowIndex).data.estper);
                                 cboBuscaPersona.disable();
                                 desbloqueaPersona();
@@ -246,7 +268,7 @@ function frm_reg_persona(){
         pageSize	: 10,
         hideTrigger     : true,
         tpl		: tpl_per,
-        itemSelector	: 'div.search-item',
+        itemSelector	: 'div.search-item1',
         onSelect	: function(record){
                                 Ext.getCmp("frmResultadoPersona").getForm().loadRecord(record);
                                 cboBuscaPersona.disable();
@@ -293,7 +315,7 @@ function frm_reg_persona(){
                         var vapepatper= Ext.util.Format.trim(Ext.getCmp('txt_apepatper').getValue());
                         var vapematper= Ext.util.Format.trim(Ext.getCmp('txt_apematper').getValue());
                         var vcodtipdoc= Ext.getCmp('cbo_codtipdoc').getValue();
-                        var vnumdocper = Ext.util.Format.trim(Ext.getCmp('txt_numdocper').getValue());
+                        var vnumdocper = Ext.util.Format.trim(Ext.getCmp('cboNumdocper').getValue());
                         var vestper = Ext.getCmp('cbo_estper').getValue();
 
                         if(frmResultadoPersona.getForm().isValid()){
@@ -434,13 +456,12 @@ function frm_reg_persona(){
         }]
     });
 
-var txt_codper = new Ext.form.TextField({
-        id          :'txt_codper',
+var txt_codper = new Ext.form.Hidden({
+        id          : 'txt_codper',
         fieldLabel  : 'C&oacute;digo',
         readOnly    : true,
         disabled    : true,
-        name        : 'codper',
-        anchor      : '99%'
+        name        : 'codper'
 });
 
 var txt_nomper = new Ext.form.TextField({
@@ -451,7 +472,8 @@ var txt_nomper = new Ext.form.TextField({
         allowBlank  : false,
         listeners   : {keyup:cambioPersona},
         name        : 'nomper',
-        anchor      : '100%'
+        anchor      : '-10',
+        plugins     : new Ext.ux.Uppercase()
 });
 
 var txt_apepatper = new Ext.form.TextField({
@@ -462,7 +484,8 @@ var txt_apepatper = new Ext.form.TextField({
         allowBlank  : false,
         listeners   : {keyup:cambioPersona},
         name        : 'apepatper',
-        anchor      : '99%'
+        anchor      : '100%',
+        plugins     : new Ext.ux.Uppercase()
 });
 
 var txt_apematper = new Ext.form.TextField({
@@ -473,26 +496,27 @@ var txt_apematper = new Ext.form.TextField({
         allowBlank  : false,
         listeners   : {keyup:cambioPersona},
         name        : 'apematper',
-        anchor      : '100%'
+        anchor      : '-10',
+        plugins     : new Ext.ux.Uppercase()
 });
 
-var txt_numdocper = new Ext.form.TextField({
-        id          :'txt_numdocper',
-        fieldLabel  : 'Num. Doc.',
-        readOnly    :false,
-        disabled    : true,
-        allowBlank  : false,
-        listeners   : {keyup:cambioPersona},
-        name        : 'numdocper',
-        anchor      : '99%'
-});
+//var txt_numdocper = new Ext.form.TextField({
+//        id          :'txt_numdocper',
+//        fieldLabel  : 'Num. Doc.',
+//        readOnly    :false,
+//        disabled    : true,
+//        allowBlank  : false,
+//        listeners   : {keyup:cambioPersona},
+//        name        : 'numdocper',
+//        anchor      : '99%'
+//});
 
 var cbo_codtipdoc = new Ext.form.ComboBox({
                 xtype       : 'combo',
                 id          : 'cbo_codtipdoc',
                 name        : 'codtipdoc',
                 fieldLabel  : 'Tip. Doc.',
-                mode        : 'local',
+                mode        : 'remote',
                 disabled    : true,
                 allowBlank  : false,
                 store       : dstipdocper,
@@ -500,7 +524,8 @@ var cbo_codtipdoc = new Ext.form.ComboBox({
                 triggerAction: 'all',
                 displayField : 'destipdoc',
                 valueField  : 'codtipdoc',
-                anchor      : '99%',
+                anchor      : '-10',
+                value       : '1',
                 listeners   :{
                 select      : function (field, newValue, oldValue) {
                                 if (newValue != oldValue) {
@@ -509,6 +534,28 @@ var cbo_codtipdoc = new Ext.form.ComboBox({
                             }
                 }
 });
+
+var cboNumdocper = new Ext.form.ComboBox({
+        id		: 'cboNumdocper',
+        store		: ds_per,
+        typeAhead       : false,
+        labelWidth      : 150,
+        fieldLabel	: 'Num. Doc.',
+        loadingText	: 'Buscando...',
+        anchor		: '100%',
+        pageSize	: 10,
+        disabled        : true,
+        hideTrigger     : true,
+        tpl		: tpl_per,
+        itemSelector	: 'div.search-item'/*,
+        onSelect	: function(record){
+                                Ext.getCmp("frmResultadoPersona").getForm().loadRecord(record);
+                                cboBuscaPersona.disable();
+                                cboBuscaPersona.setValue(record.data.numdocper);
+                                cboBuscaPersona.collapse();
+                                desbloqueaPersona();
+                        }*/
+    });
 
 var cbo_estper = new Ext.form.ComboBox({
                 xtype       : 'combo',
@@ -524,6 +571,7 @@ var cbo_estper = new Ext.form.ComboBox({
                 displayField : 'desest',
                 valueField  : 'codest',
                 anchor      : '100%',
+                value       : '1',
                 listeners   :{
                     select: function (field, newValue, oldValue) {
                                 if (newValue != oldValue) {
@@ -547,22 +595,22 @@ var cbo_estper = new Ext.form.ComboBox({
                         layout	: 'column',
                         border	: false,
                         style	: 'padding:0px 0px 0px 0px',
-                        items:[{
-                                columnWidth	: .25,
+                        items:[txt_codper,{
+                                columnWidth	: .30,
                                 layout		: 'form',
                                 border		: false,
                                 labelAlign	: 'left',
-                                labelWidth      : 42,
+                                labelWidth      : 60,
                                 defaultType	: 'textfield',
-                                items		: [txt_codper]
+                                items		: [cbo_codtipdoc]
                                 },{
-                                columnWidth	: .75,
+                                columnWidth	: .70,
                                 layout		: 'form',
                                 border		: false,
                                 labelAlign	: 'left',
-                                labelWidth      : 50,
+                                labelWidth      : 70,
                                 defaultType	: 'textfield',
-                                items		: [txt_nomper]
+                                items		: [cboNumdocper]
                                 }]
                         },{
                         layout	: 'column',
@@ -573,9 +621,9 @@ var cbo_estper = new Ext.form.ComboBox({
                                 layout		: 'form',
                                 border		: false,
                                 labelAlign	: 'left',
-                                labelWidth 	: 80,
+                                labelWidth 	: 60,
                                 defaultType	: 'textfield',
-                                items		: [txt_apepatper]
+                                items		: [txt_nomper]
                                 },{
                                 columnWidth	: .50,
                                 layout		: 'form',
@@ -583,21 +631,21 @@ var cbo_estper = new Ext.form.ComboBox({
                                 labelAlign	: 'left',
                                 labelWidth 	: 83,
                                 defaultType	: 'textfield',
-                                items		: [txt_apematper]
+                                items		: [txt_apepatper]
                                 }]
                         },{
                         layout	: 'column',
                         border	: false,
                         style	: 'padding:0px 0px 0px 0px',
                         items:[{
-                                columnWidth	: .33,
+                                columnWidth	: .65,
                                 layout		: 'form',
                                 border		: false,
                                 labelAlign	: 'left',
-                                labelWidth 	: 60,
+                                labelWidth 	: 83,
                                 defaultType	: 'textfield',
-                                items		: [cbo_codtipdoc]
-                                },{
+                                items		: [txt_apematper]
+                                },/*{
                                 columnWidth	: .34,
                                 layout		: 'form',
                                 border		: false,
@@ -605,8 +653,8 @@ var cbo_estper = new Ext.form.ComboBox({
                                 labelWidth 	: 65,
                                 defaultType	: 'textfield',
                                 items		: [txt_numdocper]
-                                },{
-                                columnWidth	: .33,
+                                },*/{
+                                columnWidth	: .35,
                                 layout		: 'form',
                                 border		: false,
                                 labelAlign	: 'left',
@@ -703,7 +751,7 @@ function inicializaNewPersona(){
     respuesta=-1;
     Ext.getCmp("frmResultadoPersona").getForm().reset();
     //Enfoca nombre
-    Ext.getCmp('txt_nomper').focus(true);
+    Ext.getCmp('cbo_codtipdoc').focus(true);
 }
 
 function bloqueaPersona(){
@@ -712,7 +760,7 @@ function bloqueaPersona(){
     Ext.getCmp('txt_apepatper').disable();
     Ext.getCmp('txt_apematper').disable();
     Ext.getCmp('cbo_codtipdoc').disable();
-    Ext.getCmp('txt_numdocper').disable();
+    Ext.getCmp('cboNumdocper').disable();
     Ext.getCmp('cbo_estper').disable();
     Ext.getCmp('btnGrabarPersona').disable();
 }
@@ -723,7 +771,7 @@ function desbloqueaPersona(){
     Ext.getCmp('txt_apepatper').enable();
     Ext.getCmp('txt_apematper').enable();
     Ext.getCmp('cbo_codtipdoc').enable();
-    Ext.getCmp('txt_numdocper').enable();
+    Ext.getCmp('cboNumdocper').enable();
     Ext.getCmp('cbo_estper').enable();
     Ext.getCmp('btn_cancelapersona').enable();
 }
@@ -1176,7 +1224,8 @@ function frm_reg_cliente(){
                                             allowBlank  : false,
                                             listeners	: {keyup:cambioCliente},
                                             name		: 'nomcli',
-                                            anchor		: '100%'
+                                            anchor		: '100%',
+                                            plugins     : new Ext.ux.Uppercase()
                                             }]
                                 }]
                         },{
@@ -1250,6 +1299,7 @@ function frm_reg_cliente(){
                                             displayField : 'desestcli',
                                             valueField: 'codestcli',
                                             anchor  : '100%',
+                                            value   : '1',
                                             listeners :{
                                                 select: function (field, newValue, oldValue) {
                                                             if (newValue != oldValue) {
@@ -1278,7 +1328,8 @@ function frm_reg_cliente(){
                                             allowBlank  : true,
                                             listeners	: {keyup:cambioCliente},
                                             name		: 'dircli',
-                                            anchor      : '99%'
+                                            anchor      : '99%',
+                                            plugins     : new Ext.ux.Uppercase()
                                             }]
                                 },{
                                 columnWidth	: .28,
@@ -1898,13 +1949,13 @@ var btn_cancelasol = new Ext.Button({
                             var fecha = new Date();
                             var nuevafecha = newvalue;
                             if(fecha != '')
-                                if(nuevafecha<=fecha){
-                                    //alert(fecha);
-                                    //alert(nuevafecha);
+                                if(nuevafecha.format("d/m/Y")<fecha.format("d/m/Y")){
+                                    //alert(fecha.format("d/m/Y"));
+                                    //alert(nuevafecha.format("d/m/Y"));
                                     dp_fecvensol.setValue('');
                                     dp_fecvensol.focus();
                                     Ext.Msg.show({title: 'Error de Ingreso',
-                                            msg: 'Recuerde que la fecha de vencimiento debe ser mayor a la fecha actual',
+                                            msg: 'Recuerde que la fecha de vencimiento debe ser mayor o igual a la fecha actual',
                                             buttons: Ext.MessageBox.OK,
                                             icon: Ext.MessageBox.INFO});
                                     
@@ -1929,7 +1980,8 @@ var txt_obssol = new Ext.form.TextField({
     fieldLabel	: 'Observación',
     name	: 'obssol',
     allowBlank  : true,
-    anchor	: '100%'
+    anchor	: '100%',
+    plugins     : new Ext.ux.Uppercase()
 });
 
 var cbo_codcli = new Ext.form.ComboBox({
@@ -2213,10 +2265,14 @@ var dp_consolhasta=new Ext.form.DateField({
         allowBlank  :true
     });
 
-function change_r(val){
-	if(val > 0) return '<span style="font-weight:bold;color:white;background-color: red;cursor:pointer;">&nbsp;' + val + '&nbsp;&nbsp;</span>';
-	else return '<span style="color:white;background-color: red">' + val + '</span>';
-	return val;
+function change_r(rval){
+ if(rval > 0) {
+            return '<span style="font-weight:bold;color:white;background-color: red;cursor:pointer;">&nbsp;' + rval + '&nbsp;&nbsp;</span>';
+        } else {
+            rval='Vencida';
+            return '<span style="color:white;background-color: red">' + rval + '</span>';
+        }
+
 }
 
 var cm_consolicitud = new Ext.grid.ColumnModel(
@@ -2337,9 +2393,20 @@ var cm_consolicitud = new Ext.grid.ColumnModel(
         selModel: new Ext.grid.RowSelectionModel({singleSelect:false}),
         listeners:{
             rowdblclick: function(grid, rowIndex, e){
-                                var sol = stcondetsolper.getAt(rowIndex).data.codsol;
-                                //alert(sol);
+                            var sol = stcondetsolper.getAt(rowIndex).data.codsol;
+                            var vencida = stcondetsolper.getAt(rowIndex).data.diasrest;
+
+                            if(vencida<0){
+                                Ext.Msg.show({
+                                    title: 'Aviso',
+                                    msg: 'No puede consultar esta solicitud porque ya esta vencida',
+                                    buttons: Ext.MessageBox.OK,
+                                    icon: Ext.MessageBox.INFO
+                                });
+                            }else{
                                 frm_det_solicitud(sol);
+                            }
+
                         }
                 }
     });
@@ -2551,9 +2618,19 @@ ds_detsol = new Ext.data.Store({
                 });
 ds_detsol.load();
 
-
+var check_sm1 = new Ext.grid.CheckboxSelectionModel({
+				singleSelect : false,
+				listeners : {rowselect : function(obj, rowIndex, record){
+					                    codsolpdf = record.data.codsol;
+					                    codperpdf = record.data.codper;
+					                    //alert(record.data.codsol);
+					                    //alert(record.data.codper);
+				                }
+				                
+            	}
+});
 var cm_detpersonas = new Ext.grid.ColumnModel(
-        [{
+        [check_sm1,{
             header: 'codsol',
             readonly: true,
             dataIndex: 'codsol',
@@ -2625,8 +2702,18 @@ var btn_pdf_checkspersona = new Ext.Button({
 });
 
 function pdf_checkspersona(){
-    window.open("reportes/rptChecks.php?codper="+codperpdf+"&codsol="+codsolpdf,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
-}
+     var arreglo  = [];
+     var selectedKeys = grd_detpersonas.selModel.selections.keys;
+     for(var i=0;i<selectedKeys.length;i++)
+	 	{var record = grd_detpersonas.getStore().getById(selectedKeys[i]);
+			arreglo.push(record.data.codper);
+	    }
+	 var xcodperpdf=arreglo.join(',');
+    if (arreglo.length==0)
+        alert('Seleccione por lo menos 1 registro para generar reporte');
+    else
+        window.open("reportes/rptChecks2.php?codper="+xcodperpdf+"&codsol="+codsolpdf,"ventana1" , "width=500,height=650,scrollbars=YES,resizable=YES");
+};
 
 var grd_detpersonas = new Ext.grid.EditorGridPanel({
         id      : 'grd_detpersonas',
@@ -2634,6 +2721,7 @@ var grd_detpersonas = new Ext.grid.EditorGridPanel({
         title   : 'Personas',
         cm      : cm_detpersonas,
         width   : 350,
+		sm		: check_sm1,
         anchor  : '100%',
         height  : 300,
         frame   : true,
@@ -2641,7 +2729,7 @@ var grd_detpersonas = new Ext.grid.EditorGridPanel({
 	layout    : 'fit',
 	autoScroll: true,
         tbar : [{xtype: 'tbfill'},btn_pdf_checkspersona],
-        selModel: new Ext.grid.RowSelectionModel({
+  /*      selModel: new Ext.grid.RowSelectionModel({
             singleSelect:false,
             listeners : {
                 rowselect : function(obj, rowIndex, record){
@@ -2651,7 +2739,7 @@ var grd_detpersonas = new Ext.grid.EditorGridPanel({
                     //alert(record.data.codper);
                 }
             }
-        }),
+        }),*/
         listeners:{
             rowdblclick: function(grid, rowIndex, e){
                                 var sol = ds_detsol.getAt(rowIndex).data.codsol;
@@ -5457,6 +5545,7 @@ function frm_checks_persona(cod_sol, cod_per){
                     baseParams:{n:1, codsol:cod_sol, codper:cod_per},
                     autoLoad: false
             });
+
 
             var cm_detchkLaboral = new Ext.grid.ColumnModel(
                     [{

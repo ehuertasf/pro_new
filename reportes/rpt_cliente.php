@@ -19,7 +19,7 @@
 
     $dsn = 'mysql:host=localhost;dbname=prodb;';
     $user = 'root';
-    $password = 'rjdg';
+    $password = 'mysql';
     try
     {
         $dbh = new PDO($dsn, $user, $password);

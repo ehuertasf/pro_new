@@ -28,7 +28,7 @@ FROM tb_chklaboral AS a
 LEFT JOIN tb_detallesolicitud AS b ON b.codper=a.codper AND b.codsol=a.codsol
 LEFT JOIN tb_persona AS c ON c.codper=a.codper 
 LEFT JOIN tb_puesto AS d ON d.codpue=b.codpue
-WHERE a.codper=$codper AND a.codsol=$codsol",$link);
+WHERE a.codper in ($codper) AND a.codsol=$codsol",$link);
 
 
 if (!isset($pdf)) {

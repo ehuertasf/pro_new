@@ -40,7 +40,12 @@ LEFT JOIN tb_distrito AS h ON h.coddpto=a.coddpto AND h.codpro=a.codpro AND h.co
 LEFT JOIN tb_tipvias AS i ON i.codtipvia=a.codtipvia
 LEFT JOIN tb_zonariesgo AS j ON j.codzonrie=a.codzonrie
 LEFT JOIN tb_conclusion AS k ON k.codcon=a.codcon
-WHERE a.codper=$codper AND a.codsol=$codsol",$link);
+WHERE a.codper in ($codper) AND a.codsol=$codsol",$link);
+
+if (!isset($pdf)) {
+	$pdf=new PDF();
+	$pdf->AliasNbPages();
+}
 
 while($row = mysql_fetch_array($result))
 {
@@ -88,28 +93,28 @@ while($row = mysql_fetch_array($result))
 		//$pdf=new PDF();
 		//$pdf->AliasNbPages();
 		
-		if (!isset($pdf)) {
+	/*	if (!isset($pdf)) {
 			$pdf=new PDF();
 			$pdf->AliasNbPages();
 		}
-		
+	*/	
 		$pdf->AddPage();
 		$pdf->SetDisplayMode('fullpage');
 		$pdf->SetMargins(20, 20,20);
 		$pdf->SetFont('Arial','BU',14);
 		$pdf->SetTextColor(70,125,25);
-		$pdf->Cell(0,10,'FICHA DE CHECH DOMICILIARIO',0,1,'C');
+		$pdf->Cell(0,10,'FICHA DE CHECK DOMICILIARIO',0,1,'C');
 
 		$pdf->Ln(2);
 		$pdf->SetTextColor(0,0,0);
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(55,7,'NOMBRES Y APELLIDOS',0,0,'L');
+		$pdf->Cell(55,7,'NOMBRES Y APELLIDOS',1,0,'L');
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(0,7,$nombre,1,1,'C');
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(55,7,'DIRECCION',0,0,'L');
+		$pdf->Cell(55,7,'DIRECCION',1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->MultiCell(0,5,$domicilio,1,'L');
+		$pdf->MultiCell(0,7,$domicilio,1,'C');
 
 		//$pdf->Ln(2);
 		//$pdf->Image('../files/images_dni/imagen1.png',40,null,0,130);
@@ -272,13 +277,13 @@ while($row = mysql_fetch_array($result))
 		$pdf->Ln(2);
 		$pdf->SetTextColor(0,0,0);
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(55,7,'NOMBRES Y APELLIDOS',0,0,'L');
+		$pdf->Cell(55,7,'NOMBRES Y APELLIDOS',1,0,'L');
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(0,7,$nombre,1,1,'C');
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(55,7,'DIRECCION',0,0,'L');
+		$pdf->Cell(55,7,'DIRECCION',1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->MultiCell(0,5,$domicilio,1,'L');
+		$pdf->MultiCell(0,7,$domicilio,1,'C');
 
 		$pdf->Ln(5);
 		$pdf->Image("../files/images_dom/$fotos[0]",40,null,130,100);
@@ -298,13 +303,13 @@ while($row = mysql_fetch_array($result))
 		$pdf->Ln(2);
 		$pdf->SetTextColor(0,0,0);
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(55,7,'NOMBRES Y APELLIDOS',0,0,'L');
+		$pdf->Cell(55,7,'NOMBRES Y APELLIDOS',1,0,'L');
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(0,7,$nombre,1,1,'C');
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(55,7,'DIRECCION',0,0,'L');
+		$pdf->Cell(55,7,'DIRECCION',1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->MultiCell(0,5,$domicilio,1,'L');
+		$pdf->MultiCell(0,7,$domicilio,1,'C');
 
 		$pdf->Ln(5);
 		$pdf->Image("../files/images_dom/$fotos[2]",30,null,0,120);

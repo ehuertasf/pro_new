@@ -10,6 +10,28 @@ if (!isset($swInit)) {
 	$codper=$_GET["codper"];
 	$codsol=$_GET["codsol"];
 }
+/*
+echo "SELECT a.codchkser,
+CONCAT(c.apepatper,' ',c.apematper,', ',c.nomper) AS nombre,
+d.despue AS puesto,
+a.imgreniec,
+a.obsimgreniec,
+a.indrefpol, a.refpolchk,
+a.indantpol,
+a.indreqjud,
+a.indrefter,
+a.indrefdro,
+a.indimpsalpai,
+a.indinvpen,a.invpenchk,
+e.desdel,
+a.recchk
+FROM tb_chkservice AS a
+LEFT JOIN tb_detallesolicitud AS b ON b.codper=a.codper AND b.codsol=a.codsol
+LEFT JOIN tb_persona AS c ON c.codper=a.codper
+LEFT JOIN tb_puesto AS d ON d.codpue=b.codpue
+LEFT JOIN tb_delito AS e ON e.coddel=a.coddel
+WHERE a.codper=$codper AND a.codsol=$codsol";
+*/
 $result=mysql_query("SELECT a.codchkser,
 CONCAT(c.apepatper,' ',c.apematper,', ',c.nomper) AS nombre,
 d.despue AS puesto,
@@ -29,8 +51,11 @@ LEFT JOIN tb_detallesolicitud AS b ON b.codper=a.codper AND b.codsol=a.codsol
 LEFT JOIN tb_persona AS c ON c.codper=a.codper
 LEFT JOIN tb_puesto AS d ON d.codpue=b.codpue
 LEFT JOIN tb_delito AS e ON e.coddel=a.coddel
-WHERE a.codper=$codper AND a.codsol=$codsol",$link);
-
+WHERE a.codper in ($codper) AND a.codsol=$codsol",$link);
+if (!isset($pdf)) {
+	$pdf=new PDF();
+	$pdf->AliasNbPages();
+}
 while($row = mysql_fetch_array($result))
 {
 		$nombre		= utf8_decode($row['nombre']);
@@ -62,8 +87,8 @@ while($row = mysql_fetch_array($result))
 
 
 		//Creación del objeto de la clase heredada
-		$pdf=new PDF();
-		$pdf->AliasNbPages();
+	//	$pdf=new PDF();
+	//	$pdf->AliasNbPages();
 		$pdf->AddPage();
 		$pdf->SetDisplayMode('fullpage');
 		$pdf->SetMargins(20, 20,20);
@@ -96,38 +121,74 @@ while($row = mysql_fetch_array($result))
 		$pdf->SetFont('Arial','B',12);
 		$pdf->Cell(70,7,'Referencia Policial:',1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->Cell(0,7,$TXTindrefpol,1,1,'C');
+		if ($TXTindrefpol=='Si Registra'){
+			$pdf->SetFont('Arial','B',12);
+			$pdf->SetTextColor(255,0,0);
+			$pdf->Cell(0,7,$TXTindrefpol,1,1,'C');
+			$pdf->SetTextColor(0,0,0);
+		}else $pdf->Cell(0,7,$TXTindrefpol,1,1,'C');
 
 		$pdf->SetFont('Arial','B',12);
 		$pdf->Cell(70,7,'Antecedente Policial:',1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->Cell(0,7,$TXTindantpol,1,1,'C');
+		
+		if ($TXTindantpol=='Si Registra'){
+			$pdf->SetFont('Arial','B',12);
+			$pdf->SetTextColor(255,0,0);
+			$pdf->Cell(0,7,$TXTindantpol,1,1,'C');
+			$pdf->SetTextColor(0,0,0);
+		}else $pdf->Cell(0,7,$TXTindantpol,1,1,'C');
 
 		$pdf->SetFont('Arial','B',12);
 		$pdf->Cell(70,7,'Requisitoria Judicial:',1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->Cell(0,7,$TXTindreqjud,1,1,'C');
+		if ($TXTindreqjud=='Si Registra'){
+			$pdf->SetFont('Arial','B',12);
+			$pdf->SetTextColor(255,0,0);
+			$pdf->Cell(0,7,$TXTindreqjud,1,1,'C');
+			$pdf->SetTextColor(0,0,0);
+		}else $pdf->Cell(0,7,$TXTindreqjud,1,1,'C');
 
 		$pdf->SetFont('Arial','B',12);
 		$pdf->Cell(70,7,'Referencia por Terrorismo',1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->Cell(0,7,$TXTindrefter,1,1,'C');
+		if ($TXTindrefter=='Si Registra'){
+			$pdf->SetFont('Arial','B',12);
+			$pdf->SetTextColor(255,0,0);
+			$pdf->Cell(0,7,$TXTindrefter,1,1,'C');
+			$pdf->SetTextColor(0,0,0);
+		}else $pdf->Cell(0,7,$TXTindrefter,1,1,'C');
 
 		$pdf->SetFont('Arial','B',12);
 		$pdf->Cell(70,7,'Referencia por Drogas:',1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->Cell(0,7,$TXTindrefdro,1,1,'C');
+		if ($TXTindrefdro=='Si Registra'){
+			$pdf->SetFont('Arial','B',12);
+			$pdf->SetTextColor(255,0,0);
+			$pdf->Cell(0,7,$TXTindrefdro,1,1,'C');
+			$pdf->SetTextColor(0,0,0);
+		}else $pdf->Cell(0,7,$TXTindrefdro,1,1,'C');
 
 		$pdf->SetFont('Arial','B',12);
 		$pdf->Cell(70,7,utf8_decode('Impedimento de salida del país:'),1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->Cell(0,7,$TXTindimpsalpai,1,1,'C');
+		if ($TXTindimpsalpai=='Si Registra'){
+			$pdf->SetFont('Arial','B',12);
+			$pdf->SetTextColor(255,0,0);
+			$pdf->Cell(0,7,$TXTindimpsalpai,1,1,'C');
+			$pdf->SetTextColor(0,0,0);
+		}else $pdf->Cell(0,7,$TXTindimpsalpai,1,1,'C');
 
 		//$str = utf8_decode('Investigación Penal:');
 		$pdf->SetFont('Arial','B',12);
 		$pdf->Cell(70,7,utf8_decode('Investigación Penal:'),1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->Cell(0,7,$TXTindinvpen,1,1,'C');
+		if ($TXTindinvpen=='Si Registra'){
+			$pdf->SetFont('Arial','B',12);
+			$pdf->SetTextColor(255,0,0);
+			$pdf->Cell(0,7,$TXTindinvpen,1,1,'C');
+			$pdf->SetTextColor(0,0,0);
+		}else $pdf->Cell(0,7,$TXTindinvpen,1,1,'C');
 
 		if ($sw1==1 or $sw2==1 ){
 		$pdf->AddPage();

@@ -96,8 +96,8 @@ function mttotipdelito(){
                     var selectedRowDelito =grdtipdelito.getSelectionModel().getSelected();
                     var campo0 =grdtipdelito.getColumnModel().getDataIndex(0);
                     var campo1 =grdtipdelito.getColumnModel().getDataIndex(1);
-					var campo2 =grdtipdelito.getColumnModel().getDataIndex(2);
-                    var campo3 =grdtipdelito.getColumnModel().getDataIndex(3);
+                    var campo2 =grdtipdelito.getColumnModel().getDataIndex(2);
+                    var campo3 =grdtipdelito.getColumnModel().getDataIndex(4);
 
 
                     idfiDelito_ =selectedRowDelito.get(campo0);
@@ -179,12 +179,13 @@ function mttotipdelito(){
                 fieldLabel:'Tipo',
                 name:'descdelito',
                 id:'descdelito',
-                maxLength:45,
+                maxLength:180,
                 disabled:true,
                 minLength:2,
                 maxLengthText:'El texto es muy extenso',
                 minLengthText:'El texto es muy corto',
-                width:160
+                width:160,
+                plugins     : new Ext.ux.Uppercase()
             },{
 				xtype: 'textarea',
 				fieldLabel:'Descripci\u00F3n',
