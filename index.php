@@ -1,4 +1,4 @@
-<?php
+<?php 
 	session_start();
 	if ($_SESSION['p3r1m1t1d0'] != "yes"){
 		header("Location: seguridad/login.php");
