@@ -19,7 +19,6 @@
 	global $pdf;
 	include("rptCheckService.php");
 	include("rptCheckLaboral.php");
-        include("rptCheckFamiliar.php");
 	include("rptCheckDomiciliario.php");
 	$pdf->Output();
 	

@@ -257,7 +257,7 @@ while($row = mysql_fetch_array($result))
 		$pdf->Ln(2);
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(50,7,utf8_decode('Conclusiones:'),0,0,'L');
-		$pdf->Cell(0,7,$descon,1,1,'C');
+		$pdf->Cell(0,7,$deszonrie,1,1,'C');
 
 		$pdf->Ln(2);
 		$pdf->SetFont('Arial','',12);

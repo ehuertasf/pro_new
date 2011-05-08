@@ -48,12 +48,7 @@ if($i==0){
 		$stmt3->execute(array(
 			':xcodsol' => $codsol
 		));
-
 		$dbh->commit();
-
-
-
-
 	} catch (Exception $e) {
 		$dbh->rollBack();
 //     echo 'SQL Query: ', $sql;

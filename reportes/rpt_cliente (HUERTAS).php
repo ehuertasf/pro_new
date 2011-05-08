@@ -63,7 +63,7 @@
 
         
         $sql="SELECT CONCAT(a.apepatper,' ',a.apematper,', ',a.nomper) AS APELLIDOS_NOMBRES,a.numdocper AS DNI,
-            (SELECT if((c.inrefpol=1 or c.indantpol=1 or c.indreqjud=1 or c.indrefter=1 or c.indrefdro=1 or c.indimpsalpai=1 or c.indinvpen=1),'Registra','No Registra') FROM tb_chkservice c WHERE c.codper=a.codper) AS CHECK_DELICTIVO,
+            (SELECT d.nomdel FROM tb_chkservice c,tb_delito d WHERE c.coddel=d.coddel AND c.codper=a.codper) AS CHECK_DELICTIVO,
             (SELECT f.descon FROM tb_chkdomicilio e,tb_conclusion f WHERE e.codcon=f.codcon AND e.codper=a.codper  ) AS CHECK_DOMICILIARIO,
             (SELECT GROUP_CONCAT(g.descon SEPARATOR '/') FROM tb_chklaboral v,tb_conclusion g WHERE v.codcon=g.codcon AND codper=u.codper AND codsol=u.codsol) AS CHECK_LABORAL,
             z.nomcli AS CLIENTE,w.fecvensol AS FECHA_ENTREGA,w.fecciesol AS FECHA_CIERRE,r.despue AS PUESTO,w.obssol AS OBSERVACION

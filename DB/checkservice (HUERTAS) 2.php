@@ -262,7 +262,7 @@ switch ($n){
 //                echo 'Error con la base de datos: <br />';
 //                echo 'SQL Query: ', $sql;
 //                echo '<pre>';
-//                echo 'Error: ,'.$e->getMessage();
+                echo 'Error: ,'.$e->getMessage();
 //                echo 'Archivo: ' . $e->getFile() . '<br />';
 //                echo 'Linea: ' . $e->getLine() . '<br />';
 //                echo '</pre>';

@@ -32,7 +32,7 @@ switch ($n){
             $codper = $_POST['codper'];
             $codsol = $_POST['codsol'];
             $sqlquery="SELECT codchkser, imgreniec, obsimgreniec, indrefpol, refpolchk, indantpol, indreqjud
-                        , indrefter, indrefdro, indimpsalpai, indinvpen, invpenchk, recchk, codestchk
+                        , indrefter, indrefdro, indimpsalpai, indinvpen, invpenchk, recchk, coddel, codestchk
                         FROM tb_chkservice where codper='$codper' and codsol='$codsol'";
             $stmt = mysql_query($sqlquery);
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
@@ -41,7 +41,6 @@ switch ($n){
         case 4: //Graba CheckService
             $codper = $_POST['codper'];
             $codsol = $_POST['codsol'];
-            $codchkser = $_POST['codchkser'];
             $imgactual = $_POST['imgreniecact'];
             $nomimgreniec =  basename( $_FILES['imgreniec']['name']);
             $obsimgreniec = $_POST['obsimgreniec'];
@@ -55,11 +54,8 @@ switch ($n){
             $indinvpen	= $_POST['vindinvpen'];
             $invpenchk	= $_POST['invpenchk'];
             $recchk	= $_POST['recchk'];
-            $delitos	= $_POST['delitos'];
+            $coddel	= $_POST['vcoddel'];
             $codestchk  = $_POST['vcodestchk'];
-            $detrecibido = explode("|,|",$delitos);
-            $cant_elementos = count($detrecibido);
-
             //print_r($_FILES);
             $target_path = "../files/images_dni/";
             //$target_path = $target_path . basename( $_FILES['imgreniec']['name']);
@@ -83,8 +79,7 @@ switch ($n){
                 $sql = "UPDATE tb_chkservice SET obsimgreniec=:obsimgreniec, indrefpol=:indrefpol, imgreniec=:nomimgreniec,
                         refpolchk=:refpolchk, indantpol=:indantpol, indreqjud=:indreqjud, indrefter=:indrefter,
                         indrefdro=:indrefdro, indimpsalpai=:indimpsalpai, indinvpen=:indinvpen, invpenchk=:invpenchk,
-                        recchk=:recchk, codestchk=:codestchk where codsol=:codsol and codper=:codper";
-                        //recchk=:recchk, coddel=:coddel, codestchk=:codestchk where codsol=:codsol and codper=:codper";
+                        recchk=:recchk, coddel=:coddel, codestchk=:codestchk where codsol=:codsol and codper=:codper";
                 $stmt=$dbh->prepare($sql);
                 $stmt->execute(array(
                     ':obsimgreniec' => $obsimgreniec,
@@ -99,34 +94,11 @@ switch ($n){
                     ':indinvpen' => $indinvpen,
                     ':invpenchk' => $invpenchk,
                     ':recchk' => $recchk,
-                    //':coddel' => $coddel,
+                    ':coddel' => $coddel,
                     ':codestchk' => $codestchk,
                     ':codsol' => $codsol,
                     ':codper' => $codper
                 ));
-
-
-
-                for($i=0;$i<$cant_elementos;$i++){
-                    //echo "elementodetalle=".$elementodetalle;
-                    $elementodetalle = explode("$$",$detrecibido[$i]);
-                    $rgrabado=$elementodetalle[1];
-                    //echo "es grabado=".$rgrabado;
-                    if($rgrabado==0){
-                        $rcoddel = $elementodetalle[0];
-                        $sql = "INSERT INTO tb_delito_chkservice (coddel,codchkser,codper,codsol)
-                                      VALUES (:coddel,:codchkser,:codper,:codsol)";
-                        $stmt =$dbh->prepare($sql);
-                        //echo "recibido: ".$rcoddel."-".$codchkser."-".$codper."-".$codsol;
-                        $stmt->execute(array(
-                            ':coddel' => $rcoddel,
-                            ':codchkser' => $codchkser,
-                            ':codper' => $codper,
-                            ':codsol' => $codsol
-                        ));
-                    }
-                }
-
                 $dbh->commit();
                 echo "{success: true, confirma: {mensaje: 'Se grabaron correctamente los datos'},respuesta: {estado: '$codestchk'}, img: {imagen: '$archivorecibido' }}";
             } catch (Exception $e) {
@@ -233,44 +205,5 @@ switch ($n){
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
             echo '{"checkspersona":'.json_encode($arr).'}';
             break;
-       case 10:
-            $codchkser = $_POST['codchkser'];
-            $sqlquery ="select d.coddel, de.nomdel, de.desdel, 1 as grabado from tb_delito_chkservice d, tb_delito de where
-                        d.coddel=de.coddel and d.codchkser='$codchkser' order by de.nomdel";
-            $stmt = mysql_query($sqlquery);
-            while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
-            //echo $codchkser;
-            echo '{"delitosgrab":'.json_encode($arr).'}';
-            break;
-       case 11:
-           $codchkser=$_POST['codchkser'];
-           $coddel=$_POST['coddel'];
-           try {
-               $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-                $dbh->beginTransaction();
-                $sql = "DELETE from tb_delito_chkservice where codchkser=:codchkser and coddel=:coddel";
-                        //recchk=:recchk, coddel=:coddel, codestchk=:codestchk where codsol=:codsol and codper=:codper";
-                $stmt=$dbh->prepare($sql);
-                $stmt->execute(array(
-                    ':codchkser' => $codchkser,
-                    ':coddel' => $coddel
-                ));
-                $dbh->commit();
-                echo "{respuesta: {error : 0, mensaje: 'Se elimino correctamente'}}";
-            } catch (Exception $e) {
-//                echo 'PDO Excepciones.	';
-//                echo 'Error con la base de datos: <br />';
-//                echo 'SQL Query: ', $sql;
-//                echo '<pre>';
-//                echo 'Error: ,'.$e->getMessage();
-//                echo 'Archivo: ' . $e->getFile() . '<br />';
-//                echo 'Linea: ' . $e->getLine() . '<br />';
-//                echo '</pre>';
-//                echo $e->getMessage();
-                echo "{respuesta: {error : 1, mensaje: 'No se pudo eliminar el delito, intente nuevamente'}}";
-
-            }
-
-           break;
 }
 ?>

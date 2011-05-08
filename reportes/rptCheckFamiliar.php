@@ -33,8 +33,8 @@ LEFT JOIN tb_delito AS e ON e.coddel=a.coddel
 WHERE a.codper=$codper AND a.codsol=$codsol";
 */
 $result=mysql_query("SELECT a.codchkser,
-CONCAT(c.apepatper,' ',c.apematper,', ',c.nomper) AS nombre,
-d.despue AS puesto,
+a.nombre,
+p.despar AS parentesco,
 a.imgreniec,
 a.obsimgreniec,
 a.indrefpol, a.refpolchk,
@@ -45,10 +45,10 @@ a.indrefdro,
 a.indimpsalpai,
 a.indinvpen,a.invpenchk,
 a.recchk
-FROM tb_chkservice AS a
+FROM tb_chkfamiliar AS a
 LEFT JOIN tb_detallesolicitud AS b ON b.codper=a.codper AND b.codsol=a.codsol
 LEFT JOIN tb_persona AS c ON c.codper=a.codper
-LEFT JOIN tb_puesto AS d ON d.codpue=b.codpue
+LEFT JOIN tb_parentesco AS p ON a.codpar=p.codpar
 WHERE a.codper in ($codper) AND a.codsol=$codsol",$link);
 if (!isset($pdf)) {
 	$pdf=new PDF();
@@ -56,13 +56,13 @@ if (!isset($pdf)) {
 }
 while($row = mysql_fetch_array($result))
 {
-		$nombre		= utf8_decode($row['nombre']);
-		$puesto		= utf8_decode($row['puesto']);
+		$codchkser      = utf8_decode($row['codchkser']);
+                $nombre		= utf8_decode($row['nombre']);
+		$parentesco	= utf8_decode($row['parentesco']);
 		$imgreniec	= utf8_decode($row['imgreniec']);
-
 		$obs		= utf8_decode($row['obsimgreniec']);
-
-		$indrefpol= utf8_decode($row['indrefpol']); 	$refpolchk= utf8_decode($row['refpolchk']);
+		$indrefpol= utf8_decode($row['indrefpol']);
+                $refpolchk= utf8_decode($row['refpolchk']);
 		$indantpol= utf8_decode($row['indantpol']);
 		$indreqjud= utf8_decode($row['indreqjud']);
 		$indrefter= utf8_decode($row['indrefter']);
@@ -71,9 +71,9 @@ while($row = mysql_fetch_array($result))
 		$indinvpen= utf8_decode($row['indinvpen']);
                 $invpenchk= utf8_decode($row['invpenchk']);
 
-		$delitos=mysql_query("SELECT cd.coddel,d.nomdel,d.desdel FROM tb_delito_chkservice cd
+		$delitos=mysql_query("SELECT cd.coddel,d.nomdel,d.desdel FROM tb_chkfamilia_delito cd
                             LEFT JOIN tb_delito d ON cd.coddel=d.coddel
-                            where cd.codsol=".$codsol." and cd.codper=".$codper);
+                            where cd.codchkser=".$codchkser);
                 
                 $desdel="";
                 
@@ -106,21 +106,21 @@ while($row = mysql_fetch_array($result))
 		$pdf->SetMargins(20, 20,20);
 		$pdf->SetFont('Arial','BU',14);
 		$pdf->SetTextColor(70,125,25);
-		$pdf->Cell(0,10,'CHECK SERVICE',0,1,'C');
+		$pdf->Cell(0,10,'CHECK FAMILIAR',0,1,'C');
 		$pdf->Ln(2);
 
 		$pdf->SetTextColor(0,0,0);
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(70,7,'CHECK IDENTIDAD',1,0,'L');
+		$pdf->Cell(70,7,'NOMBRE',1,0,'L');
 		$pdf->SetFont('Arial','',12);
 		$pdf->Cell(0,7,$nombre,1,1,'C');
 		$pdf->SetFont('Arial','B',12);
-		$pdf->Cell(70,7,'PUESTO AL QUE POSTULA',1,0,'L');
+		$pdf->Cell(70,7,'PARENTESCO',1,0,'L');
 		$pdf->SetFont('Arial','',12);
-		$pdf->Cell(0,7,$puesto,1,1,'C');
+		$pdf->Cell(0,7,$parentesco,1,1,'C');
 		$pdf->Ln(2);
 		//$pdf->Image('../files/images_dni/imagen1.png',40,null,0,130);
-		$pdf->Image('../files/images_dni/'.$imgreniec,40,null,0,130);
+		$pdf->Image('../files/images_dni/fam/'.$imgreniec,40,null,0,130);
 
 		$pdf->Ln(2);
 		$pdf->SetFont('Arial','B',12);

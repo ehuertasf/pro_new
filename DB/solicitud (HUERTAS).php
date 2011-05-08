@@ -91,20 +91,16 @@ switch ($n){
                 foreach($dbh->query($sql) as $fila){
                     switch($fila['nomtbl']){
                         case 'tb_chkservice' :
-                            $sql="INSERT INTO tb_chkservice (codper,codsol,codestchk)
-                                        VALUES (:codper,:codsol,1)";
+                            $sql="INSERT INTO tb_chkservice (codper,codsol,coddel,codestchk)
+                                        VALUES (:codper,:codsol,1,1)";
                             break;
                         case 'tb_chklaboral' :
-                            $sql="INSERT INTO tb_chklaboral (codper,codsol,codcue,codestchk,cueresp,codcon)
-                                        VALUES (:codper,:codsol,1,1,0,1)";
+                            $sql="INSERT INTO tb_chklaboral (codper,codsol,codcue,codestchk,cueresp)
+                                        VALUES (:codper,:codsol,1,1,0)";
                             break;
                         case 'tb_chkdomicilio' :
                             $sql="INSERT INTO tb_chkdomicilio (codper,codsol,coddpto,codpro,coddist,codtipvia,codpar,codviv,codtipviv,codtipmat,codestcon,codzonif,codzonrie,codcon,codestchk)
                                         VALUES (:codper,:codsol,15,1,1,1,1,1,1,1,1,1,1,1,1)";
-                            break;
-                        case 'tb_chkfamiliar' :
-                            $sql="INSERT INTO tb_chkfamiliar (codper,codsol,codestchk,codpar)
-                                        VALUES (:codper,:codsol,1,1)";
                             break;
                     }
                     $stmt =$dbh->prepare($sql);
@@ -268,49 +264,6 @@ switch ($n){
             $stmt = mysql_query($sqlquery);
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
             echo '{"checkspersona":'.json_encode($arr).'}';
-            break;
-       case 10:
-           $codsol=$_POST['codsol'];
-           $sqlquery="SELECT s.codsol,c.nomcli,s.fecregsol,s.fecvensol,s.codestsol,CONCAT(u.nomuser,' ',u.apeuser) as usuario FROM tb_solicitud s
-                        LEFT JOIN tb_cliente c ON s.codcli=c.codcli
-                        LEFT JOIN tb_users u ON s.usuregsol=u.loguser WHERE s.codsol=".$codsol;
-           $stmt = mysql_query($sqlquery);
-            while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
-            echo '{"desbloquear":'.json_encode($arr).'}';
-            break;
-       case 11:
-            $codsol	= $_POST['codsol'];
-            $nuefecvensol = $_POST['nuefecvensol'];
-            $nuehorvensol = $_POST['nuehorvensol'];
-            $nuevafecha=substr($nuefecvensol,6,4).'-'.substr($nuefecvensol,3,2).'-'.substr($nuefecvensol,0,2).' '.$nuehorvensol.':00';
-            try {
-                $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-                $dbh->beginTransaction();
-                $sql="UPDATE tb_solicitud SET fecvensol=:nueva where codsol=:codsol";
-                //echo $nuevafecha;
-                $stmt=$dbh->prepare($sql);
-                $stmt->execute(array(
-                    ':codsol' => $codsol,
-                    ':nueva' => $nuevafecha
-                ));
-                $dbh->commit();
-                echo "{success: true, respuesta: {mensaje: 'Solicitud ha sido desbloqueada correctamente ' }}";
-                //echo 'Solicitud generada satisfactoriamente. Nro. Solicitud: ~'.$nrosol;
-                //echo ','.$sqlchecks;
-            } catch (PDOException $e) {
-                //echo $e;
-                $dbh->rollBack();
-//                echo 'PDO Excepciones.	';
-//                echo 'Error con la base de datos: <br />';
-//                echo 'SQL Query: ', $sql;
-//                echo '<pre>';
-//                echo 'Error: ,'.$e->getMessage();
-//                echo 'Archivo: ' . $e->getFile() . '<br />';
-//                echo 'Linea: ' . $e->getLine() . '<br />';
-//                echo '</pre>';
-		//echo 'Ocurrio un error al tratar de grabar la solicitud, Vuelva a intentar y si el problema persiste comuniquese con soporte';
-                echo "{success: false, respuesta: {mensaje: 'Ocurrio un error al desbloquear solicitud comuniquese con Sistemas' }}";
-            }
             break;
 }
 ?>

@@ -12,39 +12,33 @@ $dbh=conectaPDO();
 //$n=$_GET['n'];
 $n = (isset($_POST['n']) ? $_POST['n'] : $_GET['n']);
 switch ($n){
-        //case 100:
-        //    echo '{"detpersonas":null}';
-        case 1: //Delitos
-            $sqlquery ="select coddel, nomdel, desdel from tb_delito where estdel='1' order by nomdel";
-            $stmt = mysql_query($sqlquery);
-            while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
-            echo '{"delitos":'.json_encode($arr).'}';
-            break;
-        case 2:	//Estados Check
-            $sqlquery ="select codestchk, desestchk from tb_estadocheck where estdeschk='1' order by codestchk";
-            $stmt = mysql_query($sqlquery);
-            while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
-            echo '{"estadoscheck":'.json_encode($arr).'}';
-            break;
-        case 3: //Obtiene Datos CheckService
-            //session_start();
-            //$usuregsol  = $_SESSION['us3r1d'];
+        case 1: //Listado de Checks Laborales
             $codper = $_POST['codper'];
             $codsol = $_POST['codsol'];
-            $sqlquery="SELECT codchkser, imgreniec, obsimgreniec, indrefpol, refpolchk, indantpol, indreqjud
-                        , indrefter, indrefdro, indimpsalpai, indinvpen, invpenchk, recchk, codestchk
-                        FROM tb_chkservice where codper='$codper' and codsol='$codsol'";
+            $sqlquery ="SELECT f.codchkser, f.nombre, p.despar, e.desestchk
+                        FROM tb_chkfamiliar f left join tb_estadocheck e on f.codestchk=e.codestchk
+                        left join tb_parentesco p on f.codpar=p.codpar where codper='$codper' and codsol='$codsol'";
             $stmt = mysql_query($sqlquery);
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
-            echo '{"chechservicepersona":'.json_encode($arr).'}';
+            echo '{"listacheckfam":'.json_encode($arr).'}';
             break;
-        case 4: //Graba CheckService
-            $codper = $_POST['codper'];
-            $codsol = $_POST['codsol'];
+        case 4: //recupera datos del Chek Laboral
             $codchkser = $_POST['codchkser'];
-            $imgactual = $_POST['imgreniecact'];
-            $nomimgreniec =  basename( $_FILES['imgreniec']['name']);
-            $obsimgreniec = $_POST['obsimgreniec'];
+            $sqlquery ="select * FROM tb_chkfamiliar where codchkser='$codchkser'";
+            $stmt = mysql_query($sqlquery);
+            while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
+            echo '{"checkfamiliarpersona":'.json_encode($arr).'}';
+            break;
+        case 5: //Graba CheckService
+            $codper = $_POST['codper'];
+            $codsol = $_POST['codsol'];
+            $codchkser = $_POST['codchkfam'];
+            $nuevo = $_POST['nuevo'];
+            $imgactual = $_POST['imgreniecactfam'];
+            $nomimgreniec =  basename( $_FILES['imgreniecfam']['name']);
+            $nombreper = $_POST['nombre'];
+            $codpar = $_POST['vcodpar'];
+            $obsimgreniec = $_POST['obsimgreniecfam'];
             $indrefpol	= $_POST['vindrefpol'];
             $refpolchk	= $_POST['refpolchk'];
             $indantpol	= $_POST['vindantpol'];
@@ -54,79 +48,146 @@ switch ($n){
             $indimpsalpai= $_POST['vindimpsalpai'];
             $indinvpen	= $_POST['vindinvpen'];
             $invpenchk	= $_POST['invpenchk'];
-            $recchk	= $_POST['recchk'];
+            $recchk	= $_POST['recchkfam'];
             $delitos	= $_POST['delitos'];
             $codestchk  = $_POST['vcodestchk'];
             $detrecibido = explode("|,|",$delitos);
             $cant_elementos = count($detrecibido);
 
             //print_r($_FILES);
-            $target_path = "../files/images_dni/";
+            $target_path = "../files/images_dni/fam/";
             //$target_path = $target_path . basename( $_FILES['imgreniec']['name']);
-
-            if($nomimgreniec!=''){
-                $nombre = $codsol."_".$codper."_dni.".end(explode(".", $nomimgreniec));
-                if(move_uploaded_file($_FILES['imgreniec']['tmp_name'], $target_path.$nombre)) {
-                    $archivorecibido =  $nombre;
-                } else{
-                    echo "{\"success\":\"false\",\"errors\":{\"reason\":\"Ocurrio un error al cargar el archivo, Intente nuevamente\"},\"respuesta\":{\"estado\":\"-1\"},\"img\":{\"imagen\":\"$archivorecibido\"}}";
-                    exit();
-                }
-            }
-            else{
-                $archivorecibido=$imgactual;
-            }
 
             try {
                 $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
                 $dbh->beginTransaction();
-                $sql = "UPDATE tb_chkservice SET obsimgreniec=:obsimgreniec, indrefpol=:indrefpol, imgreniec=:nomimgreniec,
-                        refpolchk=:refpolchk, indantpol=:indantpol, indreqjud=:indreqjud, indrefter=:indrefter,
-                        indrefdro=:indrefdro, indimpsalpai=:indimpsalpai, indinvpen=:indinvpen, invpenchk=:invpenchk,
-                        recchk=:recchk, codestchk=:codestchk where codsol=:codsol and codper=:codper";
-                        //recchk=:recchk, coddel=:coddel, codestchk=:codestchk where codsol=:codsol and codper=:codper";
-                $stmt=$dbh->prepare($sql);
-                $stmt->execute(array(
-                    ':obsimgreniec' => $obsimgreniec,
-                    ':indrefpol' => $indrefpol,
-                    ':nomimgreniec' => $archivorecibido,
-                    ':refpolchk' => $refpolchk,
-                    ':indantpol' => $indantpol,
-                    ':indreqjud' => $indreqjud,
-                    ':indrefter' => $indrefter,
-                    ':indrefdro' => $indrefdro,
-                    ':indimpsalpai' => $indimpsalpai,
-                    ':indinvpen' => $indinvpen,
-                    ':invpenchk' => $invpenchk,
-                    ':recchk' => $recchk,
-                    //':coddel' => $coddel,
-                    ':codestchk' => $codestchk,
-                    ':codsol' => $codsol,
-                    ':codper' => $codper
-                ));
+
+                if ($nuevo=='no'){
+                    if($nomimgreniec!=''){
+                        $nombre = $codsol."_".date("YmdGis")."_dni.".end(explode(".", $nomimgreniec));
+                        if(move_uploaded_file($_FILES['imgreniecfam']['tmp_name'], $target_path.$nombre)) {
+                            $archivorecibido =  $nombre;
+                        } else{
+                            echo "{success: false, confirma: {mensaje: 'No se pudo grabar la imagen, intente nuevamente'}}";
+                            //echo "{\"success\":\"false\",\"errors\":{\"reason\":\"Ocurrio un error al cargar el archivo, Intente nuevamente\"},\"respuesta\":{\"estado\":\"-1\"},\"img\":{\"imagen\":\"$archivorecibido\"}}";
+                            exit();
+                        }
+                    }
+                    else{
+                        $archivorecibido=$imgactual;
+                    }
+
+                    $sql = "UPDATE tb_chkfamiliar SET nombre=:nombre, codpar=:codpar, obsimgreniec=:obsimgreniec, indrefpol=:indrefpol, imgreniec=:nomimgreniec,
+                            refpolchk=:refpolchk, indantpol=:indantpol, indreqjud=:indreqjud, indrefter=:indrefter,
+                            indrefdro=:indrefdro, indimpsalpai=:indimpsalpai, indinvpen=:indinvpen, invpenchk=:invpenchk,
+                            recchk=:recchk, codestchk=:codestchk where codchkser=:codchkser";
+                            //recchk=:recchk, coddel=:coddel, codestchk=:codestchk where codsol=:codsol and codper=:codper";
+                    $stmt=$dbh->prepare($sql);
+                    $stmt->execute(array(
+                        ':nombre' => $nombreper,
+                        ':codpar' => $codpar,
+                        ':obsimgreniec' => $obsimgreniec,
+                        ':indrefpol' => $indrefpol,
+                        ':nomimgreniec' => $archivorecibido,
+                        ':refpolchk' => $refpolchk,
+                        ':indantpol' => $indantpol,
+                        ':indreqjud' => $indreqjud,
+                        ':indrefter' => $indrefter,
+                        ':indrefdro' => $indrefdro,
+                        ':indimpsalpai' => $indimpsalpai,
+                        ':indinvpen' => $indinvpen,
+                        ':invpenchk' => $invpenchk,
+                        ':recchk' => $recchk,
+                        ':codestchk' => $codestchk,
+                        ':codchkser' => $codchkser
+                    ));
 
 
 
-                for($i=0;$i<$cant_elementos;$i++){
-                    //echo "elementodetalle=".$elementodetalle;
-                    $elementodetalle = explode("$$",$detrecibido[$i]);
-                    $rgrabado=$elementodetalle[1];
-                    //echo "es grabado=".$rgrabado;
-                    if($rgrabado==0){
-                        $rcoddel = $elementodetalle[0];
-                        $sql = "INSERT INTO tb_delito_chkservice (coddel,codchkser,codper,codsol)
-                                      VALUES (:coddel,:codchkser,:codper,:codsol)";
-                        $stmt =$dbh->prepare($sql);
-                        //echo "recibido: ".$rcoddel."-".$codchkser."-".$codper."-".$codsol;
-                        $stmt->execute(array(
-                            ':coddel' => $rcoddel,
-                            ':codchkser' => $codchkser,
-                            ':codper' => $codper,
-                            ':codsol' => $codsol
-                        ));
+                    for($i=0;$i<$cant_elementos;$i++){
+                        //echo "elementodetalle=".$elementodetalle;
+                        $elementodetalle = explode("$$",$detrecibido[$i]);
+                        $rgrabado=$elementodetalle[1];
+                        //echo "es grabado=".$rgrabado;
+                        if($rgrabado==0){
+                            $rcoddel = $elementodetalle[0];
+                            $sql = "INSERT INTO tb_chkfamilia_delito (coddel,codchkser,codper,codsol)
+                                          VALUES (:coddel,:codchkser,:codper,:codsol)";
+                            $stmt =$dbh->prepare($sql);
+                            //echo "recibido: ".$rcoddel."-".$codchkser."-".$codper."-".$codsol;
+                            $stmt->execute(array(
+                                ':coddel' => $rcoddel,
+                                ':codchkser' => $codchkser,
+                                ':codper' => $codper,
+                                ':codsol' => $codsol
+                            ));
+                        }
+                    }
+                }else{
+                    if($nomimgreniec!=''){
+                        $nombre = $codsol."_".date("YmdGis")."_dni.".end(explode(".", $nomimgreniec));
+                        if(move_uploaded_file($_FILES['imgreniecfam']['tmp_name'], $target_path.$nombre)) {
+                            $archivorecibido =  $nombre;
+                        } else{
+                            echo "{success: false, confirma: {mensaje: 'No se pudo grabar la imagen, intente nuevamente'}}";
+                            //echo "{\"success\":\"false\",\"errors\":{\"reason\":\"Ocurrio un error al cargar el archivo, Intente nuevamente\"},\"respuesta\":{\"estado\":\"-1\"},\"img\":{\"imagen\":\"$archivorecibido\"}}";
+                            exit();
+                        }
+                    }
+                    else{
+                        $archivorecibido=$imgactual;
+                    }
+
+                    $sql = "INSERT INTO tb_chkfamiliar (codper,codsol,nombre,codpar,obsimgreniec,indrefpol,imgreniec,
+                                refpolchk,indantpol,indreqjud,indrefter,indrefdro,indimpsalpai,indinvpen,invpenchk,
+                                recchk,codestchk)
+                        VALUES (:codper,:codsol,:nombre,:codpar,:obsimgreniec,:indrefpol,:nomimgreniec,
+                            :refpolchk,:indantpol,:indreqjud,:indrefter,:indrefdro,:indimpsalpai,:indinvpen,:invpenchk,
+                            :recchk,:codestchk)";
+                            //recchk=:recchk, coddel=:coddel, codestchk=:codestchk where codsol=:codsol and codper=:codper";
+                    $stmt=$dbh->prepare($sql);
+                    $stmt->execute(array(
+                        ':codper' => $codper,
+                        ':codsol' => $codsol,
+                        ':nombre' => $nombreper,
+                        ':codpar' => $codpar,
+                        ':obsimgreniec' => $obsimgreniec,
+                        ':indrefpol' => $indrefpol,
+                        ':nomimgreniec' => $archivorecibido,
+                        ':refpolchk' => $refpolchk,
+                        ':indantpol' => $indantpol,
+                        ':indreqjud' => $indreqjud,
+                        ':indrefter' => $indrefter,
+                        ':indrefdro' => $indrefdro,
+                        ':indimpsalpai' => $indimpsalpai,
+                        ':indinvpen' => $indinvpen,
+                        ':invpenchk' => $invpenchk,
+                        ':recchk' => $recchk,
+                        ':codestchk' => $codestchk
+                    ));
+
+                $codchkser=$dbh->lastInsertId();
+
+                    for($i=0;$i<$cant_elementos;$i++){
+                        //echo "elementodetalle=".$elementodetalle;
+                        $elementodetalle = explode("$$",$detrecibido[$i]);
+                        $rgrabado=$elementodetalle[1];
+                        //echo "es grabado=".$rgrabado;
+                        if($rgrabado==0){
+                            $rcoddel = $elementodetalle[0];
+                            $sql = "INSERT INTO tb_chkfamilia_delito (coddel,codchkser,codper,codsol)
+                                          VALUES (:coddel,:codchkser,:codper,:codsol)";
+                            $stmt =$dbh->prepare($sql);
+                            //echo "recibido: ".$rcoddel."-".$codchkser."-".$codper."-".$codsol;
+                            $stmt->execute(array(
+                                ':coddel' => $rcoddel,
+                                ':codchkser' => $codchkser,
+                                ':codper' => $codper,
+                                ':codsol' => $codsol
+                            ));
+                        }
                     }
                 }
-
                 $dbh->commit();
                 echo "{success: true, confirma: {mensaje: 'Se grabaron correctamente los datos'},respuesta: {estado: '$codestchk'}, img: {imagen: '$archivorecibido' }}";
             } catch (Exception $e) {
@@ -134,7 +195,7 @@ switch ($n){
 //                echo 'Error con la base de datos: <br />';
 //                echo 'SQL Query: ', $sql;
 //                echo '<pre>';
-//                echo 'Error: ,'.$e->getMessage();
+                echo 'Error: ,'.$e->getMessage();
 //                echo 'Archivo: ' . $e->getFile() . '<br />';
 //                echo 'Linea: ' . $e->getLine() . '<br />';
 //                echo '</pre>';
@@ -143,7 +204,7 @@ switch ($n){
 
             }
             break;
-        case 5: //Consultas de solicitud
+        case 45: //Consultas de solicitud
             $ponerand=false;
             $codsol = $_POST['codsol'];
             $codcli = $_POST['codcli'];
@@ -235,7 +296,7 @@ switch ($n){
             break;
        case 10:
             $codchkser = $_POST['codchkser'];
-            $sqlquery ="select d.coddel, de.nomdel, de.desdel, 1 as grabado from tb_delito_chkservice d, tb_delito de where
+            $sqlquery ="select d.coddel, de.nomdel, de.desdel, 1 as grabado from tb_chkfamilia_delito d, tb_delito de where
                         d.coddel=de.coddel and d.codchkser='$codchkser' order by de.nomdel";
             $stmt = mysql_query($sqlquery);
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
@@ -262,7 +323,7 @@ switch ($n){
 //                echo 'Error con la base de datos: <br />';
 //                echo 'SQL Query: ', $sql;
 //                echo '<pre>';
-//                echo 'Error: ,'.$e->getMessage();
+                echo 'Error: ,'.$e->getMessage();
 //                echo 'Archivo: ' . $e->getFile() . '<br />';
 //                echo 'Linea: ' . $e->getLine() . '<br />';
 //                echo '</pre>';

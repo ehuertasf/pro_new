@@ -44,11 +44,13 @@ a.indrefter,
 a.indrefdro,
 a.indimpsalpai,
 a.indinvpen,a.invpenchk,
+e.desdel,
 a.recchk
 FROM tb_chkservice AS a
 LEFT JOIN tb_detallesolicitud AS b ON b.codper=a.codper AND b.codsol=a.codsol
 LEFT JOIN tb_persona AS c ON c.codper=a.codper
 LEFT JOIN tb_puesto AS d ON d.codpue=b.codpue
+LEFT JOIN tb_delito AS e ON e.coddel=a.coddel
 WHERE a.codper in ($codper) AND a.codsol=$codsol",$link);
 if (!isset($pdf)) {
 	$pdf=new PDF();
@@ -68,23 +70,9 @@ while($row = mysql_fetch_array($result))
 		$indrefter= utf8_decode($row['indrefter']);
 		$indrefdro= utf8_decode($row['indrefdro']);
 		$indimpsalpai= utf8_decode($row['indimpsalpai']);
-		$indinvpen= utf8_decode($row['indinvpen']);
-                $invpenchk= utf8_decode($row['invpenchk']);
+		$indinvpen= utf8_decode($row['indinvpen']);		$invpenchk= utf8_decode($row['invpenchk']);
 
-		$delitos=mysql_query("SELECT cd.coddel,d.nomdel,d.desdel FROM tb_delito_chkservice cd
-                            LEFT JOIN tb_delito d ON cd.coddel=d.coddel
-                            where cd.codsol=".$codsol." and cd.codper=".$codper);
-                
-                $desdel="";
-                
-                while($fildel = mysql_fetch_array($delitos)){
-                    $desdel=$desdel.utf8_decode($fildel['nomdel'])." : ".utf8_decode($fildel['desdel'])."\n\n";
-                }
-                
-                
-                //$desdel= utf8_decode($row['desdel']);
-
-
+		$desdel= utf8_decode($row['desdel']);
 		$recchk= utf8_decode($row['recchk']);
 
 		$sw1=0;

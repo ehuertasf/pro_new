@@ -43,7 +43,7 @@ function ftn_act_estadochk($codsol,$loguser){
                         }
 			
 			while($ofila_=mysql_fetch_array($oquery_)){
-				mysql_query("insert into tmp_estperchk (codsol,codper,codchk,codestchk,fe_mov,loguser,codchkreg) values ($codsol,$codper,$codchk,'".$ofila_[0]."',NOW(),'".$loguser."','".$ofila_[1]."')") or die(mysql_error()); //or die(mysql_error());
+				mysql_query("insert into tmp_estperchk (codsol,codper,codchk,codestchk,fe_mov,loguser,codchkreg) values ($codsol,$codper,$codchk,'".$ofila_[0]."',NOW(),'".$loguser."','".$ofila_[1]."')") or die("error al insertar en tabla tmp_estperchk"); //or die(mysql_error());
 			}
 
 		}
@@ -52,12 +52,12 @@ function ftn_act_estadochk($codsol,$loguser){
 		$wquery_=mysql_query("SELECT codchk,codestchk,codchkreg FROM tmp_estperchk WHERE codsol=$codsol AND codper=$codper ORDER BY 2;");
 		while($wfila_=mysql_fetch_array($wquery_)){
 			if($wfila_[1]!=3){
-				mysql_query("insert into tmp_estactchk (codsol,codper,codestchk,fe_mov,loguser,codchkreg) values ($codsol,$codper,$wfila_[1],NOW(),'".$loguser."','".$wfila_[2]."')") or die(mysql_error()); //or die(mysql_error());
+				mysql_query("insert into tmp_estactchk (codsol,codper,codestchk,fe_mov,loguser,codchkreg) values ($codsol,$codper,$wfila_[1],NOW(),'".$loguser."','".$wfila_[2]."')") or die("error al insertar en tabla tmp_estactchk"); //or die(mysql_error());
 				break;
 			}else{
-				mysql_query("insert into tmp_estactchk (codsol,codper,codestchk,fe_mov,loguser,codchkreg) values ($codsol,$codper,3,NOW(),'".$loguser."','".$wfila_[2]."')") or die(mysql_error()); //or die(mysql_error());
+				mysql_query("insert into tmp_estactchk (codsol,codper,codestchk,fe_mov,loguser,codchkreg) values ($codsol,$codper,3,NOW(),'".$loguser."','".$wfila_[2]."')") or die("error al insertar en tabla tmp_estperchk 2"); //or die(mysql_error());
 
-                                mysql_query("update tb_detallesolicitud set codestchk=3 where codsol=$codsol and codper=$codper and codpacchk='".$jfila_[2]."'") or die(mysql_error()); //or die(mysql_error());
+                                mysql_query("update tb_detallesolicitud set codestchk=3 where codsol=$codsol and codper=$codper and codpacchk='".$jfila_[2]."'") or die("error al actualizar en tabla tb_detallesolicitud"); //or die(mysql_error());
 
 				break;
 			}

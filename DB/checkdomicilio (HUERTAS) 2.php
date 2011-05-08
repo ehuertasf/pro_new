@@ -14,7 +14,7 @@ $n = (isset($_POST['n']) ? $_POST['n'] : $_GET['n']);
 switch ($n){
         case 0:
             $codchkdom = $_POST['codchkdom'];
-            $sqlquery ="select d.codres, r.desres, 1 as grabado from tb_residentesdomicilio d, tb_residentes r where
+            $sqlquery ="select d.codres, r.desres from tb_residentesdomicilio d, tb_residentes r where
                         d.codres=r.codres and d.codchkdom='$codchkdom' order by r.desres";
             $stmt = mysql_query($sqlquery);
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
@@ -225,19 +225,16 @@ switch ($n){
                     $rcodper     = $elementodetalle[1];
                     $rcodchkdom  = $elementodetalle[2];
                     $rcodres     = $elementodetalle[3];
-                    $grabado    =  $elementodetalle[4];
 
-                    if($grabado==0){
-                        $sqldetres = "INSERT INTO tb_residentesdomicilio (codsol,codper,codchkdom,codres)
-                                      VALUES (:codsol,:codper,:codchkdom,:codres)";
-                        $stmt2 =$dbh->prepare($sqldetres);
-                        $stmt2->execute(array(
-                            ':codsol' => $rcodsol,
-                            ':codper' => $rcodper,
-                            ':codchkdom' => $rcodchkdom,
-                            ':codres' => $rcodres
-                        ));
-                    }
+                    $sqldetres = "INSERT INTO tb_residentesdomicilio (codsol,codper,codchkdom,codres)
+                                  VALUES (:codsol,:codper,:codchkdom,:codres)";
+                    $stmt2 =$dbh->prepare($sqldetres);
+                    $stmt2->execute(array(
+                        ':codsol' => $rcodsol,
+                        ':codper' => $rcodper,
+                        ':codchkdom' => $rcodchkdom,
+                        ':codres' => $rcodres
+                    ));
                 }
                 $dbh->commit();
                 echo "{respuesta: {error : 0, mensaje: 'Se grabaron correctamente los datos', estado: '$codestchk' }}";
@@ -371,6 +368,8 @@ switch ($n){
                 echo "{success: false, respuesta: { mensaje: 'No se pudo grabar las imagenes en el servidor' }}";
                 //echo "{\"success\":\"false\",\"errors\":{\"reason\":\"Ocurrio un error al cargar el archivo, Intente nuevamente\"},\"respuesta\":{\"estado\":\"-1\"},\"img\":{\"imagen\":\"$nombre\"}}";
             }
+
+
             break;
         case 18: //Obtiene Imagenes CheckDomiciliario
             $codper = $_POST['codper'];
@@ -381,35 +380,95 @@ switch ($n){
             while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
             echo '{"imagenesdomicilio":'.json_encode($arr).'}';
             break;
-       case 19:
-           $codchkdom=$_POST['codchkdom'];
-           $codres=$_POST['codres'];
-           try {
-               $dbh->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-                $dbh->beginTransaction();
-                $sql = "DELETE from tb_residentesdomicilio where codchkdom=:codchkdom and codres=:codres";
-                        //recchk=:recchk, coddel=:coddel, codestchk=:codestchk where codsol=:codsol and codper=:codper";
-                $stmt=$dbh->prepare($sql);
-                $stmt->execute(array(
-                    ':codchkdom' => $codchkdom,
-                    ':codres' => $codres
-                ));
-                $dbh->commit();
-                echo "{respuesta: {error : 0, mensaje: 'Se elimino correctamente'}}";
-            } catch (Exception $e) {
-//                echo 'PDO Excepciones.	';
-//                echo 'Error con la base de datos: <br />';
-//                echo 'SQL Query: ', $sql;
-//                echo '<pre>';
-//                echo 'Error: ,'.$e->getMessage();
-//                echo 'Archivo: ' . $e->getFile() . '<br />';
-//                echo 'Linea: ' . $e->getLine() . '<br />';
-//                echo '</pre>';
-//                echo $e->getMessage();
-                echo "{respuesta: {error : 1, mensaje: 'No se pudo eliminar el delito, intente nuevamente'}}";
-
-            }
-
-           break;
+//        case 5: //Consultas de solicitud
+//            $ponerand=false;
+//            $codsol = $_POST['codsol'];
+//            $codcli = $_POST['codcli'];
+//            $codestsol = $_POST['codestsol'];
+//            $desde = $_POST['desde'];
+//            $hasta = $_POST['hasta'];
+//            $sqlquery ="select s.codsol,s.codcli,c.nomcli,s.fecregsol,s.fecvensol,CONCAT(DATEDIFF(s.fecvensol,s.fecregsol),' dias') as plazo,s.codestsol,e.desestsol,concat(u.nomuser,' ',u.apeuser) as usuario,
+//                        (select count(ds.codsol) from tb_detallesolicitud ds where ds.codsol=s.codsol) as canper
+//                        from tb_solicitud s left join tb_cliente c on s.codcli=c.codcli
+//                        left join tb_estsol e on s.codestsol=e.codestsol
+//                        left join tb_users u on s.usuregsol=u.loguser";
+//            if($codsol!='' || $codcli!='' || $codestsol!='' || $desde!='' || $hasta!=''){
+//                $sqlquery=$sqlquery.' WHERE';
+//                if($codsol!=''){
+//                    $sqlquery=$sqlquery.' s.codsol='.$codsol;
+//                    $ponerand=true;
+//                }else{
+//                    $ponerand=false;
+//                }
+//                if($codcli!=''){
+//                    if($ponerand==false){
+//                        $sqlquery=$sqlquery.' s.codcli='.$codcli;
+//                        $ponerand=true;
+//                    }else{
+//                        $sqlquery=$sqlquery.' and s.codcli='.$codcli;
+//                        $ponerand=true;
+//                    }
+//                }
+//                if($codestsol!=''){
+//                    if($ponerand==false){
+//                        $sqlquery=$sqlquery.' s.codestsol='.$codestsol;
+//                        $ponerand=true;
+//                    }else{
+//                        $sqlquery=$sqlquery.' and s.codestsol='.$codestsol;
+//                        $ponerand=true;
+//                    }
+//                }
+//                if($desde!='' && $hasta!=''){
+//                    if($ponerand==false){
+//                        $sqlquery=$sqlquery.' s.fecregsol BETWEEN \''.$desde.'\' AND \''.$hasta.'\'';
+//                        $ponerand=true;
+//                    }else{
+//                        $sqlquery=$sqlquery.' and s.fecregsol BETWEEN \''.$desde.'\' AND \''.$hasta.'\'';
+//                        $ponerand=false;
+//                    }
+//                }
+//            }
+//            $stmt = mysql_query($sqlquery);
+//            while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
+//            echo '{"busquedasol":'.json_encode($arr).'}';
+//            //echo '{'.$sqlquery.'}';
+//            break;
+//       case 6: //Lista Paquetes de Check
+//            $sqlquery ="select codpacchk,despacchk from tb_packcheck where estpacchk=1";
+//            $stmt = mysql_query($sqlquery);
+//            while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
+//            echo '{"packcheck":'.json_encode($arr).'}';
+//            break;
+//       case 7: //cabecera solicitud
+//            $codsol	= $_POST['codsol'];
+//            $sqlquery ="select codsol,codcli,fecvensol,obssol,codestsol from tb_solicitud where codsol=".$codsol;
+//            $stmt = mysql_query($sqlquery);
+//            while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
+//            echo '{"cabsolicitud":'.json_encode($arr).'}';
+//            break;
+//       case 8: //cabecera solicitud
+//            $codsol	= $_POST['codsol'];
+//            $sqlquery ="select ds.codsol,ds.codper,concat(p.nomper,' ',p.apepatper,' ',p.apematper) as nombre,p.codtipdoc,doc.destipdoc,p.numdocper,ds.codpacchk,pc.despacchk,ds.codpue,pu.despue
+//                        from tb_detallesolicitud ds left join tb_persona p on ds.codper=p.codper
+//                        left join tb_packcheck pc on ds.codpacchk=pc.codpacchk
+//                        left join tb_puesto pu on ds.codpue=pu.codpue
+//                        left join tb_tipdoc doc on p.codtipdoc=doc.codtipdoc
+//                        where codsol=".$codsol;
+//            $stmt = mysql_query($sqlquery);
+//            while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
+//            echo '{"detpersol":'.json_encode($arr).'}';
+//            break;
+//       case 9: //cabecera solicitud
+//            $codsol	= $_POST['codsol'];
+//            $codper	= $_POST['codper'];
+//            $sqlquery ="select sp.codsol,sp.codper,sp.codpacchk,sp.codpue,c.nomobj,concat(p.apepatper,' ',p.apematper,', ',p.nomper) as nombre from tb_detallesolicitud sp
+//                            right join tb_detallepackcheck pc on sp.codpacchk=pc.codpacchk
+//                            right join tb_check c on pc.codchk=c.codchk
+//                            right join tb_persona p on sp.codper=p.codper
+//                        where sp.codsol=".$codsol." and sp.codper=".$codper." order by sp.codper,pc.codpacchk,pc.codchk";
+//            $stmt = mysql_query($sqlquery);
+//            while($obj = mysql_fetch_object($stmt)) {$arr[] = $obj;}
+//            echo '{"checkspersona":'.json_encode($arr).'}';
+//            break;
 }
 ?>

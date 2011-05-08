@@ -39,7 +39,7 @@ function main_menu(){
             }
 
             new Ext.Toolbar({
-                renderTo: document.body,
+                renderTo: 'medio',
                 items: [{
                         xtype: 'tbbutton',
                         text: 'Nuevo',

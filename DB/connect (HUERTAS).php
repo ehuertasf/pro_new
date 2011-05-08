@@ -1,5 +1,6 @@
 <?php
 
+
 function conectarse()
 {
     $server = "localhost";
